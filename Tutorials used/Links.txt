@@ -1,0 +1,3 @@
+Outlines:
+https://www.youtube.com/watch?v=CG0TMH8D8kY
+Remember to apply weighted normals modifier in blender, otherwise borked

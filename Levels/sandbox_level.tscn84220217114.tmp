@@ -1,0 +1,74 @@
+[gd_scene load_steps=13 format=3 uid="uid://clq4ymy58tejc"]
+
+[ext_resource type="PackedScene" uid="uid://be1k25cx46lxo" path="res://Player/Player.tscn" id="1_e63bh"]
+[ext_resource type="Script" uid="uid://c3asycq8nnahh" path="res://Outlines/select_highlight.gd" id="2_bu5p0"]
+[ext_resource type="Material" uid="uid://nrcomeem7x3v" path="res://Outlines/OutlineMaterial.tres" id="3_67hdk"]
+[ext_resource type="Material" uid="uid://bncutmpqxq13f" path="res://Outlines/SelectionMaterial.tres" id="4_oyyku"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_e63bh"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_bu5p0"]
+sky_material = SubResource("ProceduralSkyMaterial_e63bh")
+
+[sub_resource type="Environment" id="Environment_67hdk"]
+background_mode = 2
+sky = SubResource("Sky_bu5p0")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_c1o2k"]
+size = Vector3(200, 1, 200)
+
+[sub_resource type="BoxMesh" id="BoxMesh_e63bh"]
+size = Vector3(200, 1, 200)
+
+[sub_resource type="TorusMesh" id="TorusMesh_67hdk"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_oyyku"]
+height = 0.5
+radius = 1.0
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_l7jkp"]
+points = PackedVector3Array(0.36677587, 0.037893053, 1.9572877, -0.36271653, -0.083356395, -1.9356253, -0.47777933, -0.14203559, -1.8523426, -1.7598317, 0.2126695, 0.4104735, 0.95303786, 0.4279016, -0.3923092, 0.61714506, -0.46977022, 0.28056142, 1.9357088, -0.08325963, -0.36266118, -1.4364945, -0.30861342, 0.63171786, -1.4824237, 0.15558311, -1.1857067, -0.33522424, 0.48262554, 0.39119348, 1.4997517, 0.0972106, 1.259695, 0.46272737, 0.2678178, -1.6203164, 1.002701, -0.19910479, -1.5335034, -0.9118124, -0.3632054, -1.0259007, -1.0108569, 0.15600708, 1.6052082, 0.17271091, -0.309751, 1.5566226, 0.565711, 0.3753416, 1.188647, 1.3296291, -0.25279638, 1.0983317, -1.8738608, -0.08330211, -0.6044262, -0.6720856, 0.42751002, -0.78388786, 1.7811176, 0.15566838, -0.6527254, -1.2001882, -0.08266293, 1.5605785, 0.56291634, -0.41516027, -0.95729977, -0.6171484, -0.46977282, 0.28056294, 1.6204369, 0.26778618, 0.46258062, 1.556564, -0.30977294, -0.17263679, -1.8069693, -0.08296899, 0.78294224, 1.0328702, 0.037690297, -1.7010664, -0.5882757, 0.21338141, -1.7069561, -0.68430847, 0.32096398, 1.3687063, -1.2002056, -0.08266424, -1.5606011, -1.3035835, 0.3757829, 0.16970605)
+
+[node name="SandboxLevel" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_67hdk")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+shadow_enabled = true
+
+[node name="Ground" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground"]
+shape = SubResource("BoxShape3D_c1o2k")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ground"]
+mesh = SubResource("BoxMesh_e63bh")
+
+[node name="Player" parent="." instance=ExtResource("1_e63bh")]
+
+[node name="CSG" type="Node3D" parent="."]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="CSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, -9.145692)
+use_collision = true
+size = Vector3(3, 5, 1)
+
+[node name="OutlinePlayground" type="Node3D" parent="."]
+
+[node name="MouseHoverOutlineBox" type="Node3D" parent="OutlinePlayground" node_paths=PackedStringArray("mesh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6968603, 0.87252474, -7.8347826)
+script = ExtResource("2_bu5p0")
+mesh = NodePath("MeshInstance3D")
+outline_material = ExtResource("3_67hdk")
+selected_material = ExtResource("4_oyyku")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="OutlinePlayground/MouseHoverOutlineBox"]
+transform = Transform3D(1.835, 0, 0, 0, 1.835, 0, 0, 0, 1.835, 0, 0, 0)
+mesh = SubResource

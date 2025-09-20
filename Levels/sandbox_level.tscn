@@ -1,6 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://clq4ymy58tejc"]
+[gd_scene load_steps=15 format=3 uid="uid://clq4ymy58tejc"]
 
 [ext_resource type="PackedScene" uid="uid://be1k25cx46lxo" path="res://Player/Player.tscn" id="1_e63bh"]
+[ext_resource type="Script" uid="uid://c3asycq8nnahh" path="res://Outlines/select_highlight.gd" id="2_bu5p0"]
+[ext_resource type="Material" uid="uid://nrcomeem7x3v" path="res://Outlines/OutlineMaterial.tres" id="3_67hdk"]
+[ext_resource type="Material" uid="uid://bncutmpqxq13f" path="res://Outlines/SelectionMaterial.tres" id="4_oyyku"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_e63bh"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -18,8 +21,24 @@ glow_enabled = true
 [sub_resource type="BoxShape3D" id="BoxShape3D_c1o2k"]
 size = Vector3(200, 1, 200)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_oyyku"]
+albedo_color = Color(0.2714402, 0.19179177, 0.08591708, 1)
+
 [sub_resource type="BoxMesh" id="BoxMesh_e63bh"]
+material = SubResource("StandardMaterial3D_oyyku")
 size = Vector3(200, 1, 200)
+
+[sub_resource type="TorusMesh" id="TorusMesh_67hdk"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_oyyku"]
+height = 0.5
+radius = 1.0
+
+[sub_resource type="PrismMesh" id="PrismMesh_oyyku"]
+size = Vector3(1, 2.225, 1)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_oyyku"]
+points = PackedVector3Array(0.011046177, 1.0633445, 0.47627237, -0.49049878, -1.0702195, -0.49049878, -0.49049878, -1.0702195, 0.47938764, 0.49854597, -1.1125, 0.49854597, 0.5065476, -0.9533778, -0.5176587, -0.05849027, 1.0241786, -0.5176587, -0.48226863, -0.847619, 0.5065476, 0.04737913, 1.0591365, -0.5176587, 0.08266893, 0.9181986, 0.5065476, -0.5176587, -1.0241786, -0.5176587, 0.48888886, -1.0911877, -0.5, -0.05849027, 1.0241786, 0.5065476, 0.5065476, -0.9533778, 0.5065476, -0.09378007, 0.8827982, -0.5176587, -0.5176587, -1.0241786, 0.5065476, -0.48226863, -0.847619, -0.5176587, 0.08266893, 0.9181986, -0.5176587, -0.09378007, 0.8827982, 0.5065476, 0.04737913, 1.0591365, 0.5065476, 0.011046177, 1.0633445, -0.4873835)
 
 [node name="SandboxLevel" type="Node3D"]
 
@@ -41,9 +60,70 @@ mesh = SubResource("BoxMesh_e63bh")
 
 [node name="Player" parent="." instance=ExtResource("1_e63bh")]
 
-[node name="CSG" type="Node3D" parent="."]
+[node name="CollisionWalls" type="Node3D" parent="."]
 
-[node name="CSGBox3D" type="CSGBox3D" parent="CSG"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, -4.145692)
+[node name="CSGBox3D" type="CSGBox3D" parent="CollisionWalls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, -9.145692)
 use_collision = true
 size = Vector3(3, 5, 1)
+
+[node name="CollisionOnLabel" type="Label3D" parent="CollisionWalls/CSGBox3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.5279131)
+text = "I have collision"
+font_size = 52
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="CollisionWalls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5011451, 2.5, -9.145692)
+size = Vector3(3, 5, 1)
+
+[node name="CollisionOffLabel" type="Label3D" parent="CollisionWalls/CSGBox3D2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.5279131)
+text = "I do not have collision"
+font_size = 52
+
+[node name="OutlinePlayground" type="Node3D" parent="."]
+
+[node name="MouseHoverOutlineBox" type="Node3D" parent="OutlinePlayground" node_paths=PackedStringArray("mesh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6968603, 0.87252474, -7.8347826)
+script = ExtResource("2_bu5p0")
+mesh = NodePath("MeshInstance3D")
+outline_material = ExtResource("3_67hdk")
+selected_material = ExtResource("4_oyyku")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="OutlinePlayground/MouseHoverOutlineBox"]
+transform = Transform3D(1.835, 0, 0, 0, 1.835, 0, 0, 0, 1.835, 0, 0, 0)
+mesh = SubResource("TorusMesh_67hdk")
+skeleton = NodePath("../../..")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="OutlinePlayground/MouseHoverOutlineBox/MeshInstance3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="OutlinePlayground/MouseHoverOutlineBox/MeshInstance3D/StaticBody3D"]
+shape = SubResource("CylinderShape3D_oyyku")
+
+[node name="Label3D" type="Label3D" parent="OutlinePlayground/MouseHoverOutlineBox"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.99030495, 0)
+billboard = 2
+text = "Click me!"
+font_size = 64
+outline_size = 32
+
+[node name="AnotherObject" type="Node3D" parent="OutlinePlayground" node_paths=PackedStringArray("mesh", "body")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.19974, 0, -8.379846)
+script = ExtResource("2_bu5p0")
+mesh = NodePath("MeshInstance3D")
+outline_material = ExtResource("3_67hdk")
+selected_material = ExtResource("4_oyyku")
+body = NodePath("MeshInstance3D/StaticBody3D")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="OutlinePlayground/AnotherObject"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1125, 1.3431511)
+mesh = SubResource("PrismMesh_oyyku")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="OutlinePlayground/AnotherObject/MeshInstance3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="OutlinePlayground/AnotherObject/MeshInstance3D/StaticBody3D"]
+shape = SubResource("ConvexPolygonShape3D_oyyku")
+
+[connection signal="input_event" from="OutlinePlayground/MouseHoverOutlineBox/MeshInstance3D/StaticBody3D" to="OutlinePlayground/MouseHoverOutlineBox" method="_on_static_body_3d_input_event"]
+[connection signal="mouse_entered" from="OutlinePlayground/MouseHoverOutlineBox/MeshInstance3D/StaticBody3D" to="OutlinePlayground/MouseHoverOutlineBox" method="_on_static_body_3d_mouse_entered"]
+[connection signal="mouse_exited" from="OutlinePlayground/MouseHoverOutlineBox/MeshInstance3D/StaticBody3D" to="OutlinePlayground/MouseHoverOutlineBox" method="_on_static_body_3d_mouse_exited"]

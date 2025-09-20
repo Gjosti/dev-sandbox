@@ -4,6 +4,7 @@ const SPEED := 5.0
 const JUMP_VELOCITY := 4.5
 
 @export var mouse_sensitivity: float = 0.00075
+@export var camera_scroll_sensitivity = 0.25
 @export var min_camera_rotation: float = -90
 @export var max_camera_rotation: float = 90
 @export var min_camera_distance: float = 1
@@ -61,9 +62,9 @@ func _unhandled_input(event: InputEvent) -> void:
 
 	# Camera zoom
 	if Input.is_action_just_pressed("scroll_forward"):
-		camera_arm.spring_length = clampf(camera_arm.spring_length - 0.5, min_camera_distance, max_camera_distance)
+		camera_arm.spring_length = clampf(camera_arm.spring_length - camera_scroll_sensitivity, min_camera_distance, max_camera_distance)
 	if Input.is_action_just_pressed("scroll_backward"):
-		camera_arm.spring_length = clampf(camera_arm.spring_length + 0.5, min_camera_distance, max_camera_distance)
+		camera_arm.spring_length = clampf(camera_arm.spring_length + camera_scroll_sensitivity, min_camera_distance, max_camera_distance)
 
 func frame_camera_rotation() -> void:
 	horizontal_pivot.rotation.y += _look.x
