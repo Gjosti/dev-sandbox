@@ -3,7 +3,8 @@
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w1y3n"]
 render_priority = -1
 no_depth_test = true
-albedo_color = Color(0.4131, 0.43571, 0.51, 0.5294118)
+shading_mode = 0
+albedo_color = Color(0.6907189, 0.71099913, 0.77371323, 0.15686275)
 
 [resource]
 render_priority = -2
@@ -14,4 +15,3 @@ no_depth_test = true
 shading_mode = 0
 albedo_color = Color(0, 0, 0, 1)
 grow = true
-grow_amount = 0.02

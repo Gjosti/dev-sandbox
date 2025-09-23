@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://be1k25cx46lxo"]
+[gd_scene load_steps=11 format=3 uid="uid://be1k25cx46lxo"]
 
 [ext_resource type="Script" uid="uid://bf26qmpmlw17r" path="res://Player/player.gd" id="1_3qydi"]
 [ext_resource type="Material" uid="uid://c23j08bjm2j2x" path="res://Outlines/XRayOutline.tres" id="2_q3lat"]
@@ -8,6 +8,10 @@ transparency = 4
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_l2ndj"]
 material = SubResource("StandardMaterial3D_tok1r")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8g4oa"]
+no_depth_test = true
+albedo_color = Color(0, 0, 0, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ddoul"]
 render_priority = -2
@@ -35,6 +39,7 @@ skeleton = NodePath("")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="MeshInstance3D"]
 transform = Transform3D(0.69, 0, 0, 0, 0.27, 0, 0, 0, 0.445, 0, 0.94015825, -0.41239765)
+material_override = SubResource("StandardMaterial3D_8g4oa")
 mesh = SubResource("BoxMesh_3qydi")
 surface_material_override/0 = SubResource("StandardMaterial3D_q3lat")
 
