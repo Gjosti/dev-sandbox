@@ -69,6 +69,7 @@ mesh = SubResource("BoxMesh_e63bh")
 [node name="Player" parent="." instance=ExtResource("1_e63bh")]
 
 [node name="CollisionWalls" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.8392062, 0, -5.5322585)
 
 [node name="CSGBox3D" type="CSGBox3D" parent="CollisionWalls"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, -9.145692)
@@ -89,6 +90,11 @@ material = SubResource("StandardMaterial3D_qag8g")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.5279131)
 text = "I do not have collision"
 font_size = 52
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="CollisionWalls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2074997, 0)
+use_collision = true
+size = Vector3(1, 2.415, 1)
 
 [node name="OutlinePlayground" type="Node3D" parent="."]
 

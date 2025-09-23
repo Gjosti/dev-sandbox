@@ -21,6 +21,8 @@ extends CharacterBody3D
 var _look := Vector2.ZERO
 var jumps_left: int = extra_jumps
 var previous_velocity: Vector3
+var coyote_time: float = 0.1
+var coyote_timer: float = 0.0
 
 # Node References
 @onready var horizontal_pivot: Node3D = $HorizontalPivot
@@ -46,6 +48,11 @@ func _physics_process(delta: float) -> void:
 	handle_air_control()
 	move_and_slide()
 	previous_velocity = velocity
+	 # Coyote time logic
+	if is_on_floor():
+		coyote_timer = coyote_time
+	else:
+		coyote_timer = max(0.0, coyote_timer - delta)
 
 # Gravity
 func apply_gravity(delta: float) -> void:
@@ -79,6 +86,7 @@ func handle_air_control() -> void:
 	if not is_on_floor():
 		velocity.x = lerp(previous_velocity.x, velocity.x, 0.1)
 		velocity.z = lerp(previous_velocity.z, velocity.z, 0.1)
+		velocity.y = lerp(previous_velocity.y, velocity.y, 0.9)
 
 # Input Handling
 func _unhandled_input(event: InputEvent) -> void:
@@ -99,7 +107,10 @@ func handle_jump_input(event: InputEvent) -> void:
 		velocity.y *= 0.4
 
 func jump() -> void:
-	if jumps_left > 0:
+	if is_on_floor() or coyote_timer > 0.0:
+		velocity.y = jump_velocity
+		coyote_timer = 0.0
+	elif jumps_left > 0:
 		jumps_left -= 1
 		velocity.y = jump_velocity
 
@@ -118,5 +129,3 @@ func frame_camera_rotation() -> void:
 		deg_to_rad(max_camera_rotation)
 	)
 	_look = Vector2.ZERO
-
-
