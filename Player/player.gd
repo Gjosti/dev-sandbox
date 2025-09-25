@@ -1,12 +1,14 @@
 extends CharacterBody3D
+class_name Player
 
-# ovement Settings
+# Movement Settings
 @export_group("Movement Settings")
 @export var jump_height: float = 4
 @export var jump_time_to_peak: float = 0.5
 @export var jump_time_to_descent: float = 0.25
 @export var extra_jumps: int = 1
 @export var speed: float = 6.0
+@export_range (0, 30, 0.5) var air_control_lerp: float = 10 # Controls air movement responsiveness
 
 # Camera Settings
 @export_group("Camera Settings")
@@ -29,6 +31,7 @@ var coyote_timer: float = 0.0
 @onready var vertical_pivot: Node3D = $HorizontalPivot/VerticalPivot
 @onready var player_mesh: Node3D = $MeshInstance3D
 @onready var collision_shape_3d: CollisionShape3D = $CollisionShape3D
+@onready var rig_pivot: Node3D = $RigPivot
 @onready var camera_arm: SpringArm3D = $HorizontalPivot/VerticalPivot/CameraArm
 
 # Calculated Jump Variables
@@ -44,11 +47,15 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	frame_camera_rotation()
 	apply_gravity(delta)
-	handle_movement()
-	handle_air_control()
+	handle_movement(delta)
+	handle_air_control(delta)
+	# handle_dash_input()
+	handle_jump_input()
+
 	move_and_slide()
 	previous_velocity = velocity
-	 # Coyote time logic
+
+	 # Coyote time 
 	if is_on_floor():
 		coyote_timer = coyote_time
 	else:
@@ -64,7 +71,7 @@ func get_player_gravity() -> float:
 	return jump_gravity if velocity.y > 0.0 else fall_gravity
 
 # Movement
-func handle_movement() -> void:
+func handle_movement(delta: float) -> void:
 	var input_dir := Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
 	var direction := Vector3.ZERO
 	if input_dir.length() > 0:
@@ -75,24 +82,24 @@ func handle_movement() -> void:
 		velocity.x = direction.x * speed
 		velocity.z = direction.z * speed
 		var target_yaw = atan2(-direction.x, -direction.z)
-		player_mesh.rotation.y = target_yaw
-		collision_shape_3d.rotation.y = target_yaw
+		rig_pivot.rotation.y = lerp_angle(rig_pivot.rotation.y, target_yaw, 10.0 * delta)
 	else:
 		velocity.x = move_toward(velocity.x, 0, speed)
 		velocity.z = move_toward(velocity.z, 0, speed)
 
 # Air Control
-func handle_air_control() -> void:
+func handle_air_control(delta: float) -> void:
 	if not is_on_floor():
-		velocity.x = lerp(previous_velocity.x, velocity.x, 0.1)
-		velocity.z = lerp(previous_velocity.z, velocity.z, 0.1)
-		velocity.y = lerp(previous_velocity.y, velocity.y, 0.9)
+		velocity.x = lerp(previous_velocity.x, velocity.x, 1.0 - exp(-air_control_lerp * delta))
+		velocity.z = lerp(previous_velocity.z, velocity.z, 1.0 - exp(-air_control_lerp * delta))
 
 # Input Handling
 func _unhandled_input(event: InputEvent) -> void:
 	handle_mouse_input(event)
-	handle_jump_input(event)
 	handle_camera_zoom(event)
+	# Handle jump release for variable jump height
+	if event.is_action_released("jump") and velocity.y >= 0:
+		velocity.y *= 0.4
 
 func handle_mouse_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_focus_next"):
@@ -100,25 +107,24 @@ func handle_mouse_input(event: InputEvent) -> void:
 	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED and event is InputEventMouseMotion:
 		_look += -event.relative * mouse_sensitivity
 
-func handle_jump_input(event: InputEvent) -> void:
-	if event.is_action_pressed("jump"):
-		jump()
-	if event.is_action_released("jump") and velocity.y >= 0:
-		velocity.y *= 0.4
-
-func jump() -> void:
-	if is_on_floor() or coyote_timer > 0.0:
-		velocity.y = jump_velocity
-		coyote_timer = 0.0
-	elif jumps_left > 0:
-		jumps_left -= 1
-		velocity.y = jump_velocity
+func handle_jump_input() -> void:
+	if Input.is_action_just_pressed("jump"):
+		if is_on_floor() or coyote_timer > 0.0:
+			velocity.y = jump_velocity
+			coyote_timer = 0.0
+		elif jumps_left > 0:
+			jumps_left -= 1
+			velocity.y = jump_velocity
 
 func handle_camera_zoom(event: InputEvent) -> void:
 	if event.is_action_pressed("scroll_forward"):
-		camera_arm.spring_length = clampf(camera_arm.spring_length - camera_scroll_sensitivity, min_camera_distance, max_camera_distance)
+		camera_arm.spring_length = clampf(
+			camera_arm.spring_length - camera_scroll_sensitivity,
+			min_camera_distance, max_camera_distance)
 	if event.is_action_pressed("scroll_backward"):
-		camera_arm.spring_length = clampf(camera_arm.spring_length + camera_scroll_sensitivity, min_camera_distance, max_camera_distance)
+		camera_arm.spring_length = clampf(
+			camera_arm.spring_length + camera_scroll_sensitivity,
+			min_camera_distance, max_camera_distance)
 
 func frame_camera_rotation() -> void:
 	horizontal_pivot.rotation.y += _look.x
@@ -129,3 +135,5 @@ func frame_camera_rotation() -> void:
 		deg_to_rad(max_camera_rotation)
 	)
 	_look = Vector2.ZERO
+
+#func look_toward_direction(direction: Vector3, delta: float) -> void:

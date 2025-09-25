@@ -1,0 +1,43 @@
+[gd_scene load_steps=9 format=3 uid="uid://bedml0okde3l1"]
+
+[ext_resource type="Material" uid="uid://c23j08bjm2j2x" path="res://Outlines/XRayOutline.tres" id="1_ydo8n"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wer68"]
+transparency = 4
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tok1r"]
+transparency = 4
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_ojd8b"]
+material = SubResource("StandardMaterial3D_tok1r")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_awthv"]
+no_depth_test = true
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ddoul"]
+render_priority = -2
+
+[sub_resource type="BoxMesh" id="BoxMesh_32kt2"]
+material = SubResource("StandardMaterial3D_ddoul")
+size = Vector3(0.45, 1, 2.18)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8s7l5"]
+albedo_color = Color(0.10747976, 0.10747973, 0.10747973, 1)
+
+[node name="Rig" type="Node3D"]
+
+[node name="CharacterRig" type="Node3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterRig"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+material_override = SubResource("StandardMaterial3D_wer68")
+material_overlay = ExtResource("1_ydo8n")
+mesh = SubResource("CapsuleMesh_ojd8b")
+skeleton = NodePath("")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterRig/MeshInstance3D"]
+transform = Transform3D(0.69, 0, 0, 0, 0.27, 0, 0, 0, 0.445, 0, 0.94015825, -0.41239765)
+material_override = SubResource("StandardMaterial3D_awthv")
+mesh = SubResource("BoxMesh_32kt2")
+surface_material_override/0 = SubResource("StandardMaterial3D_8s7l5")
