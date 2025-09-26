@@ -25,6 +25,7 @@ var jumps_left: int = extra_jumps
 var previous_velocity: Vector3
 var coyote_time: float = 0.1
 var coyote_timer: float = 0.0
+var direction: Vector3 = Vector3.ZERO
 
 # Node References
 @onready var horizontal_pivot: Node3D = $HorizontalPivot
@@ -32,6 +33,7 @@ var coyote_timer: float = 0.0
 @onready var player_mesh: Node3D = $MeshInstance3D
 @onready var collision_shape_3d: CollisionShape3D = $CollisionShape3D
 @onready var rig_pivot: Node3D = $RigPivot
+@onready var rig: Node3D = $RigPivot/Rig
 @onready var camera_arm: SpringArm3D = $HorizontalPivot/VerticalPivot/CameraArm
 
 # Calculated Jump Variables
@@ -73,7 +75,7 @@ func get_player_gravity() -> float:
 # Movement
 func handle_movement(delta: float) -> void:
 	var input_dir := Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
-	var direction := Vector3.ZERO
+	direction = Vector3.ZERO
 	if input_dir.length() > 0:
 		var camera_yaw = horizontal_pivot.rotation.y
 		var camera_basis = Basis(Vector3.UP, camera_yaw)
@@ -86,6 +88,7 @@ func handle_movement(delta: float) -> void:
 	else:
 		velocity.x = move_toward(velocity.x, 0, speed)
 		velocity.z = move_toward(velocity.z, 0, speed)
+	rig.update_animation_tree(direction)
 
 # Air Control
 func handle_air_control(delta: float) -> void:
@@ -97,6 +100,7 @@ func handle_air_control(delta: float) -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	handle_mouse_input(event)
 	handle_camera_zoom(event)
+	handle_attack_input(event)
 	# Handle jump release for variable jump height
 	if event.is_action_released("jump") and velocity.y >= 0:
 		velocity.y *= 0.4
@@ -112,9 +116,18 @@ func handle_jump_input() -> void:
 		if is_on_floor() or coyote_timer > 0.0:
 			velocity.y = jump_velocity
 			coyote_timer = 0.0
+			rig.travel("Jump")
 		elif jumps_left > 0:
 			jumps_left -= 1
 			velocity.y = jump_velocity
+			rig.travel("Jump")
+		
+
+func handle_attack_input(event: InputEvent) -> void:
+	if rig.is_idle():
+		if event.is_action_pressed("attack"):
+			slash_attack()
+
 
 func handle_camera_zoom(event: InputEvent) -> void:
 	if event.is_action_pressed("scroll_forward"):
@@ -136,4 +149,5 @@ func frame_camera_rotation() -> void:
 	)
 	_look = Vector2.ZERO
 
-#func look_toward_direction(direction: Vector3, delta: float) -> void:
+func slash_attack() -> void:
+	rig.travel("Attack")
