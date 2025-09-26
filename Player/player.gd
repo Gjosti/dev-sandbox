@@ -101,6 +101,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	handle_mouse_input(event)
 	handle_camera_zoom(event)
 	handle_attack_input(event)
+	handle_crouch_input()
 	# Handle jump release for variable jump height
 	if event.is_action_released("jump") and velocity.y >= 0:
 		velocity.y *= 0.4
@@ -128,6 +129,13 @@ func handle_attack_input(event: InputEvent) -> void:
 		if event.is_action_pressed("attack"):
 			main_action()
 
+func handle_crouch_input() -> void:
+	if is_on_floor() and rig.is_idle():
+		if Input.is_action_pressed("crouch"):
+			rig.travel("Crouch")
+	else:
+		rig.travel("Start")
+
 
 func handle_camera_zoom(event: InputEvent) -> void:
 	if event.is_action_pressed("scroll_forward"):
@@ -151,3 +159,9 @@ func frame_camera_rotation() -> void:
 
 func main_action() -> void:
 	rig.travel("Attack")
+
+# idiotisk måte å gjørde det på. TODO lage state machine separat fra AnimationTree 
+# og heller transforme onPress og OnRelease type ting
+func crouch() -> void:
+	rig.travel("Crouch")
+
