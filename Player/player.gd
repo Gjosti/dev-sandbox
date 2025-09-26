@@ -126,7 +126,7 @@ func handle_jump_input() -> void:
 func handle_attack_input(event: InputEvent) -> void:
 	if rig.is_idle():
 		if event.is_action_pressed("attack"):
-			slash_attack()
+			main_action()
 
 
 func handle_camera_zoom(event: InputEvent) -> void:
@@ -149,5 +149,5 @@ func frame_camera_rotation() -> void:
 	)
 	_look = Vector2.ZERO
 
-func slash_attack() -> void:
+func main_action() -> void:
 	rig.travel("Attack")
