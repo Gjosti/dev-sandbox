@@ -5,6 +5,7 @@ class_name Player
 @export_group("Movement Settings")
 @export var speed: float = 6.0
 @export var air_control_lerp: float = 75 # Controls air movement responsiveness
+var air_turn_face_rate: float = 2.5
 
 # Camera Settings
 @export_group("Camera Settings")
@@ -25,7 +26,7 @@ var direction: Vector3 = Vector3.ZERO
 # Camera
 var camera_yaw: float
 var camera_basis: Basis
-var target_yaw :float
+var target_yaw: float
 
 
 # Node References
@@ -88,6 +89,8 @@ func handle_movement(delta: float) -> void:
 		if direction != Vector3.ZERO:
 			velocity.x += direction.x * speed * (air_control_lerp) * delta
 			velocity.z += direction.z * speed * (air_control_lerp) * delta
+			target_yaw = atan2(-direction.x, -direction.z)
+			rig_pivot.rotation.y = lerp_angle(rig_pivot.rotation.y, target_yaw, air_turn_face_rate * delta)
 	rig.update_animation_tree(direction)
 
 # TODO Air Control TODO REDO! NOT IN USE

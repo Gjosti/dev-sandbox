@@ -1,22 +1,23 @@
 extends Node3D
 
 @export var player: Player
-@export var dash_cooldown: float = 0.5
+@export var dash_cooldown: float = 0.1
 @export var dash_duration: float = 0.2
-@export var dash_speed_modifier: float = 5.0
+@export var dash_speed_modifier: float = 2.0
 @export var time_remaining: float = 0.0
 @onready var timer: Timer = $Timer
 
 var direction: Vector3 = Vector3.ZERO
 var previous_velocity: Vector3 = Vector3.ZERO
+var dash_velocity: Vector3
 
 func _physics_process(delta: float) -> void:
-	var dash_velocity = direction * player.speed * dash_speed_modifier
+	dash_velocity = direction * player.speed * dash_speed_modifier
 	player.velocity.x = dash_velocity.x
 	player.velocity.z = dash_velocity.z
 
-	# Face dash direction
-	if direction.length() > 0.01:
+	# Face dash direction while dashing
+	if time_remaining > 0 and direction.length() > 0.01:
 		var target_yaw = atan2(-direction.x, -direction.z)
 		player.rig_pivot.rotation.y = target_yaw
 
@@ -35,5 +36,12 @@ func _unhandled_input(event: InputEvent) -> void:
 			player.rig.travel("Dash")
 			timer.start(dash_cooldown)
 			time_remaining = dash_duration
+
+			# Apply dash
+			var initial_horizontal_speed = Vector2(player.velocity.x, player.velocity.z).length()
+			var dash_speed = max(player.speed, initial_horizontal_speed) * dash_speed_modifier
+			dash_velocity = direction * dash_speed
+			player.velocity.x += dash_velocity.x
+			player.velocity.z += dash_velocity.z
 		else:
 			print("Not Dashable")
