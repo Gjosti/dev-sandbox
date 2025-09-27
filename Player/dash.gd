@@ -32,7 +32,6 @@ func _unhandled_input(event: InputEvent) -> void:
 		else:
 			direction = - player.rig_pivot.global_transform.basis.z.normalized()
 
-		print("Dashable")
 		player.rig.travel("Dash")
 		timer.start(dash_cooldown)
 		time_remaining = dash_duration
