@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://be1k25cx46lxo"]
+[gd_scene load_steps=8 format=3 uid="uid://be1k25cx46lxo"]
 
 [ext_resource type="Script" uid="uid://bf26qmpmlw17r" path="res://Player/player.gd" id="1_3qydi"]
 [ext_resource type="PackedScene" uid="uid://co5s7037hupeh" path="res://Player/dash.tscn" id="3_tok1r"]
 [ext_resource type="PackedScene" uid="uid://dntcr487ilb6w" path="res://Player/crouch.tscn" id="4_8g4oa"]
 [ext_resource type="PackedScene" uid="uid://bedml0okde3l1" path="res://Player/rig.tscn" id="4_ddoul"]
+[ext_resource type="PackedScene" uid="uid://b1veppx83glta" path="res://Player/jump.tscn" id="5_8g4oa"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tok1r"]
 
@@ -38,6 +39,9 @@ player = NodePath("..")
 [node name="Rig" parent="RigPivot" instance=ExtResource("4_ddoul")]
 
 [node name="Crouch" parent="." node_paths=PackedStringArray("player") instance=ExtResource("4_8g4oa")]
+player = NodePath("..")
+
+[node name="Jump" parent="." node_paths=PackedStringArray("player") instance=ExtResource("5_8g4oa")]
 player = NodePath("..")
 
 [editable path="RigPivot/Rig"]

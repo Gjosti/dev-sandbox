@@ -3,10 +3,6 @@ class_name Player
 
 # Movement Settings
 @export_group("Movement Settings")
-@export var jump_height: float = 4
-@export var jump_time_to_peak: float = 0.5
-@export var jump_time_to_descent: float = 0.25
-@export var extra_jumps: int = 1
 @export var speed: float = 6.0
 @export_range (0, 30, 0.5) var air_control_lerp: float = 10 # Controls air movement responsiveness
 
@@ -21,7 +17,6 @@ class_name Player
 
 # State Variables
 var _look := Vector2.ZERO
-var jumps_left: int = extra_jumps
 var previous_velocity: Vector3
 var coyote_time: float = 0.1
 var coyote_timer: float = 0.0
@@ -35,11 +30,7 @@ var direction: Vector3 = Vector3.ZERO
 @onready var rig_pivot: Node3D = $RigPivot
 @onready var rig: Node3D = $RigPivot/Rig
 @onready var camera_arm: SpringArm3D = $HorizontalPivot/VerticalPivot/CameraArm
-
-# Calculated Jump Variables
-@onready var jump_velocity: float = (2.0 * jump_height) / jump_time_to_peak
-@onready var jump_gravity: float = (-2.0 * jump_height) / (jump_time_to_peak * jump_time_to_peak)
-@onready var fall_gravity: float = (-2.0 * jump_height) / (jump_time_to_peak * jump_time_to_descent)
+@onready var jump: Node = $Jump # or the correct path to your jump node
 
 # Initialization
 func _ready() -> void:
@@ -52,7 +43,7 @@ func _physics_process(delta: float) -> void:
 	handle_movement(delta)
 	handle_air_control(delta)
 	# handle_dash_input()
-	handle_jump_input()
+
 
 	move_and_slide()
 	previous_velocity = velocity
@@ -66,11 +57,10 @@ func _physics_process(delta: float) -> void:
 # Gravity
 func apply_gravity(delta: float) -> void:
 	velocity.y += get_player_gravity() * delta
-	if is_on_floor():
-		jumps_left = extra_jumps
+
 
 func get_player_gravity() -> float:
-	return jump_gravity if velocity.y > 0.0 else fall_gravity
+	return jump.get_gravity(velocity.y)
 
 # Movement
 func handle_movement(delta: float) -> void:
@@ -113,16 +103,7 @@ func handle_mouse_input(event: InputEvent) -> void:
 	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED and event is InputEventMouseMotion:
 		_look += -event.relative * mouse_sensitivity
 
-func handle_jump_input() -> void:
-	if Input.is_action_just_pressed("jump"):
-		if is_on_floor() or coyote_timer > 0.0:
-			velocity.y = jump_velocity
-			coyote_timer = 0.0
-			rig.travel("Jump")
-		elif jumps_left > 0:
-			jumps_left -= 1
-			velocity.y = jump_velocity
-			rig.travel("Jump")
+
 		
 
 func handle_attack_input(event: InputEvent) -> void:
@@ -153,6 +134,3 @@ func frame_camera_rotation() -> void:
 
 func main_action() -> void:
 	rig.travel("Attack")
-
-
-
