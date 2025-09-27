@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=3 uid="uid://bedml0okde3l1"]
+[gd_scene load_steps=34 format=3 uid="uid://bedml0okde3l1"]
 
 [ext_resource type="Script" uid="uid://d4fg32t3i02lo" path="res://Player/rig.gd" id="1_wer68"]
 [ext_resource type="Material" uid="uid://c23j08bjm2j2x" path="res://Outlines/XRayOutline.tres" id="1_ydo8n"]
@@ -386,6 +386,9 @@ advance_mode = 2
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_icx30"]
 
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_sy1xi"]
+xfade_time = 0.1
+
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_ydo8n"]
 states/Attack/node = SubResource("AnimationNodeAnimation_wer68")
 states/Attack/position = Vector2(482, 197)
@@ -395,8 +398,8 @@ states/Jump/node = SubResource("AnimationNodeAnimation_32kt2")
 states/Jump/position = Vector2(611, 8)
 states/MoveSpace/node = SubResource("AnimationNodeBlendSpace1D_32kt2")
 states/MoveSpace/position = Vector2(482, 100)
-transitions = ["Start", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_8s7l5"), "MoveSpace", "Attack", SubResource("AnimationNodeStateMachineTransition_ojd8b"), "Attack", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_awthv"), "MoveSpace", "Jump", SubResource("AnimationNodeStateMachineTransition_wer68"), "Jump", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_32kt2"), "Dash", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_vcvy3"), "MoveSpace", "Dash", SubResource("AnimationNodeStateMachineTransition_icx30")]
-graph_offset = Vector2(10, -27)
+transitions = ["Start", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_8s7l5"), "MoveSpace", "Attack", SubResource("AnimationNodeStateMachineTransition_ojd8b"), "Attack", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_awthv"), "MoveSpace", "Jump", SubResource("AnimationNodeStateMachineTransition_wer68"), "Jump", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_32kt2"), "Dash", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_vcvy3"), "MoveSpace", "Dash", SubResource("AnimationNodeStateMachineTransition_icx30"), "Dash", "Jump", SubResource("AnimationNodeStateMachineTransition_sy1xi")]
+graph_offset = Vector2(-60, -121)
 
 [node name="Rig" type="Node3D"]
 script = ExtResource("1_wer68")

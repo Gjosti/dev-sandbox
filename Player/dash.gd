@@ -1,8 +1,8 @@
 extends Node3D
 
 @export var player: Player
-@export var dash_cooldown: float = 0.1
-@export var dash_duration: float = 0.2
+@export var dash_cooldown: float = 0.5
+@export var dash_duration: float = 0.3
 @export var dash_speed_modifier: float = 2.0
 @export var time_remaining: float = 0.0
 @onready var timer: Timer = $Timer
@@ -36,12 +36,5 @@ func _unhandled_input(event: InputEvent) -> void:
 			player.rig.travel("Dash")
 			timer.start(dash_cooldown)
 			time_remaining = dash_duration
-
-			# Apply dash
-			var initial_horizontal_speed = Vector2(player.velocity.x, player.velocity.z).length()
-			var dash_speed = max(player.speed, initial_horizontal_speed) * dash_speed_modifier
-			dash_velocity = direction * dash_speed
-			player.velocity.x += dash_velocity.x
-			player.velocity.z += dash_velocity.z
 		else:
 			print("Not Dashable")

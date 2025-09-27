@@ -60,7 +60,10 @@ func _physics_process(delta: float) -> void:
 
 # Gravity
 func apply_gravity(delta: float) -> void:
-	velocity.y += get_player_gravity() * delta
+	if rig.is_dashing():
+		velocity.y = 0
+	else:
+		velocity.y += get_player_gravity() * delta
 
 func get_player_gravity() -> float:
 	return jump.get_gravity(velocity.y)
