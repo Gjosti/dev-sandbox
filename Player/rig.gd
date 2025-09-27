@@ -29,3 +29,12 @@ func is_idle() -> bool:
 
 func is_dashing() -> bool:
 	return playback.get_current_node() == "Dash"
+
+func is_jumping() -> bool:
+	return playback.get_current_node() == "Jump"
+
+func is_attacking() -> bool:
+	return playback.get_current_node() == "Attack"
+	
+func is_crouching() -> bool:
+	return playback.get_current_node() == "Crouch"
