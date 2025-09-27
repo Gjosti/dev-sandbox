@@ -4,7 +4,7 @@ class_name Player
 # Movement Settings
 @export_group("Movement Settings")
 @export var speed: float = 6.0
-@export_range (0, 30, 0.5) var air_control_lerp: float = 10 # Controls air movement responsiveness
+@export var air_control_lerp: float = 75 # Controls air movement responsiveness
 
 # Camera Settings
 @export_group("Camera Settings")
@@ -22,6 +22,12 @@ var coyote_time: float = 0.1
 var coyote_timer: float = 0.0
 var direction: Vector3 = Vector3.ZERO
 
+# Camera
+var camera_yaw: float
+var camera_basis: Basis
+var target_yaw :float
+
+
 # Node References
 @onready var horizontal_pivot: Node3D = $HorizontalPivot
 @onready var vertical_pivot: Node3D = $HorizontalPivot/VerticalPivot
@@ -38,15 +44,12 @@ func _ready() -> void:
 
 # Physics Processing
 func _physics_process(delta: float) -> void:
+	previous_velocity = velocity
 	frame_camera_rotation()
 	apply_gravity(delta)
 	handle_movement(delta)
-	handle_air_control(delta)
-	# handle_dash_input()
-
-
+	# handle_air_control(delta)
 	move_and_slide()
-	previous_velocity = velocity
 
 	 # Coyote time 
 	if is_on_floor():
@@ -58,7 +61,6 @@ func _physics_process(delta: float) -> void:
 func apply_gravity(delta: float) -> void:
 	velocity.y += get_player_gravity() * delta
 
-
 func get_player_gravity() -> float:
 	return jump.get_gravity(velocity.y)
 
@@ -69,24 +71,37 @@ func handle_movement(delta: float) -> void:
 	var input_dir := Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
 	direction = Vector3.ZERO
 	if input_dir.length() > 0:
-		var camera_yaw = horizontal_pivot.rotation.y
-		var camera_basis = Basis(Vector3.UP, camera_yaw)
+		camera_yaw = horizontal_pivot.rotation.y
+		camera_basis = Basis(Vector3.UP, camera_yaw)
 		direction = (camera_basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-	if direction != Vector3.ZERO:
-		velocity.x = direction.x * speed
-		velocity.z = direction.z * speed
-		var target_yaw = atan2(-direction.x, -direction.z)
-		rig_pivot.rotation.y = lerp_angle(rig_pivot.rotation.y, target_yaw, 10.0 * delta)
+	if is_on_floor():
+		if direction != Vector3.ZERO:
+			velocity.x = direction.x * speed
+			velocity.z = direction.z * speed
+			target_yaw = atan2(-direction.x, -direction.z)
+			rig_pivot.rotation.y = lerp_angle(rig_pivot.rotation.y, target_yaw, 10.0 * delta)
+		elif velocity.y == 0.0:
+			velocity.x = move_toward(velocity.x, 0, speed)
+			velocity.z = move_toward(velocity.z, 0, speed)
 	else:
-		velocity.x = move_toward(velocity.x, 0, speed)
-		velocity.z = move_toward(velocity.z, 0, speed)
+		# In air, accumulate velocity instead of resetting
+		if direction != Vector3.ZERO:
+			velocity.x += direction.x * speed * (air_control_lerp) * delta
+			velocity.z += direction.z * speed * (air_control_lerp) * delta
 	rig.update_animation_tree(direction)
 
-# Air Control
+# TODO Air Control TODO REDO! NOT IN USE
 func handle_air_control(delta: float) -> void:
 	if not is_on_floor():
-		velocity.x = lerp(previous_velocity.x, velocity.x, 1.0 - exp(-air_control_lerp * delta))
-		velocity.z = lerp(previous_velocity.z, velocity.z, 1.0 - exp(-air_control_lerp * delta))
+		var input_dir := Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
+		if input_dir.length() > 0:
+			camera_yaw = horizontal_pivot.rotation.y
+			camera_basis = Basis(Vector3.UP, camera_yaw)
+			var air_direction = (camera_basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+			# Always add a small impulse in the input direction, even from zero speed
+			var air_impulse = air_direction * speed * (air_control_lerp / 100.0) * delta
+			velocity.x += air_impulse.x
+			velocity.z += air_impulse.z
 
 # Input Handling
 func _unhandled_input(event: InputEvent) -> void:
@@ -103,8 +118,6 @@ func handle_mouse_input(event: InputEvent) -> void:
 	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED and event is InputEventMouseMotion:
 		_look += -event.relative * mouse_sensitivity
 
-
-		
 
 func handle_attack_input(event: InputEvent) -> void:
 	if rig.is_idle():

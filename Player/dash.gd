@@ -21,7 +21,7 @@ func _physics_process(delta: float) -> void:
 		player.rig_pivot.rotation.y = target_yaw
 
 	time_remaining -= delta
-	if time_remaining <= 0:
+	if time_remaining <= 0 and player.is_on_floor():
 		direction = Vector3.ZERO
 
 func _unhandled_input(event: InputEvent) -> void:

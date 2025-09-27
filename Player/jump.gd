@@ -16,22 +16,20 @@ extends Node3D
 func _ready() -> void:
 	pass # Replace with function body.
 
-	if player.is_on_floor():
-		jumps_left = extra_jumps
-
-
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta: float) -> void:
+	if player.is_on_floor():
+		jumps_left = extra_jumps
 	handle_jump_input()
 
 func handle_jump_input() -> void:
 	if Input.is_action_just_pressed("jump"):
 		if player.is_on_floor() or player.coyote_timer > 0.0:
-			player.velocity.y = jump_velocity
+			player.velocity.y += jump_velocity
 			player.coyote_timer = 0.0
 			player.rig.travel("Jump")
-		elif player.jumps_left > 0:
-			player.jumps_left -= 1
+		elif jumps_left > 0:
+			jumps_left -= 1
 			player.velocity.y = jump_velocity
 			player.rig.travel("Jump")
 
