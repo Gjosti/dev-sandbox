@@ -43,6 +43,5 @@ player = NodePath("..")
 
 [node name="Jump" parent="." node_paths=PackedStringArray("player") instance=ExtResource("5_8g4oa")]
 player = NodePath("..")
-extra_jumps = 99
 
 [editable path="RigPivot/Rig"]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=3 uid="uid://bedml0okde3l1"]
+[gd_scene load_steps=37 format=3 uid="uid://bedml0okde3l1"]
 
 [ext_resource type="Script" uid="uid://d4fg32t3i02lo" path="res://Player/rig.gd" id="1_wer68"]
 [ext_resource type="Material" uid="uid://c23j08bjm2j2x" path="res://Outlines/XRayOutline.tres" id="1_ydo8n"]
@@ -73,26 +73,38 @@ loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("MeshInstance3D:scale")
+tracks/0/path = NodePath("MeshInstance3D:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(1.25, 0.5, 1.25)]
+"values": [Vector3(0, 0.5, 0)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("MeshInstance3D:position")
+tracks/1/path = NodePath("MeshInstance3D:mesh:height")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(0, 0.5, 0)]
+"values": [1.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("MeshInstance3D/MeshInstance3D:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0.44, -0.412)]
 }
 
 [sub_resource type="Animation" id="Animation_ydo8n"]
@@ -268,6 +280,30 @@ tracks/8/keys = {
 "update": 0,
 "values": [Vector3(0, 0, 0)]
 }
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("MeshInstance3D:mesh:height")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [2.0]
+}
+tracks/10/type = "value"
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/path = NodePath("MeshInstance3D/MeshInstance3D:position")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0.94, -0.412)]
+}
 
 [sub_resource type="Animation" id="Animation_ojd8b"]
 resource_name = "Run"
@@ -346,6 +382,9 @@ _data = {
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_wer68"]
 animation = &"Attack"
 
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_vcvy3"]
+animation = &"Crouch"
+
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_8s7l5"]
 animation = &"Dash"
 
@@ -389,17 +428,23 @@ advance_mode = 2
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_sy1xi"]
 xfade_time = 0.1
 
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_80s3x"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_r5mnt"]
+
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_ydo8n"]
 states/Attack/node = SubResource("AnimationNodeAnimation_wer68")
-states/Attack/position = Vector2(482, 197)
+states/Attack/position = Vector2(370, 197)
+states/Crouch/node = SubResource("AnimationNodeAnimation_vcvy3")
+states/Crouch/position = Vector2(625, 197)
 states/Dash/node = SubResource("AnimationNodeAnimation_8s7l5")
 states/Dash/position = Vector2(370, 8)
 states/Jump/node = SubResource("AnimationNodeAnimation_32kt2")
 states/Jump/position = Vector2(611, 8)
 states/MoveSpace/node = SubResource("AnimationNodeBlendSpace1D_32kt2")
 states/MoveSpace/position = Vector2(482, 100)
-transitions = ["Start", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_8s7l5"), "MoveSpace", "Attack", SubResource("AnimationNodeStateMachineTransition_ojd8b"), "Attack", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_awthv"), "MoveSpace", "Jump", SubResource("AnimationNodeStateMachineTransition_wer68"), "Jump", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_32kt2"), "Dash", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_vcvy3"), "MoveSpace", "Dash", SubResource("AnimationNodeStateMachineTransition_icx30"), "Dash", "Jump", SubResource("AnimationNodeStateMachineTransition_sy1xi")]
-graph_offset = Vector2(-60, -121)
+transitions = ["Start", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_8s7l5"), "MoveSpace", "Attack", SubResource("AnimationNodeStateMachineTransition_ojd8b"), "Attack", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_awthv"), "MoveSpace", "Jump", SubResource("AnimationNodeStateMachineTransition_wer68"), "Jump", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_32kt2"), "Dash", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_vcvy3"), "MoveSpace", "Dash", SubResource("AnimationNodeStateMachineTransition_icx30"), "Dash", "Jump", SubResource("AnimationNodeStateMachineTransition_sy1xi"), "MoveSpace", "Crouch", SubResource("AnimationNodeStateMachineTransition_80s3x"), "Crouch", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_r5mnt")]
+graph_offset = Vector2(65, -34)
 
 [node name="Rig" type="Node3D"]
 script = ExtResource("1_wer68")
@@ -416,7 +461,7 @@ mesh = SubResource("CapsuleMesh_ojd8b")
 skeleton = NodePath("")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterRig/MeshInstance3D"]
-transform = Transform3D(0.69, 0, 0, 0, 0.27, 0, 0, 0, 0.445, 0, 0.94015825, -0.41239765)
+transform = Transform3D(0.69, 0, 0, 0, 0.27, 0, 0, 0, 0.445, 0, 0.94, -0.412)
 material_override = SubResource("StandardMaterial3D_awthv")
 mesh = SubResource("BoxMesh_32kt2")
 surface_material_override/0 = SubResource("StandardMaterial3D_8s7l5")
