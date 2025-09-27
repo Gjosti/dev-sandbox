@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3 uid="uid://bedml0okde3l1"]
+[gd_scene load_steps=33 format=3 uid="uid://bedml0okde3l1"]
 
 [ext_resource type="Script" uid="uid://d4fg32t3i02lo" path="res://Player/rig.gd" id="1_wer68"]
 [ext_resource type="Material" uid="uid://c23j08bjm2j2x" path="res://Outlines/XRayOutline.tres" id="1_ydo8n"]
@@ -256,6 +256,18 @@ tracks/7/keys = {
 "update": 0,
 "values": [Vector3(0, 1, 0)]
 }
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("MeshInstance3D:rotation")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
 
 [sub_resource type="Animation" id="Animation_ojd8b"]
 resource_name = "Run"
@@ -302,12 +314,30 @@ tracks/0/keys = {
 "values": [Vector3(0, 0, 0), Vector3(0.7853982, 0, 0), Vector3(0, 0, 0)]
 }
 
+[sub_resource type="Animation" id="Animation_icx30"]
+resource_name = "InAir"
+length = 0.4
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MeshInstance3D:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(-6.2831855, 0, 0)]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_awthv"]
 _data = {
 &"Attack": SubResource("Animation_awthv"),
 &"Crouch": SubResource("Animation_8s7l5"),
 &"Dash": SubResource("Animation_vcvy3"),
 &"Idle": SubResource("Animation_ydo8n"),
+&"InAir": SubResource("Animation_icx30"),
 &"Jump": SubResource("Animation_32kt2"),
 &"RESET": SubResource("Animation_wer68"),
 &"Run": SubResource("Animation_ojd8b")
