@@ -26,15 +26,13 @@ func _physics_process(delta: float) -> void:
 		direction = Vector3.ZERO
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("dash"):
-		if timer.is_stopped():
-			if player.direction.length() > 0.1:
-				direction = player.direction.normalized()
-			else:
-				direction = -player.rig_pivot.global_transform.basis.z.normalized()
-			print("Dashable")
-			player.rig.travel("Dash")
-			timer.start(dash_cooldown)
-			time_remaining = dash_duration
+	if event.is_action_pressed("dash") and timer.is_stopped():
+		if player.direction.length() > 0.1:
+			direction = player.direction.normalized()
 		else:
-			print("Not Dashable")
+			direction = - player.rig_pivot.global_transform.basis.z.normalized()
+
+		print("Dashable")
+		player.rig.travel("Dash")
+		timer.start(dash_cooldown)
+		time_remaining = dash_duration
