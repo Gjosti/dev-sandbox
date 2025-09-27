@@ -30,7 +30,7 @@ var direction: Vector3 = Vector3.ZERO
 # Node References
 @onready var horizontal_pivot: Node3D = $HorizontalPivot
 @onready var vertical_pivot: Node3D = $HorizontalPivot/VerticalPivot
-@onready var player_mesh: Node3D = $MeshInstance3D
+@onready var player_mesh: Node3D = $RigPivot/Rig/CharacterRig/MeshInstance3D
 @onready var collision_shape_3d: CollisionShape3D = $CollisionShape3D
 @onready var rig_pivot: Node3D = $RigPivot
 @onready var rig: Node3D = $RigPivot/Rig
@@ -74,6 +74,8 @@ func get_player_gravity() -> float:
 
 # Movement
 func handle_movement(delta: float) -> void:
+	if rig.is_dashing():
+		return
 	var input_dir := Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
 	direction = Vector3.ZERO
 	if input_dir.length() > 0:
@@ -101,7 +103,6 @@ func _unhandled_input(event: InputEvent) -> void:
 	handle_mouse_input(event)
 	handle_camera_zoom(event)
 	handle_attack_input(event)
-	handle_crouch_input()
 	# Handle jump release for variable jump height
 	if event.is_action_released("jump") and velocity.y >= 0:
 		velocity.y *= 0.4
@@ -129,13 +130,6 @@ func handle_attack_input(event: InputEvent) -> void:
 		if event.is_action_pressed("attack"):
 			main_action()
 
-func handle_crouch_input() -> void:
-	if is_on_floor() and rig.is_idle():
-		if Input.is_action_pressed("crouch"):
-			rig.travel("Crouch")
-	else:
-		rig.travel("Start")
-
 
 func handle_camera_zoom(event: InputEvent) -> void:
 	if event.is_action_pressed("scroll_forward"):
@@ -160,8 +154,5 @@ func frame_camera_rotation() -> void:
 func main_action() -> void:
 	rig.travel("Attack")
 
-# idiotisk måte å gjørde det på. TODO lage state machine separat fra AnimationTree 
-# og heller transforme onPress og OnRelease type ting
-func crouch() -> void:
-	rig.travel("Crouch")
+
 

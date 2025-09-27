@@ -26,3 +26,6 @@ func travel(animation_name: String) -> void:
 
 func is_idle() -> bool:
 	return playback.get_current_node() == "MoveSpace"
+
+func is_dashing() -> bool:
+	return playback.get_current_node() == "Dash"

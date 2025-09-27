@@ -1,32 +1,9 @@
-[gd_scene load_steps=14 format=3 uid="uid://be1k25cx46lxo"]
+[gd_scene load_steps=7 format=3 uid="uid://be1k25cx46lxo"]
 
 [ext_resource type="Script" uid="uid://bf26qmpmlw17r" path="res://Player/player.gd" id="1_3qydi"]
-[ext_resource type="Material" uid="uid://c23j08bjm2j2x" path="res://Outlines/XRayOutline.tres" id="2_q3lat"]
 [ext_resource type="PackedScene" uid="uid://co5s7037hupeh" path="res://Player/dash.tscn" id="3_tok1r"]
+[ext_resource type="PackedScene" uid="uid://dntcr487ilb6w" path="res://Player/crouch.tscn" id="4_8g4oa"]
 [ext_resource type="PackedScene" uid="uid://bedml0okde3l1" path="res://Player/rig.tscn" id="4_ddoul"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tok1r"]
-transparency = 4
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wer68"]
-transparency = 4
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_l2ndj"]
-material = SubResource("StandardMaterial3D_wer68")
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8g4oa"]
-no_depth_test = true
-albedo_color = Color(0, 0, 0, 1)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ddoul"]
-render_priority = -2
-
-[sub_resource type="BoxMesh" id="BoxMesh_3qydi"]
-material = SubResource("StandardMaterial3D_ddoul")
-size = Vector3(0.45, 1, 2.18)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_q3lat"]
-albedo_color = Color(0.10747976, 0.10747973, 0.10747973, 1)
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tok1r"]
 
@@ -34,21 +11,6 @@ albedo_color = Color(0.10747976, 0.10747973, 0.10747973, 1)
 
 [node name="Player" type="CharacterBody3D"]
 script = ExtResource("1_3qydi")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-visible = false
-material_override = SubResource("StandardMaterial3D_tok1r")
-material_overlay = ExtResource("2_q3lat")
-mesh = SubResource("CapsuleMesh_l2ndj")
-skeleton = NodePath("")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="MeshInstance3D"]
-transform = Transform3D(0.69, 0, 0, 0, 0.27, 0, 0, 0, 0.445, 0, 0.94015825, -0.41239765)
-visible = false
-material_override = SubResource("StandardMaterial3D_8g4oa")
-mesh = SubResource("BoxMesh_3qydi")
-surface_material_override/0 = SubResource("StandardMaterial3D_q3lat")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -74,5 +36,8 @@ player = NodePath("..")
 [node name="RigPivot" type="Node3D" parent="."]
 
 [node name="Rig" parent="RigPivot" instance=ExtResource("4_ddoul")]
+
+[node name="Crouch" parent="." node_paths=PackedStringArray("player") instance=ExtResource("4_8g4oa")]
+player = NodePath("..")
 
 [editable path="RigPivot/Rig"]

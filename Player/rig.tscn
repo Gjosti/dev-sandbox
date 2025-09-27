@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://bedml0okde3l1"]
+[gd_scene load_steps=32 format=3 uid="uid://bedml0okde3l1"]
 
 [ext_resource type="Script" uid="uid://d4fg32t3i02lo" path="res://Player/rig.gd" id="1_wer68"]
 [ext_resource type="Material" uid="uid://c23j08bjm2j2x" path="res://Outlines/XRayOutline.tres" id="1_ydo8n"]
@@ -286,10 +286,27 @@ tracks/1/keys = {
 "values": [Vector3(0, 0, 0), Vector3(0, 0.1, 0), Vector3(0, 0, 0)]
 }
 
+[sub_resource type="Animation" id="Animation_vcvy3"]
+resource_name = "Dash"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.05, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0.7853982, 0, 0), Vector3(0, 0, 0)]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_awthv"]
 _data = {
 &"Attack": SubResource("Animation_awthv"),
 &"Crouch": SubResource("Animation_8s7l5"),
+&"Dash": SubResource("Animation_vcvy3"),
 &"Idle": SubResource("Animation_ydo8n"),
 &"Jump": SubResource("Animation_32kt2"),
 &"RESET": SubResource("Animation_wer68"),
@@ -300,7 +317,7 @@ _data = {
 animation = &"Attack"
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_8s7l5"]
-animation = &"Crouch"
+animation = &"Dash"
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_32kt2"]
 animation = &"Jump"
@@ -333,26 +350,27 @@ switch_mode = 2
 advance_mode = 2
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_vcvy3"]
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_icx30"]
+xfade_time = 0.1
 switch_mode = 2
 advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_icx30"]
 
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_ydo8n"]
 states/Attack/node = SubResource("AnimationNodeAnimation_wer68")
 states/Attack/position = Vector2(482, 197)
-states/Crouch/node = SubResource("AnimationNodeAnimation_8s7l5")
-states/Crouch/position = Vector2(355, 8)
+states/Dash/node = SubResource("AnimationNodeAnimation_8s7l5")
+states/Dash/position = Vector2(370, 8)
 states/Jump/node = SubResource("AnimationNodeAnimation_32kt2")
 states/Jump/position = Vector2(611, 8)
 states/MoveSpace/node = SubResource("AnimationNodeBlendSpace1D_32kt2")
 states/MoveSpace/position = Vector2(482, 100)
-transitions = ["Start", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_8s7l5"), "MoveSpace", "Attack", SubResource("AnimationNodeStateMachineTransition_ojd8b"), "Attack", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_awthv"), "MoveSpace", "Jump", SubResource("AnimationNodeStateMachineTransition_wer68"), "Jump", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_32kt2"), "MoveSpace", "Crouch", SubResource("AnimationNodeStateMachineTransition_vcvy3"), "Crouch", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_icx30")]
+transitions = ["Start", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_8s7l5"), "MoveSpace", "Attack", SubResource("AnimationNodeStateMachineTransition_ojd8b"), "Attack", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_awthv"), "MoveSpace", "Jump", SubResource("AnimationNodeStateMachineTransition_wer68"), "Jump", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_32kt2"), "Dash", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_vcvy3"), "MoveSpace", "Dash", SubResource("AnimationNodeStateMachineTransition_icx30")]
 graph_offset = Vector2(10, -27)
 
 [node name="Rig" type="Node3D"]
 script = ExtResource("1_wer68")
-animation_speed = 20.0
+animation_speed = 200.0
 
 [node name="CharacterRig" type="Node3D" parent="."]
 transform = Transform3D(0.9, 0, 0, 0, 0.9, 0, 0, 0, 0.9, 0, 0, 0)
