@@ -5,10 +5,9 @@
 [ext_resource type="PackedScene" uid="uid://dntcr487ilb6w" path="res://Player/crouch.tscn" id="4_8g4oa"]
 [ext_resource type="PackedScene" uid="uid://bedml0okde3l1" path="res://Player/rig.tscn" id="4_ddoul"]
 [ext_resource type="PackedScene" uid="uid://b1veppx83glta" path="res://Player/jump.tscn" id="5_8g4oa"]
+[ext_resource type="PackedScene" uid="uid://bp4egawc77s6r" path="res://Player/player_camera.tscn" id="6_6ysni"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tok1r"]
-
-[sub_resource type="SeparationRayShape3D" id="SeparationRayShape3D_3qydi"]
 
 [node name="Player" type="CharacterBody3D"]
 script = ExtResource("1_3qydi")
@@ -16,20 +15,6 @@ script = ExtResource("1_3qydi")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_tok1r")
-
-[node name="HorizontalPivot" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
-
-[node name="VerticalPivot" type="Node3D" parent="HorizontalPivot"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.5)
-
-[node name="CameraArm" type="SpringArm3D" parent="HorizontalPivot/VerticalPivot"]
-transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0)
-shape = SubResource("SeparationRayShape3D_3qydi")
-spring_length = 9.0
-margin = 2.0
-
-[node name="Camera3D" type="Camera3D" parent="HorizontalPivot/VerticalPivot/CameraArm"]
 
 [node name="Dash" parent="." node_paths=PackedStringArray("player") instance=ExtResource("3_tok1r")]
 player = NodePath("..")
@@ -43,5 +28,7 @@ player = NodePath("..")
 
 [node name="Jump" parent="." node_paths=PackedStringArray("player") instance=ExtResource("5_8g4oa")]
 player = NodePath("..")
+
+[node name="PlayerCamera" parent="." instance=ExtResource("6_6ysni")]
 
 [editable path="RigPivot/Rig"]
