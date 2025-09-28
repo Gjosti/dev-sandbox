@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://clq4ymy58tejc"]
+[gd_scene load_steps=18 format=3 uid="uid://clq4ymy58tejc"]
 
 [ext_resource type="PackedScene" uid="uid://be1k25cx46lxo" path="res://Player/Player.tscn" id="1_e63bh"]
 [ext_resource type="Script" uid="uid://c3asycq8nnahh" path="res://Outlines/select_highlight.gd" id="2_bu5p0"]
@@ -37,9 +37,10 @@ distance_fade_max_distance = 5.0
 albedo_color = Color(1, 0.45, 0.8808333, 1)
 
 [sub_resource type="TorusMesh" id="TorusMesh_67hdk"]
+inner_radius = 0.3
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_oyyku"]
-height = 0.5
+height = 0.7
 radius = 1.0
 
 [sub_resource type="PrismMesh" id="PrismMesh_oyyku"]
@@ -47,6 +48,8 @@ size = Vector3(1, 2.225, 1)
 
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_oyyku"]
 points = PackedVector3Array(0.011046177, 1.0633445, 0.47627237, -0.49049878, -1.0702195, -0.49049878, -0.49049878, -1.0702195, 0.47938764, 0.49854597, -1.1125, 0.49854597, 0.5065476, -0.9533778, -0.5176587, -0.05849027, 1.0241786, -0.5176587, -0.48226863, -0.847619, 0.5065476, 0.04737913, 1.0591365, -0.5176587, 0.08266893, 0.9181986, 0.5065476, -0.5176587, -1.0241786, -0.5176587, 0.48888886, -1.0911877, -0.5, -0.05849027, 1.0241786, 0.5065476, 0.5065476, -0.9533778, 0.5065476, -0.09378007, 0.8827982, -0.5176587, -0.5176587, -1.0241786, 0.5065476, -0.48226863, -0.847619, -0.5176587, 0.08266893, 0.9181986, -0.5176587, -0.09378007, 0.8827982, 0.5065476, 0.04737913, 1.0591365, 0.5065476, 0.011046177, 1.0633445, -0.4873835)
+
+[sub_resource type="PrismMesh" id="PrismMesh_l7jkp"]
 
 [node name="SandboxLevel" type="Node3D"]
 
@@ -139,6 +142,14 @@ mesh = SubResource("PrismMesh_oyyku")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="OutlinePlayground/AnotherObject/MeshInstance3D/StaticBody3D"]
 shape = SubResource("ConvexPolygonShape3D_oyyku")
+
+[node name="ObstacleCourse" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.318405, 0, 0)
+
+[node name="CSGMesh3D" type="CSGMesh3D" parent="ObstacleCourse"]
+transform = Transform3D(16.453428, 0, 0, 0, 3.4593942, 0, 0, 0, 7.539881, 3.9389381, 1.7296968, -0.16828847)
+use_collision = true
+mesh = SubResource("PrismMesh_l7jkp")
 
 [connection signal="input_event" from="OutlinePlayground/MouseHoverOutlineBox/MeshInstance3D/StaticBody3D" to="OutlinePlayground/MouseHoverOutlineBox" method="_on_static_body_3d_input_event"]
 [connection signal="mouse_entered" from="OutlinePlayground/MouseHoverOutlineBox/MeshInstance3D/StaticBody3D" to="OutlinePlayground/MouseHoverOutlineBox" method="_on_static_body_3d_mouse_entered"]
