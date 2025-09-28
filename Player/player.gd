@@ -19,15 +19,12 @@ var air_turn_face_rate: float = 2.5
 # State Variables
 var _look := Vector2.ZERO
 var previous_velocity: Vector3
-var coyote_time: float = 0.1
-var coyote_timer: float = 0.0
 var direction: Vector3 = Vector3.ZERO
 
 # Camera
 var camera_yaw: float
 var camera_basis: Basis
 var target_yaw: float
-
 
 # Node References
 @onready var horizontal_pivot: Node3D = $HorizontalPivot
@@ -52,11 +49,6 @@ func _physics_process(delta: float) -> void:
 	# handle_air_control(delta)
 	move_and_slide()
 
-	 # Coyote time 
-	if is_on_floor():
-		coyote_timer = coyote_time
-	else:
-		coyote_timer = max(0.0, coyote_timer - delta)
 
 # Gravity
 func apply_gravity(delta: float) -> void:
@@ -96,18 +88,9 @@ func handle_movement(delta: float) -> void:
 			rig_pivot.rotation.y = lerp_angle(rig_pivot.rotation.y, target_yaw, air_turn_face_rate * delta)
 	rig.update_animation_tree(direction)
 
-# TODO Air Control TODO REDO! NOT IN USE
-func handle_air_control(delta: float) -> void:
-	if not is_on_floor():
-		var input_dir := Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
-		if input_dir.length() > 0:
-			camera_yaw = horizontal_pivot.rotation.y
-			camera_basis = Basis(Vector3.UP, camera_yaw)
-			var air_direction = (camera_basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-			# Always add a small impulse in the input direction, even from zero speed
-			var air_impulse = air_direction * speed * (air_control_lerp / 100.0) * delta
-			velocity.x += air_impulse.x
-			velocity.z += air_impulse.z
+# TODO Air Control REDO! NOT IN USE handle_movement above is current. To be seperated in logic later
+# func handle_air_control(delta: float) -> void:
+
 
 # Input Handling
 func _unhandled_input(event: InputEvent) -> void:
