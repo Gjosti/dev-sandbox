@@ -61,15 +61,18 @@ func get_player_gravity() -> float:
 	return jump.get_gravity(velocity.y)
 
 # Movement
-func handle_movement(delta: float) -> void:
-	if rig.is_dashing():
-		return
+func get_desired_movement_direction() -> Vector3:
 	var input_dir := Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
-	direction = Vector3.ZERO
 	if input_dir.length() > 0:
 		camera_yaw = horizontal_pivot.rotation.y
 		camera_basis = Basis(Vector3.UP, camera_yaw)
-		direction = (camera_basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+		return (camera_basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	return Vector3.ZERO
+
+func handle_movement(delta: float) -> void:
+	if rig.is_dashing():
+		return
+	direction = get_desired_movement_direction()
 	if is_on_floor():
 		if direction != Vector3.ZERO:
 			velocity.x = direction.x * speed
@@ -80,7 +83,6 @@ func handle_movement(delta: float) -> void:
 			velocity.x = move_toward(velocity.x, 0, speed)
 			velocity.z = move_toward(velocity.z, 0, speed)
 	else:
-		# In air, accumulate velocity instead of resetting
 		if direction != Vector3.ZERO:
 			velocity.x += direction.x * speed * (air_control_lerp) * delta
 			velocity.z += direction.z * speed * (air_control_lerp) * delta
