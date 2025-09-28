@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=3 uid="uid://bedml0okde3l1"]
+[gd_scene load_steps=41 format=3 uid="uid://bedml0okde3l1"]
 
 [ext_resource type="Script" uid="uid://d4fg32t3i02lo" path="res://Player/rig.gd" id="1_wer68"]
 [ext_resource type="Material" uid="uid://c23j08bjm2j2x" path="res://Outlines/XRayOutline.tres" id="1_ydo8n"]
@@ -367,6 +367,59 @@ tracks/0/keys = {
 "values": [Vector3(0, 0, 0), Vector3(-6.2831855, 0, 0)]
 }
 
+[sub_resource type="Animation" id="Animation_sy1xi"]
+resource_name = "Slide"
+length = 0.4
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MeshInstance3D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0.5, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("MeshInstance3D:mesh:height")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [1.0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("MeshInstance3D/MeshInstance3D:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0.44, -0.412)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("MeshInstance3D:rotation")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(-6.2831855, 0, 0)]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_awthv"]
 _data = {
 &"Attack": SubResource("Animation_awthv"),
@@ -376,7 +429,8 @@ _data = {
 &"InAir": SubResource("Animation_icx30"),
 &"Jump": SubResource("Animation_32kt2"),
 &"RESET": SubResource("Animation_wer68"),
-&"Run": SubResource("Animation_ojd8b")
+&"Run": SubResource("Animation_ojd8b"),
+&"Slide": SubResource("Animation_sy1xi")
 }
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_wer68"]
@@ -402,6 +456,9 @@ blend_point_0/node = SubResource("AnimationNodeAnimation_ojd8b")
 blend_point_0/pos = 1.0
 blend_point_1/node = SubResource("AnimationNodeAnimation_awthv")
 blend_point_1/pos = -1.0
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_icx30"]
+animation = &"Slide"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_8s7l5"]
 advance_mode = 2
@@ -432,19 +489,27 @@ xfade_time = 0.1
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_r5mnt"]
 
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_n25uh"]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_856ud"]
+advance_mode = 2
+
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_ydo8n"]
 states/Attack/node = SubResource("AnimationNodeAnimation_wer68")
-states/Attack/position = Vector2(370, 197)
+states/Attack/position = Vector2(358, 221)
 states/Crouch/node = SubResource("AnimationNodeAnimation_vcvy3")
-states/Crouch/position = Vector2(625, 197)
+states/Crouch/position = Vector2(599, 221)
 states/Dash/node = SubResource("AnimationNodeAnimation_8s7l5")
-states/Dash/position = Vector2(370, 8)
+states/Dash/position = Vector2(325, -65)
+states/End/position = Vector2(1050, 100)
 states/Jump/node = SubResource("AnimationNodeAnimation_32kt2")
-states/Jump/position = Vector2(611, 8)
+states/Jump/position = Vector2(482, -65)
 states/MoveSpace/node = SubResource("AnimationNodeBlendSpace1D_32kt2")
 states/MoveSpace/position = Vector2(482, 100)
-transitions = ["Start", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_8s7l5"), "MoveSpace", "Attack", SubResource("AnimationNodeStateMachineTransition_ojd8b"), "Attack", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_awthv"), "MoveSpace", "Jump", SubResource("AnimationNodeStateMachineTransition_wer68"), "Jump", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_32kt2"), "Dash", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_vcvy3"), "MoveSpace", "Dash", SubResource("AnimationNodeStateMachineTransition_icx30"), "Dash", "Jump", SubResource("AnimationNodeStateMachineTransition_sy1xi"), "MoveSpace", "Crouch", SubResource("AnimationNodeStateMachineTransition_80s3x"), "Crouch", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_r5mnt")]
-graph_offset = Vector2(65, -34)
+states/Slide/node = SubResource("AnimationNodeAnimation_icx30")
+states/Slide/position = Vector2(626, -65)
+transitions = ["Start", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_8s7l5"), "MoveSpace", "Attack", SubResource("AnimationNodeStateMachineTransition_ojd8b"), "Attack", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_awthv"), "MoveSpace", "Jump", SubResource("AnimationNodeStateMachineTransition_wer68"), "Jump", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_32kt2"), "Dash", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_vcvy3"), "MoveSpace", "Dash", SubResource("AnimationNodeStateMachineTransition_icx30"), "Dash", "Jump", SubResource("AnimationNodeStateMachineTransition_sy1xi"), "MoveSpace", "Crouch", SubResource("AnimationNodeStateMachineTransition_80s3x"), "Crouch", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_r5mnt"), "MoveSpace", "Slide", SubResource("AnimationNodeStateMachineTransition_n25uh"), "Slide", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_856ud")]
+graph_offset = Vector2(-94, -123)
 
 [node name="Rig" type="Node3D"]
 script = ExtResource("1_wer68")
@@ -476,3 +541,10 @@ root_node = NodePath("../CharacterRig")
 tree_root = SubResource("AnimationNodeStateMachine_ydo8n")
 anim_player = NodePath("../CharacterRig/AnimationPlayer")
 parameters/MoveSpace/blend_position = -1.1567165
+
+[node name="StateLabel" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2260134, 2.5220368, 0)
+billboard = 1
+text = "State"
+font_size = 64
+outline_size = 32

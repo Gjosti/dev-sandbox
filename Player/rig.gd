@@ -1,9 +1,11 @@
 extends Node3D
 
 @export var animation_speed: float = 10.0
+@export var debug_mode:bool = true
 
 @onready var animation_tree := $AnimationTree
 @onready var playback: AnimationNodeStateMachinePlayback = animation_tree["parameters/playback"]
+@onready var state_label: Label3D = $StateLabel
 
 var run_path: String = "parameters/MoveSpace/blend_position"
 var run_weight_target: float = -1.0
@@ -14,6 +16,8 @@ func _physics_process(delta: float) -> void:
 		run_weight_target,
 		delta * animation_speed
 	)
+	if debug_mode:
+		state_label.text = playback.get_current_node()
 
 func update_animation_tree(direction: Vector3) -> void:
 	if direction.is_zero_approx():
@@ -35,6 +39,9 @@ func is_jumping() -> bool:
 
 func is_attacking() -> bool:
 	return playback.get_current_node() == "Attack"
-	
+
 func is_crouching() -> bool:
 	return playback.get_current_node() == "Crouch"
+
+func is_sliding() -> bool:
+	return playback.get_current_node() == "Slide"
