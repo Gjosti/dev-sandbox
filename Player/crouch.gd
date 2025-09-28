@@ -3,7 +3,6 @@ extends Node3D
 @export var player: Player
 @export_group("Slide Properties")
 @export var slide_cooldown: float = 0.5
-@export var slide_duration: float = 0.3
 @export var time_remaining: float = 0.0
 @export var slide_threshold: float = 3
 
@@ -14,10 +13,19 @@ var stand_height: float = 2.0
 var crouch_mesh_scale: Vector3 = Vector3(1, 0.5, 1)
 var crouch_height: float = 1.0
 var is_crouching: bool = false
+var slide_friction: float = 0.2
 
-
+func _physics_process(delta):
+	if player.rig.is_sliding():
+		# Apply ice-like friction
+		player.velocity.x = lerp(player.velocity.x, 0.0, slide_friction * delta)
+		player.velocity.z = lerp(player.velocity.z, 0.0, slide_friction * delta)
+		# Cancel slide if velocity is below threshold
+		if player.velocity.length() < slide_threshold:
+			stand()
 
 func _unhandled_input(event: InputEvent) -> void:
+	# Simple crouching
 	if event.is_action_pressed("crouch") and player.velocity.length() < slide_threshold:
 		if not is_crouching:
 			crouch()
@@ -25,7 +33,15 @@ func _unhandled_input(event: InputEvent) -> void:
 		if is_crouching:
 			stand()
 
+	# Slide
 	if event.is_action_pressed("crouch") and player.velocity.length() > slide_threshold:
+		if not is_crouching:
+			slide()
+	elif event.is_action_released("crouch") and player.velocity.length() > slide_threshold: 
+		if is_crouching:
+			stand()
+
+	if event.is_action_pressed("crouch") and player.velocity.length() > slide_threshold and player.is_on_floor():
 		slide()
 		print("Sliding at " + str(player.velocity.length()) + " Velocity")
 	

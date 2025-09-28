@@ -4,3 +4,5 @@
 
 [node name="Crouch" type="Node3D"]
 script = ExtResource("1_eaxlx")
+
+[node name="Timer" type="Timer" parent="."]
