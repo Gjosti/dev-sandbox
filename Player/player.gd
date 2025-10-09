@@ -16,6 +16,9 @@ var air_turn_face_rate: float = 2.5
 @export var min_camera_distance: float = 1
 @export var max_camera_distance: float = 15
 
+# Signals
+signal velocity_current(current_velocity: Vector3)
+
 # State Variables
 var direction: Vector3 = Vector3.ZERO
 
@@ -35,6 +38,9 @@ func _physics_process(delta: float) -> void:
 	apply_gravity(delta)
 	handle_movement(delta)
 	move_and_slide()
+
+	# Share velocity to children nodes/abilities such as sliding.
+	emit_signal("velocity_current", velocity)
 
 # Gravity
 func apply_gravity(delta: float) -> void:
@@ -98,6 +104,3 @@ func handle_attack_input(event: InputEvent) -> void:
 
 func main_action() -> void:
 	rig.travel("Attack")
-
-
-

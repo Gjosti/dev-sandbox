@@ -31,4 +31,6 @@ player = NodePath("..")
 
 [node name="PlayerCamera" parent="." instance=ExtResource("6_6ysni")]
 
+[connection signal="velocity_current" from="." to="Crouch" method="_on_player_velocity_current"]
+
 [editable path="RigPivot/Rig"]
