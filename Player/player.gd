@@ -39,6 +39,7 @@ func _physics_process(delta: float) -> void:
 	apply_gravity(delta)
 	handle_movement(delta)
 	move_and_slide()
+	print(velocity)
 
 
 # Gravity
@@ -82,10 +83,6 @@ func handle_movement(delta: float) -> void:
 			var target_yaw = atan2(-direction.x, -direction.z)
 			rig_pivot.rotation.y = lerp_angle(rig_pivot.rotation.y, target_yaw, air_turn_face_rate * delta)
 	rig.update_animation_tree(direction)
-
-# TODO Air Control REDO! NOT IN USE handle_movement above is current. To be seperated in logic later
-# func handle_air_control(delta: float) -> void:
-
 
 # Input Handling
 func _unhandled_input(event: InputEvent) -> void:
