@@ -17,7 +17,7 @@ var air_turn_face_rate: float = 2.5
 @export var max_camera_distance: float = 15
 
 # Signals
-signal velocity_current(current_velocity: Vector3)
+signal velocity_current(current_velocity: Vector3) #The player node is emitting it's velocity for children nodes to use. such as crouch's slide function
 
 # State Variables
 var direction: Vector3 = Vector3.ZERO
