@@ -27,6 +27,8 @@ func _physics_process(delta: float) -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("dash") and timer.is_stopped():
+		if player.rig.is_sliding() or player.rig.is_crouching():
+			return
 		if player.direction.length() > 0.1:
 			direction = player.direction.normalized()
 		else:
