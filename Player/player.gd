@@ -17,17 +17,14 @@ var air_turn_face_rate: float = 2.5
 @export var max_camera_distance: float = 15
 
 # State Variables
-var previous_velocity: Vector3
 var direction: Vector3 = Vector3.ZERO
-
-
 
 # Node References
 @onready var player_mesh: Node3D = $RigPivot/Rig/CharacterRig/MeshInstance3D
 @onready var collision_shape_3d: CollisionShape3D = $CollisionShape3D
 @onready var rig_pivot: Node3D = $RigPivot
 @onready var rig: Node3D = $RigPivot/Rig
-@onready var jump: Node = $Jump # or the correct path to your jump node
+@onready var jump: Node = $Jump 
 
 # Initialization
 func _ready() -> void:
@@ -35,11 +32,9 @@ func _ready() -> void:
 
 # Physics Processing
 func _physics_process(delta: float) -> void:
-	previous_velocity = velocity
 	apply_gravity(delta)
 	handle_movement(delta)
 	move_and_slide()
-
 
 # Gravity
 func apply_gravity(delta: float) -> void:
@@ -52,7 +47,7 @@ func get_player_gravity() -> float:
 	return jump.get_gravity(velocity.y)
 
 # Movement
-func get_desired_movement_direction() -> Vector3:
+func get_camera_movement_direction() -> Vector3:
 	var input_dir := Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
 	if input_dir.length() > 0:
 		# Get yaw from camera node instead
@@ -65,7 +60,7 @@ func get_desired_movement_direction() -> Vector3:
 func handle_movement(delta: float) -> void:
 	if rig.is_dashing():
 		return
-	direction = get_desired_movement_direction()
+	direction = get_camera_movement_direction()
 	if is_on_floor():
 		if direction != Vector3.ZERO:
 			velocity.x = direction.x * speed
@@ -94,7 +89,6 @@ func _unhandled_input(event: InputEvent) -> void:
 func handle_mouse_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_focus_next"):
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED else Input.MOUSE_MODE_CAPTURED
-	# Camera mouse logic removed
 
 
 func handle_attack_input(event: InputEvent) -> void:
@@ -102,6 +96,8 @@ func handle_attack_input(event: InputEvent) -> void:
 		if event.is_action_pressed("attack"):
 			main_action()
 
-
 func main_action() -> void:
 	rig.travel("Attack")
+
+
+
