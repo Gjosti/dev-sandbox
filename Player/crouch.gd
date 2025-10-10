@@ -1,8 +1,10 @@
 extends Node
 
 @export var player: Player
-@export var slide_threshold: float = 5
+@export var slide_threshold: float = 6.1
 @export var slide_friction: float = 0.98
+
+signal slide_friction_applied(new_velocity: Vector3)
 
 var stand_mesh_scale: Vector3 = Vector3(1, 1, 1)
 var stand_height: float = 2.0
@@ -10,6 +12,10 @@ var crouch_mesh_scale: Vector3 = Vector3(1, 0.5, 1)
 var crouch_height: float = 1.0
 var velocity: Vector3 = Vector3.ZERO
 var horizontal_velocity = Vector3.ZERO
+
+func _ready():
+	if player:
+		slide_friction_applied.connect(player._on_slide_friction_applied)
 
 func _physics_process(_delta):
 	if player.rig.is_sliding() and player.is_on_floor():
@@ -52,12 +58,8 @@ func slide() -> void:
 		player.rig.travel("Slide")
 
 func apply_slide_friction() -> void:
-	horizontal_velocity  = Vector3(velocity.x, 0, velocity.z)
-	horizontal_velocity *= slide_friction
-	player.velocity.x = horizontal_velocity.x
-	player.velocity.z = horizontal_velocity.z
-
-	
+	horizontal_velocity = Vector3(velocity.x, 0, velocity.z) * slide_friction
+	emit_signal("slide_friction_applied", horizontal_velocity)
 
 func _on_player_velocity_current(current_velocity: Vector3) -> void:
 	velocity = current_velocity
