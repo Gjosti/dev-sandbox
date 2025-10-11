@@ -2,24 +2,21 @@ extends Node
 
 @export var player: Player
 @export var slide_threshold: float = 6.1
-@export var slide_friction: float = 0.98
-
-signal slide_friction_applied(new_velocity: Vector3)
+@export var slide_friction: float = 0.99995
 
 var stand_mesh_scale: Vector3 = Vector3(1, 1, 1)
 var stand_height: float = 2.0
 var crouch_mesh_scale: Vector3 = Vector3(1, 0.5, 1)
 var crouch_height: float = 1.0
 var velocity: Vector3 = Vector3.ZERO
-var horizontal_velocity = Vector3.ZERO
 
 func _physics_process(delta):
 	if player.rig.is_sliding():
 		apply_simple_slide(delta)
 		if velocity.length() < slide_threshold:
 			crouch()
-	# elif player.rig.is_crouching() and velocity.length() > slide_threshold:
-	# 	slide()
+	elif player.rig.is_crouching() and velocity.length() > slide_threshold:
+		slide()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("crouch") and velocity.length() < slide_threshold:
@@ -53,18 +50,22 @@ func slide() -> void:
 	if velocity.length() > slide_threshold:
 		player.rig.travel("Slide")
 
-func apply_slide_friction() -> void:
-	horizontal_velocity = Vector3(velocity.x, 0, velocity.z) * slide_friction
-	emit_signal("slide_friction_applied", horizontal_velocity)
-
 func apply_simple_slide(delta: float) -> void:
 	if player.rig.is_sliding():
 		player.floor_stop_on_slope = false
-		# Only apply friction if on flat ground (optional)
-		if player.get_floor_normal().dot(Vector3.UP) > 0.98:
+
+		if player.is_on_floor():
 			velocity.x *= slide_friction
 			velocity.z *= slide_friction
-		# Always apply gravity from jump system
+
+			# Slope acceleration
+			var floor_normal = player.get_floor_normal()
+			var gravity_vec = Vector3.DOWN * player.get_player_gravity()
+			var slope_dir = (gravity_vec - floor_normal * gravity_vec.dot(floor_normal)).normalized()
+			var slope_accel = slope_dir * player.get_player_gravity() * delta
+			velocity += slope_accel
+		# In air: do not apply friction or slope acceleration
+
 		velocity.y += player.get_player_gravity() * delta
 		player.velocity = velocity
 
