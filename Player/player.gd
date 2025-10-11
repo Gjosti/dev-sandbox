@@ -109,6 +109,3 @@ func handle_attack_input(event: InputEvent) -> void:
 func main_action() -> void:
 	rig.travel("Attack")
 
-func _on_slide_friction_applied(new_velocity: Vector3) -> void:
-	velocity.x = new_velocity.x
-	velocity.z = new_velocity.z
