@@ -2,7 +2,7 @@ extends Node
 
 @export var player: Player
 @export var slide_threshold: float = 6.1
-@export var slide_friction: float = 0.99995
+@export var slide_friction: float = 0.985
 
 var stand_mesh_scale: Vector3 = Vector3(1, 1, 1)
 var stand_height: float = 2.0
@@ -58,13 +58,14 @@ func apply_simple_slide(delta: float) -> void:
 			velocity.x *= slide_friction
 			velocity.z *= slide_friction
 
-			# Slope acceleration
+			var slope_scaling = 0.5 #1.0 = linear response| <1.0 = more acceleration on gentle/medium slopes| >1.0 = less acceleration on gentle/medium, more on steep slopes
 			var floor_normal = player.get_floor_normal()
 			var gravity_vec = Vector3.DOWN * player.get_player_gravity()
 			var slope_dir = (gravity_vec - floor_normal * gravity_vec.dot(floor_normal)).normalized()
-			var slope_accel = slope_dir * player.get_player_gravity() * delta
+			var steepness = 1.0 - floor_normal.dot(Vector3.UP)
+			var slope_boost := 10.0 # inherent boost for every slope slide. 
+			var slope_accel = slope_dir * player.get_player_gravity() * delta * pow(steepness, slope_scaling) * slope_boost
 			velocity += slope_accel
-		# In air: do not apply friction or slope acceleration
 
 		velocity.y += player.get_player_gravity() * delta
 		player.velocity = velocity
