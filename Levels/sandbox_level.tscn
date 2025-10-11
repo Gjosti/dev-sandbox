@@ -162,9 +162,14 @@ use_collision = true
 mesh = SubResource("PrismMesh_qag8g")
 
 [node name="CSGBox3D" type="CSGBox3D" parent="ObstacleCourse"]
-transform = Transform3D(0.69906455, 0.71505857, 0, -0.71505857, 0.69906455, 0, 0, 0, 1, 42.20629, 53.944805, 85.33707)
+transform = Transform3D(0.69906455, 0.71505857, 0, -0.71505857, 0.69906455, 0, 0, 0, 1, 42.20629, 53.944805, 66.75157)
 use_collision = true
-size = Vector3(6.78, 100, 100)
+size = Vector3(6.78, 100, 50)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="ObstacleCourse"]
+transform = Transform3D(0.25881907, 0.9659258, 0, -0.9659258, 0.25881907, 0, 0, 0, 1, 42.20629, 53.944805, -4.205246)
+use_collision = true
+size = Vector3(6.78, 100, 50)
 
 [connection signal="input_event" from="OutlinePlayground/MouseHoverOutlineBox/MeshInstance3D/StaticBody3D" to="OutlinePlayground/MouseHoverOutlineBox" method="_on_static_body_3d_input_event"]
 [connection signal="mouse_entered" from="OutlinePlayground/MouseHoverOutlineBox/MeshInstance3D/StaticBody3D" to="OutlinePlayground/MouseHoverOutlineBox" method="_on_static_body_3d_mouse_entered"]
