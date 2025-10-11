@@ -13,17 +13,13 @@ var crouch_height: float = 1.0
 var velocity: Vector3 = Vector3.ZERO
 var horizontal_velocity = Vector3.ZERO
 
-func _ready():
-	if player:
-		slide_friction_applied.connect(player._on_slide_friction_applied)
-
-func _physics_process(_delta):
-	if player.rig.is_sliding() and player.is_on_floor():
-		apply_slide_friction()
+func _physics_process(delta):
+	if player.rig.is_sliding():
+		apply_simple_slide(delta)
 		if velocity.length() < slide_threshold:
 			crouch()
-	elif player.rig.is_crouching() and velocity.length() > slide_threshold:
-		slide()
+	# elif player.rig.is_crouching() and velocity.length() > slide_threshold:
+	# 	slide()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("crouch") and velocity.length() < slide_threshold:
@@ -61,6 +57,16 @@ func apply_slide_friction() -> void:
 	horizontal_velocity = Vector3(velocity.x, 0, velocity.z) * slide_friction
 	emit_signal("slide_friction_applied", horizontal_velocity)
 
+func apply_simple_slide(delta: float) -> void:
+	if player.rig.is_sliding():
+		player.floor_stop_on_slope = false
+		# Only apply friction if on flat ground (optional)
+		if player.get_floor_normal().dot(Vector3.UP) > 0.98:
+			velocity.x *= slide_friction
+			velocity.z *= slide_friction
+		# Always apply gravity from jump system
+		velocity.y += player.get_player_gravity() * delta
+		player.velocity = velocity
+
 func _on_player_velocity_current(current_velocity: Vector3) -> void:
 	velocity = current_velocity
-	
