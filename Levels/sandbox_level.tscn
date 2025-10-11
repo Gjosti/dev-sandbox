@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://clq4ymy58tejc"]
+[gd_scene load_steps=19 format=3 uid="uid://clq4ymy58tejc"]
 
 [ext_resource type="PackedScene" uid="uid://be1k25cx46lxo" path="res://Player/Player.tscn" id="1_e63bh"]
 [ext_resource type="Script" uid="uid://c3asycq8nnahh" path="res://Outlines/select_highlight.gd" id="2_bu5p0"]
@@ -50,6 +50,10 @@ size = Vector3(1, 2.225, 1)
 points = PackedVector3Array(0.011046177, 1.0633445, 0.47627237, -0.49049878, -1.0702195, -0.49049878, -0.49049878, -1.0702195, 0.47938764, 0.49854597, -1.1125, 0.49854597, 0.5065476, -0.9533778, -0.5176587, -0.05849027, 1.0241786, -0.5176587, -0.48226863, -0.847619, 0.5065476, 0.04737913, 1.0591365, -0.5176587, 0.08266893, 0.9181986, 0.5065476, -0.5176587, -1.0241786, -0.5176587, 0.48888886, -1.0911877, -0.5, -0.05849027, 1.0241786, 0.5065476, 0.5065476, -0.9533778, 0.5065476, -0.09378007, 0.8827982, -0.5176587, -0.5176587, -1.0241786, 0.5065476, -0.48226863, -0.847619, -0.5176587, 0.08266893, 0.9181986, -0.5176587, -0.09378007, 0.8827982, 0.5065476, 0.04737913, 1.0591365, 0.5065476, 0.011046177, 1.0633445, -0.4873835)
 
 [sub_resource type="PrismMesh" id="PrismMesh_l7jkp"]
+left_to_right = 0.9
+
+[sub_resource type="PrismMesh" id="PrismMesh_qag8g"]
+size = Vector3(200, 100, 10)
 
 [node name="SandboxLevel" type="Node3D"]
 
@@ -70,6 +74,7 @@ shape = SubResource("BoxShape3D_c1o2k")
 mesh = SubResource("BoxMesh_e63bh")
 
 [node name="Player" parent="." instance=ExtResource("1_e63bh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 85.69266, 103.65351, 33.71123)
 
 [node name="CollisionWalls" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.8392062, 0, -5.5322585)
@@ -150,6 +155,16 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.318405, 0, 0)
 transform = Transform3D(16.453428, 0, 0, 0, 3.4593942, 0, 0, 0, 7.539881, 3.9389381, 1.7296968, -0.16828847)
 use_collision = true
 mesh = SubResource("PrismMesh_l7jkp")
+
+[node name="CSGMesh3D2" type="CSGMesh3D" parent="ObstacleCourse"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 73.287926, 50, 35.053024)
+use_collision = true
+mesh = SubResource("PrismMesh_qag8g")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="ObstacleCourse"]
+transform = Transform3D(0.69906455, 0.71505857, 0, -0.71505857, 0.69906455, 0, 0, 0, 1, 42.20629, 53.944805, 85.33707)
+use_collision = true
+size = Vector3(6.78, 100, 100)
 
 [connection signal="input_event" from="OutlinePlayground/MouseHoverOutlineBox/MeshInstance3D/StaticBody3D" to="OutlinePlayground/MouseHoverOutlineBox" method="_on_static_body_3d_input_event"]
 [connection signal="mouse_entered" from="OutlinePlayground/MouseHoverOutlineBox/MeshInstance3D/StaticBody3D" to="OutlinePlayground/MouseHoverOutlineBox" method="_on_static_body_3d_mouse_entered"]
