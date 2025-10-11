@@ -1,9 +1,11 @@
-[gd_scene load_steps=19 format=3 uid="uid://clq4ymy58tejc"]
+[gd_scene load_steps=23 format=3 uid="uid://clq4ymy58tejc"]
 
 [ext_resource type="PackedScene" uid="uid://be1k25cx46lxo" path="res://Player/Player.tscn" id="1_e63bh"]
+[ext_resource type="Texture2D" uid="uid://ctu34g88n34r" path="res://addons/kenney_prototype_textures/dark/texture_09.png" id="1_l7jkp"]
 [ext_resource type="Script" uid="uid://c3asycq8nnahh" path="res://Outlines/select_highlight.gd" id="2_bu5p0"]
 [ext_resource type="Material" uid="uid://nrcomeem7x3v" path="res://Outlines/OutlineMaterial.tres" id="3_67hdk"]
 [ext_resource type="Material" uid="uid://bncutmpqxq13f" path="res://Outlines/SelectionMaterial.tres" id="4_oyyku"]
+[ext_resource type="Texture2D" uid="uid://bltk7pd7kmpim" path="res://addons/kenney_prototype_textures/green/texture_09.png" id="6_qag8g"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_e63bh"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -27,6 +29,12 @@ albedo_color = Color(0.2714402, 0.19179177, 0.08591708, 1)
 [sub_resource type="BoxMesh" id="BoxMesh_e63bh"]
 material = SubResource("StandardMaterial3D_oyyku")
 size = Vector3(200, 1, 200)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_i8ax3"]
+albedo_texture = ExtResource("1_l7jkp")
+uv1_scale = Vector3(0.5, 0.5, 0.5)
+uv1_triplanar = true
+uv1_world_triplanar = true
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qag8g"]
 distance_fade_mode = 2
@@ -55,6 +63,12 @@ left_to_right = 0.9
 [sub_resource type="PrismMesh" id="PrismMesh_qag8g"]
 size = Vector3(200, 100, 10)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_c3wst"]
+albedo_texture = ExtResource("6_qag8g")
+uv1_scale = Vector3(0.5, 0.5, 0.5)
+uv1_triplanar = true
+uv1_world_triplanar = true
+
 [node name="SandboxLevel" type="Node3D"]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
@@ -72,6 +86,7 @@ shape = SubResource("BoxShape3D_c1o2k")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Ground"]
 mesh = SubResource("BoxMesh_e63bh")
+surface_material_override/0 = SubResource("StandardMaterial3D_i8ax3")
 
 [node name="Player" parent="." instance=ExtResource("1_e63bh")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 85.69266, 103.65351, 33.71123)
@@ -175,6 +190,7 @@ size = Vector3(6.78, 100, 10)
 transform = Transform3D(-0.08715576, -0.9961946, 0, 0.9961946, -0.08715576, 0, 0, 0, 1, 42.20629, 53.944805, 14.747997)
 use_collision = true
 size = Vector3(6.78, 100, 10)
+material = SubResource("StandardMaterial3D_c3wst")
 
 [connection signal="input_event" from="OutlinePlayground/MouseHoverOutlineBox/MeshInstance3D/StaticBody3D" to="OutlinePlayground/MouseHoverOutlineBox" method="_on_static_body_3d_input_event"]
 [connection signal="mouse_entered" from="OutlinePlayground/MouseHoverOutlineBox/MeshInstance3D/StaticBody3D" to="OutlinePlayground/MouseHoverOutlineBox" method="_on_static_body_3d_mouse_entered"]

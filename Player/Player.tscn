@@ -10,6 +10,7 @@
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tok1r"]
 
 [node name="Player" type="CharacterBody3D"]
+floor_constant_speed = true
 script = ExtResource("1_3qydi")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
