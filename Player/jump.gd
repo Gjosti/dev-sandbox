@@ -34,6 +34,8 @@ func handle_jump_input() -> void:
 			jumps_left -= 1
 			player.velocity.y = jump_velocity
 			player.rig.travel("Jump")
+	if Input.is_action_just_released("jump") and player.velocity.y >= 0:
+		player.velocity.y *= 0.4
 
 # TODO this should probably be handled in player.gd
 func get_gravity(current_velocity_y: float) -> float:

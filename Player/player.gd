@@ -29,11 +29,9 @@ var direction: Vector3 = Vector3.ZERO
 @onready var rig: Node3D = $RigPivot/Rig
 @onready var jump: Node = $Jump 
 
-# Initialization
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
-# Physics Processing
 func _physics_process(delta: float) -> void:
 	apply_gravity(delta)
 	handle_movement(delta)
@@ -92,9 +90,7 @@ func handle_movement(delta: float) -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	handle_mouse_input(event)
 	handle_attack_input(event)
-	# Handle jump release for variable jump height
-	if event.is_action_released("jump") and velocity.y >= 0:
-		velocity.y *= 0.4
+
 
 func handle_mouse_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_focus_next"):
