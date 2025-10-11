@@ -28,6 +28,7 @@ var direction: Vector3 = Vector3.ZERO
 @onready var rig_pivot: Node3D = $RigPivot
 @onready var rig: Node3D = $RigPivot/Rig
 @onready var jump: Node = $Jump 
+@onready var camera_node := get_node("PlayerCamera/HorizontalPivot")
 
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
@@ -57,13 +58,10 @@ func get_player_gravity() -> float:
 # Movement
 func get_camera_movement_direction() -> Vector3:
 	var input_dir := Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
-	if input_dir.length() > 0:
-		# Get yaw from camera node instead
-		var camera_node := get_node("PlayerCamera/HorizontalPivot")
-		var camera_yaw = camera_node.rotation.y
-		var camera_basis = Basis(Vector3.UP, camera_yaw)
-		return (camera_basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
-	return Vector3.ZERO
+	if input_dir == Vector2.ZERO:
+		return Vector3.ZERO
+	var camera_basis := Basis(Vector3.UP, camera_node.rotation.y)
+	return (camera_basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 
 func handle_movement(delta: float) -> void:
 	if rig.is_dashing() or rig.is_sliding():
