@@ -50,7 +50,11 @@ func apply_gravity(delta: float) -> void:
 		velocity.y += get_player_gravity() * delta
 
 func get_player_gravity() -> float:
-	return jump.get_gravity(velocity.y)
+	if jump:
+		return jump.get_gravity(velocity.y)
+	else:
+		printerr("Using project settings gravity and not jump gravity!")
+		return get_gravity().length()
 
 # Movement
 func get_camera_movement_direction() -> Vector3:
