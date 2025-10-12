@@ -89,12 +89,11 @@ func apply_simple_slide(delta: float) -> void:
 		var slope_accel = slope_dir * gravity * delta * pow(steepness, 0.58) * 10.0
 		velocity += slope_accel
 
-		# align horizontal velocity if steering
-		if rotate_player_left or rotate_player_right:
-			var horizontal_speed = Vector2(velocity.x, velocity.z).length()
-			var facing_dir = -player.rig_pivot.global_transform.basis.z.normalized()
-			velocity.x = facing_dir.x * horizontal_speed
-			velocity.z = facing_dir.z * horizontal_speed
+		# align horizontal velocity
+		var horizontal_speed = Vector2(velocity.x, velocity.z).length()
+		var facing_dir = -player.rig_pivot.global_transform.basis.z.normalized()
+		velocity.x = facing_dir.x * horizontal_speed
+		velocity.z = facing_dir.z * horizontal_speed
 
 	# Apply gravity
 	velocity.y += player.get_player_gravity() * delta
