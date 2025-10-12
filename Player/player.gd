@@ -35,7 +35,7 @@ var direction: Vector3 = Vector3.ZERO
 @onready var camera_node := get_node("PlayerCamera/HorizontalPivot")
 
 func _ready() -> void:
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	pass
 
 func _physics_process(delta: float) -> void:
 	apply_gravity(delta)
@@ -99,13 +99,9 @@ func handle_movement(delta: float) -> void:
 
 # Input Handling
 func _unhandled_input(event: InputEvent) -> void:
-	handle_mouse_input(event)
 	handle_attack_input(event)
 
 
-func handle_mouse_input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_focus_next"):
-		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED else Input.MOUSE_MODE_CAPTURED
 
 
 func handle_attack_input(event: InputEvent) -> void:
