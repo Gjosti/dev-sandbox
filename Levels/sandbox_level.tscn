@@ -1,11 +1,14 @@
-[gd_scene load_steps=23 format=3 uid="uid://clq4ymy58tejc"]
+[gd_scene load_steps=30 format=3 uid="uid://clq4ymy58tejc"]
 
 [ext_resource type="PackedScene" uid="uid://be1k25cx46lxo" path="res://Player/Player.tscn" id="1_e63bh"]
 [ext_resource type="Texture2D" uid="uid://ctu34g88n34r" path="res://addons/kenney_prototype_textures/dark/texture_09.png" id="1_l7jkp"]
 [ext_resource type="Script" uid="uid://c3asycq8nnahh" path="res://Outlines/select_highlight.gd" id="2_bu5p0"]
 [ext_resource type="Material" uid="uid://nrcomeem7x3v" path="res://Outlines/OutlineMaterial.tres" id="3_67hdk"]
 [ext_resource type="Material" uid="uid://bncutmpqxq13f" path="res://Outlines/SelectionMaterial.tres" id="4_oyyku"]
+[ext_resource type="Texture2D" uid="uid://cm8a4h5k87l36" path="res://addons/kenney_prototype_textures/red/texture_09.png" id="6_c3wst"]
+[ext_resource type="Texture2D" uid="uid://dn3c0hoohev8y" path="res://addons/kenney_prototype_textures/orange/texture_09.png" id="6_i8ax3"]
 [ext_resource type="Texture2D" uid="uid://bltk7pd7kmpim" path="res://addons/kenney_prototype_textures/green/texture_09.png" id="6_qag8g"]
+[ext_resource type="Texture2D" uid="uid://d1swi8m88lyvy" path="res://addons/kenney_prototype_textures/purple/texture_09.png" id="7_nxqmx"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_e63bh"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -60,14 +63,31 @@ points = PackedVector3Array(0.011046177, 1.0633445, 0.47627237, -0.49049878, -1.
 [sub_resource type="PrismMesh" id="PrismMesh_l7jkp"]
 left_to_right = 0.9
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_soprk"]
+albedo_texture = ExtResource("7_nxqmx")
+uv1_triplanar = true
+uv1_world_triplanar = true
+
 [sub_resource type="PrismMesh" id="PrismMesh_qag8g"]
 size = Vector3(200, 100, 10)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jct52"]
+albedo_texture = ExtResource("6_c3wst")
+uv1_scale = Vector3(0.5, 0.5, 0.5)
+uv1_triplanar = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xuon6"]
+albedo_texture = ExtResource("7_nxqmx")
+uv1_triplanar = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nxqmx"]
+albedo_texture = ExtResource("6_i8ax3")
+uv1_triplanar = true
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_c3wst"]
 albedo_texture = ExtResource("6_qag8g")
 uv1_scale = Vector3(0.5, 0.5, 0.5)
 uv1_triplanar = true
-uv1_world_triplanar = true
 
 [node name="SandboxLevel" type="Node3D"]
 
@@ -170,21 +190,25 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.318405, 0, 0)
 transform = Transform3D(16.453428, 0, 0, 0, 3.4593942, 0, 0, 0, 7.539881, 3.9389381, 1.7296968, -0.16828847)
 use_collision = true
 mesh = SubResource("PrismMesh_l7jkp")
+material = SubResource("StandardMaterial3D_soprk")
 
 [node name="CSGMesh3D2" type="CSGMesh3D" parent="ObstacleCourse"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 73.287926, 50, 35.053024)
 use_collision = true
 mesh = SubResource("PrismMesh_qag8g")
+material = SubResource("StandardMaterial3D_jct52")
 
 [node name="CSGBox3D" type="CSGBox3D" parent="ObstacleCourse"]
 transform = Transform3D(0.69906455, 0.71505857, 0, -0.71505857, 0.69906455, 0, 0, 0, 1, 42.20629, 53.944805, 45.356552)
 use_collision = true
 size = Vector3(6.78, 100, 10)
+material = SubResource("StandardMaterial3D_xuon6")
 
 [node name="CSGBox3D2" type="CSGBox3D" parent="ObstacleCourse"]
 transform = Transform3D(0.25881907, 0.9659258, 0, -0.9659258, 0.25881907, 0, 0, 0, 1, 42.20629, 53.944805, 24.656487)
 use_collision = true
 size = Vector3(6.78, 100, 10)
+material = SubResource("StandardMaterial3D_nxqmx")
 
 [node name="CSGBox3D3" type="CSGBox3D" parent="ObstacleCourse"]
 transform = Transform3D(-0.08715576, -0.9961946, 0, 0.9961946, -0.08715576, 0, 0, 0, 1, 42.20629, 53.944805, 14.747997)
