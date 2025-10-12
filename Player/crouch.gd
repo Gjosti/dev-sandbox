@@ -22,6 +22,8 @@ func _physics_process(delta):
 			crouch()
 	elif player.rig.is_crouching() and velocity.length() > slide_threshold:
 		slide()
+	else: 
+		player.floor_stop_on_slope = true
 
 func _unhandled_input(event: InputEvent) -> void:
 	slide_movement(event)	
