@@ -4,7 +4,9 @@ class_name Player
 # Movement Settings
 @export_group("Movement Settings")
 @export var speed: float = 6.0
+@export var acceleration: float = 30
 @export var air_control_lerp: float = 75 # Controls air movement responsiveness
+@export var friction: float = 50 # 375 is instant stop, however lesser values also could feel instant depending on speed
 var air_turn_face_rate: float = 2.5
 
 # Camera Settings
@@ -69,19 +71,25 @@ func handle_movement(delta: float) -> void:
 	direction = get_camera_movement_direction()
 	if is_on_floor():
 		if direction != Vector3.ZERO:
-			velocity.x = direction.x * speed
-			velocity.z = direction.z * speed
+			velocity.x = move_toward(velocity.x, direction.x * speed, acceleration * delta)
+			velocity.z = move_toward(velocity.z, direction.z * speed, acceleration * delta)
 			var target_yaw = atan2(-direction.x, -direction.z)
 			rig_pivot.rotation.y = lerp_angle(rig_pivot.rotation.y, target_yaw, 10.0 * delta)
-		elif velocity.y == 0.0:
-			velocity.x = move_toward(velocity.x, 0, speed)
-			velocity.z = move_toward(velocity.z, 0, speed)
+		else:
+			# Slow down to zero horizontal velocity based on friction when no movement direction input
+			velocity.x = move_toward(velocity.x, 0, friction * delta)
+			velocity.z = move_toward(velocity.z, 0, friction * delta)
 	else:
 		if direction != Vector3.ZERO:
-			velocity.x += direction.x * speed * (air_control_lerp) * delta
-			velocity.z += direction.z * speed * (air_control_lerp) * delta
+			# Use move_toward for air control to avoid infinite acceleration
+			velocity.x = move_toward(velocity.x, direction.x * speed, air_control_lerp * delta)
+			velocity.z = move_toward(velocity.z, direction.z * speed, air_control_lerp * delta)
 			var target_yaw = atan2(-direction.x, -direction.z)
 			rig_pivot.rotation.y = lerp_angle(rig_pivot.rotation.y, target_yaw, air_turn_face_rate * delta)
+		else:
+			# Optional: slow horizontal velocity slightly in air when no input
+			velocity.x = move_toward(velocity.x, 0, air_control_lerp * 0.5 * delta)
+			velocity.z = move_toward(velocity.z, 0, air_control_lerp * 0.5 * delta)
 	rig.update_animation_tree(direction)
 
 # Input Handling
