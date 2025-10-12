@@ -4,7 +4,7 @@ extends Node3D
 @export var dash_cooldown: float = 0.5
 @export var extra_dashes: int = 1
 @export var dash_duration: float = 0.5
-@export var dash_speed_modifier: float = 2.0
+@export var dash_speed_modifier: float = 3.0
 @onready var timer: Timer = $Timer
 
 var direction: Vector3 = Vector3.ZERO
