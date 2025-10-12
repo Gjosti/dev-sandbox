@@ -3,12 +3,17 @@ extends Node
 @export var player: Player
 @export var slide_threshold: float = 6.1
 @export var slide_friction: float = 0.985
+@export var slide_turn_rate:float = 0.05
 
 var stand_mesh_scale: Vector3 = Vector3(1, 1, 1)
 var stand_height: float = 2.0
 var crouch_mesh_scale: Vector3 = Vector3(1, 0.5, 1)
 var crouch_height: float = 1.0
 var velocity: Vector3 = Vector3.ZERO
+
+# movement flags
+var rotate_player_left :bool = false
+var rotate_player_right :bool = false
 
 func _physics_process(delta):
 	if player.rig.is_sliding():
@@ -19,6 +24,7 @@ func _physics_process(delta):
 		slide()
 
 func _unhandled_input(event: InputEvent) -> void:
+	slide_movement(event)	
 	if event.is_action_pressed("crouch") and velocity.length() < slide_threshold:
 		crouch()
 	elif event.is_action_pressed("crouch") and velocity.length() > slide_threshold:
@@ -50,25 +56,49 @@ func slide() -> void:
 	if velocity.length() > slide_threshold:
 		player.rig.travel("Slide")
 
+func slide_movement(event: InputEvent) -> void:
+	if event.is_action_pressed("move_left"):
+		rotate_player_left = true
+	elif event.is_action_released("move_left"):
+		rotate_player_left = false
+	if event.is_action_pressed("move_right"):
+		rotate_player_right = true
+	elif event.is_action_released("move_right"):
+		rotate_player_right = false
+
+
+
 func apply_simple_slide(delta: float) -> void:
-	if player.rig.is_sliding():
-		player.floor_stop_on_slope = false
+	player.floor_stop_on_slope = false
 
-		if player.is_on_floor():
-			velocity.x *= slide_friction
-			velocity.z *= slide_friction
+	# Rotation
+	if rotate_player_left:
+		player.rig_pivot.rotation.y += slide_turn_rate
+	if rotate_player_right:
+		player.rig_pivot.rotation.y -= slide_turn_rate
 
-			var slope_scaling = 0.5 #1.0 = linear response| <1.0 = more acceleration on gentle/medium slopes| >1.0 = less acceleration on gentle/medium, more on steep slopes
-			var floor_normal = player.get_floor_normal()
-			var gravity_vec = Vector3.DOWN * player.get_player_gravity()
-			var slope_dir = (gravity_vec - floor_normal * gravity_vec.dot(floor_normal)).normalized()
-			var steepness = 1.0 - floor_normal.dot(Vector3.UP)
-			var slope_boost := 10.0 # inherent boost for every slope slide. 
-			var slope_accel = slope_dir * player.get_player_gravity() * delta * pow(steepness, slope_scaling) * slope_boost
-			velocity += slope_accel
+	# Apply friction and slope acceleration on ground
+	if player.is_on_floor():
+		velocity.x *= slide_friction
+		velocity.z *= slide_friction
 
-		velocity.y += player.get_player_gravity() * delta
-		player.velocity = velocity
+		var floor_normal = player.get_floor_normal()
+		var gravity = player.get_player_gravity()
+		var steepness = 1.0 - floor_normal.dot(Vector3.UP)
+		var slope_dir = (floor_normal * Vector3.DOWN.dot(floor_normal) - Vector3.DOWN).normalized()
+		var slope_accel = slope_dir * gravity * delta * pow(steepness, 0.58) * 10.0
+		velocity += slope_accel
+
+		# align horizontal velocity if steering
+		if rotate_player_left or rotate_player_right:
+			var horizontal_speed = Vector2(velocity.x, velocity.z).length()
+			var facing_dir = -player.rig_pivot.global_transform.basis.z.normalized()
+			velocity.x = facing_dir.x * horizontal_speed
+			velocity.z = facing_dir.z * horizontal_speed
+
+	# Apply gravity
+	velocity.y += player.get_player_gravity() * delta
+	player.velocity = velocity
 
 func _on_player_velocity_current(current_velocity: Vector3) -> void:
 	velocity = current_velocity
