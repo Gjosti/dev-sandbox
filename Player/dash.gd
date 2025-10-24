@@ -4,7 +4,9 @@ extends Node3D
 @export var dash_cooldown: float = 0.5
 @export var extra_dashes: int = 1
 @export var dash_duration: float = 0.5
-@export var dash_speed_modifier: float = 3.0
+@export var dash_speed_modifier: float = 2.0
+@export var min_dash_speed: float = 6
+@export var max_dash_speed: float = 25
 @onready var timer: Timer = $Timer
 
 var direction: Vector3 = Vector3.ZERO
@@ -17,7 +19,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		dash()
 
 func _physics_process(_delta: float) -> void:
-	check_and_refresh_dashes()
+	ground_refresh_dashes()
 
 func dash() -> void:
 	if available_dashes > 0 and timer.is_stopped():
@@ -30,7 +32,9 @@ func dash() -> void:
 		else:
 			direction = -player.rig_pivot.global_transform.basis.z.normalized()
 
-		dash_velocity = direction * player.movement_speed * dash_speed_modifier
+		var base_dash_speed: float = maxf(player._get_horizontal_velocity().length(), min_dash_speed)
+		var clamped_dash_speed: float = clamp(base_dash_speed * dash_speed_modifier, min_dash_speed, max_dash_speed)
+		dash_velocity = direction * clamped_dash_speed
 
 		# Face dash direction
 		if direction.length() > 0.01:
@@ -49,6 +53,6 @@ func dash() -> void:
 
 		is_dashing = false
 
-func check_and_refresh_dashes() -> void:
+func ground_refresh_dashes() -> void:
 	if player.is_on_floor() and timer.is_stopped():
 		available_dashes = extra_dashes
