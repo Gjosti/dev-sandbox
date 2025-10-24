@@ -34,7 +34,7 @@ var horizontal_velocity: Vector3 = Vector3.ZERO
 @onready var rig_pivot: Node3D = $RigPivot
 @onready var rig: Node3D = $RigPivot/Rig
 @onready var jump: Node = $Jump 
-@onready var camera := $PlayerCamera
+@onready var camera: Node3D = $PlayerCamera
 
 func _ready() -> void:
 	pass
@@ -63,10 +63,10 @@ func get_player_gravity() -> float:
 
 # Movement
 func get_camera_movement_direction() -> Vector3:
-	var input_dir := Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
+	var input_dir: Vector2 = Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
 	if input_dir == Vector2.ZERO:
 		return Vector3.ZERO
-	var camera_basis := Basis(Vector3.UP, camera.horizontal_pivot.rotation.y)
+	var camera_basis: Basis = Basis(Vector3.UP, camera.horizontal_pivot.rotation.y)
 	return (camera_basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 
 func handle_movement(delta: float) -> void:
@@ -94,12 +94,12 @@ func _set_horizontal_velocity(horizontal: Vector3) -> void:
 func _face_direction(rate: float, delta: float) -> void:
 	if direction == Vector3.ZERO:
 		return
-	var target_yaw := atan2(-direction.x, -direction.z)
+	var target_yaw: float= atan2(-direction.x, -direction.z)
 	rig_pivot.rotation.y = lerp_angle(rig_pivot.rotation.y, target_yaw, rate * delta)
 
 func _apply_ground_movement(horizontal: Vector3, delta: float) -> Vector3:
 	if direction != Vector3.ZERO:
-		var target := direction * movement_speed
+		var target: Vector3 = direction * movement_speed
 		horizontal = horizontal.move_toward(target, acceleration * delta)
 		_face_direction(ground_turn_rate, delta)
 	else:
@@ -127,4 +127,3 @@ func handle_attack_input(event: InputEvent) -> void:
 
 func main_action() -> void:
 	rig.travel("Attack")
-
