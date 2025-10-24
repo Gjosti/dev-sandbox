@@ -3,7 +3,8 @@ class_name Player
 
 # Movement Settings
 @export_group("Movement Settings")
-@export var speed: float = 6.0
+@export var movement_speed: float = 6.0
+@export var crouch_movement_modifier: float
 @export var acceleration: float = 30
 @export var air_acceleration: float = 10.0
 @export var air_drag: float = 0.5 
@@ -23,8 +24,9 @@ var ground_turn_rate: float = 20
 # Signals
 signal velocity_current(current_velocity: Vector3) #The player node is emitting it's velocity for children nodes to use. such as crouch's slide function
 
-# State Variables
+# Variables
 var direction: Vector3 = Vector3.ZERO
+var horizontal_velocity: Vector3 = Vector3.ZERO
 
 # Node References
 @onready var player_mesh: Node3D = $RigPivot/Rig/CharacterRig/MeshInstance3D
@@ -71,31 +73,45 @@ func handle_movement(delta: float) -> void:
 	if rig.is_dashing() or rig.is_sliding():
 		return
 	direction = get_camera_movement_direction()
+	horizontal_velocity = _get_horizontal_velocity()
+
 	if is_on_floor():
-		if direction != Vector3.ZERO:
-			velocity.x = move_toward(velocity.x, direction.x * speed, acceleration * delta)
-			velocity.z = move_toward(velocity.z, direction.z * speed, acceleration * delta)
-			var target_yaw = atan2(-direction.x, -direction.z)
-			rig_pivot.rotation.y = lerp_angle(rig_pivot.rotation.y, target_yaw, ground_turn_rate * delta)
-		else:
-			# Slow down to zero horizontal velocity based on friction when no movement direction input
-			velocity.z = move_toward(velocity.z, 0, ground_friction * delta)
-			velocity.x = move_toward(velocity.x, 0, ground_friction * delta)
+		horizontal_velocity = _apply_ground_movement(horizontal_velocity, delta)
 	else:
-		# Apply air drag while in air
-		velocity.x -= velocity.x * air_drag * delta
-		velocity.z -= velocity.z * air_drag * delta
+		horizontal_velocity = _apply_air_movement(horizontal_velocity, delta)
 
-		# Add acceleration in input direction
-		if direction != Vector3.ZERO:
-			var input_accel = direction * air_acceleration * delta
-			velocity.x += input_accel.x
-			velocity.z += input_accel.z
-			
-			var target_yaw = atan2(-direction.x, -direction.z)
-			rig_pivot.rotation.y = lerp_angle(rig_pivot.rotation.y, target_yaw, air_turn_face_rate * delta)
-
+	_set_horizontal_velocity(horizontal_velocity)
 	rig.update_animation_tree(direction)
+
+# Helpers
+func _get_horizontal_velocity() -> Vector3:
+	return Vector3(velocity.x, 0, velocity.z)
+
+func _set_horizontal_velocity(horizontal: Vector3) -> void:
+	velocity.x = horizontal.x
+	velocity.z = horizontal.z
+
+func _face_direction(rate: float, delta: float) -> void:
+	if direction == Vector3.ZERO:
+		return
+	var target_yaw := atan2(-direction.x, -direction.z)
+	rig_pivot.rotation.y = lerp_angle(rig_pivot.rotation.y, target_yaw, rate * delta)
+
+func _apply_ground_movement(horizontal: Vector3, delta: float) -> Vector3:
+	if direction != Vector3.ZERO:
+		var target := direction * movement_speed
+		horizontal = horizontal.move_toward(target, acceleration * delta)
+		_face_direction(ground_turn_rate, delta)
+	else:
+		horizontal = horizontal.move_toward(Vector3.ZERO, ground_friction * delta)
+	return horizontal
+
+func _apply_air_movement(horizontal: Vector3, delta: float) -> Vector3:
+	horizontal -= horizontal * air_drag * delta
+	if direction != Vector3.ZERO:
+		horizontal += direction * air_acceleration * delta
+		_face_direction(air_turn_face_rate, delta)
+	return horizontal
 
 # Input Handling
 func _unhandled_input(event: InputEvent) -> void:
