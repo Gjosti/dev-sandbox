@@ -30,7 +30,7 @@ func dash() -> void:
 		else:
 			direction = -player.rig_pivot.global_transform.basis.z.normalized()
 
-		dash_velocity = direction * player.speed * dash_speed_modifier
+		dash_velocity = direction * player.movement_speed * dash_speed_modifier
 
 		# Face dash direction
 		if direction.length() > 0.01:
