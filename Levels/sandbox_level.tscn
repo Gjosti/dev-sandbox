@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://clq4ymy58tejc"]
+[gd_scene load_steps=31 format=3 uid="uid://clq4ymy58tejc"]
 
 [ext_resource type="PackedScene" uid="uid://be1k25cx46lxo" path="res://Player/Player.tscn" id="1_e63bh"]
 [ext_resource type="Texture2D" uid="uid://ctu34g88n34r" path="res://addons/kenney_prototype_textures/dark/texture_09.png" id="1_l7jkp"]
@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://dn3c0hoohev8y" path="res://addons/kenney_prototype_textures/orange/texture_09.png" id="6_i8ax3"]
 [ext_resource type="Texture2D" uid="uid://bltk7pd7kmpim" path="res://addons/kenney_prototype_textures/green/texture_09.png" id="6_qag8g"]
 [ext_resource type="Texture2D" uid="uid://d1swi8m88lyvy" path="res://addons/kenney_prototype_textures/purple/texture_09.png" id="7_nxqmx"]
+[ext_resource type="PackedScene" uid="uid://cthqdgu3mm2oo" path="res://UI/user_interface.tscn" id="10_jct52"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_e63bh"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -216,6 +217,9 @@ use_collision = true
 size = Vector3(6.78, 100, 100)
 material = SubResource("StandardMaterial3D_c3wst")
 
+[node name="UserInterface" parent="." instance=ExtResource("10_jct52")]
+
+[connection signal="velocity_current" from="Player" to="UserInterface" method="_on_player_velocity_current"]
 [connection signal="input_event" from="OutlinePlayground/MouseHoverOutlineBox/MeshInstance3D/StaticBody3D" to="OutlinePlayground/MouseHoverOutlineBox" method="_on_static_body_3d_input_event"]
 [connection signal="mouse_entered" from="OutlinePlayground/MouseHoverOutlineBox/MeshInstance3D/StaticBody3D" to="OutlinePlayground/MouseHoverOutlineBox" method="_on_static_body_3d_mouse_entered"]
 [connection signal="mouse_exited" from="OutlinePlayground/MouseHoverOutlineBox/MeshInstance3D/StaticBody3D" to="OutlinePlayground/MouseHoverOutlineBox" method="_on_static_body_3d_mouse_exited"]
