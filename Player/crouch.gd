@@ -15,7 +15,7 @@ var velocity: Vector3 = Vector3.ZERO
 var rotate_player_left :bool = false
 var rotate_player_right :bool = false
 
-func _physics_process(delta):
+func _physics_process(delta: float) -> void:
 	if player.rig.is_sliding():
 		apply_simple_slide(delta)
 		if velocity.length() < slide_threshold:
@@ -39,7 +39,7 @@ func crouch() -> void:
 	if player.rig.is_crouching():
 		return
 	player.player_mesh.scale = crouch_mesh_scale
-	var capsule := player.collision_shape_3d.shape as CapsuleShape3D
+	var capsule :CapsuleShape3D = player.collision_shape_3d.shape as CapsuleShape3D
 	player.collision_shape_3d.position.y = 0.5
 	capsule.height = crouch_height
 	player.rig.travel("Crouch")
@@ -47,7 +47,7 @@ func crouch() -> void:
 func stand() -> void:
 	if player.rig.is_crouching() or player.rig.is_sliding():
 		player.player_mesh.scale = stand_mesh_scale
-		var capsule := player.collision_shape_3d.shape as CapsuleShape3D
+		var capsule :CapsuleShape3D = player.collision_shape_3d.shape as CapsuleShape3D
 		capsule.height = stand_height
 		player.collision_shape_3d.position.y = 1
 		player.rig.travel("MoveSpace")
@@ -84,16 +84,16 @@ func apply_simple_slide(delta: float) -> void:
 		velocity.x *= slide_friction
 		velocity.z *= slide_friction
 
-		var floor_normal = player.get_floor_normal()
-		var gravity = player.get_player_gravity()
-		var steepness = 1.0 - floor_normal.dot(Vector3.UP)
-		var slope_dir = (floor_normal * Vector3.DOWN.dot(floor_normal) - Vector3.DOWN).normalized()
-		var slope_accel = slope_dir * gravity * delta * pow(steepness, 0.58) * 10.0
+		var floor_normal: Vector3 = player.get_floor_normal()
+		var gravity: float = player.get_player_gravity()
+		var steepness: float = 1.0 - floor_normal.dot(Vector3.UP)
+		var slope_dir: Vector3 = (floor_normal * Vector3.DOWN.dot(floor_normal) - Vector3.DOWN).normalized()
+		var slope_accel: Vector3 = slope_dir * gravity * delta * pow(steepness, 0.58) * 10.0
 		velocity += slope_accel
 
 		# align horizontal velocity
-		var horizontal_speed = Vector2(velocity.x, velocity.z).length()
-		var facing_dir = -player.rig_pivot.global_transform.basis.z.normalized()
+		var horizontal_speed: float = Vector2(velocity.x, velocity.z).length()
+		var facing_dir: Vector3 = -player.rig_pivot.global_transform.basis.z.normalized()
 		velocity.x = facing_dir.x * horizontal_speed
 		velocity.z = facing_dir.z * horizontal_speed
 

@@ -38,14 +38,14 @@ func dash() -> void:
 
 		# Face dash direction
 		if direction.length() > 0.01:
-			var target_yaw = atan2(-direction.x, -direction.z)
+			var target_yaw: float = atan2(-direction.x, -direction.z)
 			player.rig_pivot.rotation.y = target_yaw
 
 		player.rig.travel("Dash")
 		timer.start(dash_cooldown)
 
 		# Maintain dash velocity for dash_duration
-		var dash_timer := get_tree().create_timer(dash_duration)
+		var dash_timer: SceneTreeTimer = get_tree().create_timer(dash_duration)
 		while not dash_timer.time_left == 0:
 			player.velocity.x = dash_velocity.x
 			player.velocity.z = dash_velocity.z
