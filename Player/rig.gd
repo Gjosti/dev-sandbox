@@ -3,7 +3,7 @@ extends Node3D
 @export var animation_speed: float = 10.0
 @export var debug_mode:bool = true
 
-@onready var animation_tree := $AnimationTree
+@onready var animation_tree: AnimationTree= $AnimationTree
 @onready var playback: AnimationNodeStateMachinePlayback = animation_tree["parameters/playback"]
 @onready var state_label: Label3D = $StateLabel
 
@@ -28,6 +28,8 @@ func update_animation_tree(direction: Vector3) -> void:
 func travel(animation_name: String) -> void:
 	playback.travel(animation_name)
 
+
+# Rig States
 func is_idle() -> bool:
 	return playback.get_current_node() == "MoveSpace"
 
@@ -45,3 +47,6 @@ func is_crouching() -> bool:
 
 func is_sliding() -> bool:
 	return playback.get_current_node() == "Slide"
+
+func is_ledge_grabbing() -> bool:
+	return playback.get_current_node() == "LedgeGrab"

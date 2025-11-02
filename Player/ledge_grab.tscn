@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="uid://o8io8idytia6"]
+
+[ext_resource type="Script" uid="uid://divv7jqp0a45w" path="res://Player/ledge_grab.gd" id="1_6b7j0"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_4imup"]
+size = Vector3(0.5, 0, 0.2)
+
+[node name="LedgeGrab" type="Node3D"]
+script = ExtResource("1_6b7j0")
+
+[node name="Area3D_Top" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, -0.1)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D_Top"]
+shape = SubResource("BoxShape3D_4imup")
+
+[node name="Area3D_Bottom" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.1)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D_Bottom"]
+shape = SubResource("BoxShape3D_4imup")

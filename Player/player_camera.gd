@@ -7,7 +7,7 @@ extends Node3D
 @export var min_camera_distance: float = 1
 @export var max_camera_distance: float = 15
 
-var _look := Vector2.ZERO
+var _look :Vector2 = Vector2.ZERO
 
 @onready var horizontal_pivot: Node3D = $HorizontalPivot
 @onready var vertical_pivot: Node3D = $HorizontalPivot/VerticalPivot

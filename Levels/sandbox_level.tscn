@@ -110,7 +110,7 @@ mesh = SubResource("BoxMesh_e63bh")
 surface_material_override/0 = SubResource("StandardMaterial3D_i8ax3")
 
 [node name="Player" parent="." instance=ExtResource("1_e63bh")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 85.69266, 103.65351, 33.71123)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4307022, -7.6293945e-06, 9.739891)
 
 [node name="CollisionWalls" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.8392062, 0, -5.5322585)

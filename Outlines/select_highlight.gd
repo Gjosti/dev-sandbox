@@ -10,7 +10,7 @@ extends Node3D
 
 var selected: bool = false
 
-func _ready():
+func _ready() -> void:
 	if body:
 		body.mouse_entered.connect(_on_static_body_3d_mouse_entered)
 		body.mouse_exited.connect(_on_static_body_3d_mouse_exited)
