@@ -26,24 +26,58 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_constants/margin_left = 32
-theme_override_constants/margin_top = 32
-theme_override_constants/margin_right = 32
-theme_override_constants/margin_bottom = 32
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
 
-[node name="GridContainer" type="GridContainer" parent="MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
-size_flags_horizontal = 8
-size_flags_vertical = 8
 mouse_filter = 2
-columns = 2
 
-[node name="Label" type="Label" parent="MarginContainer/GridContainer"]
+[node name="Control" type="Control" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
-text = "Velocity:"
-label_settings = SubResource("LabelSettings_m44r8")
+size_flags_vertical = 3
 
-[node name="VelocityLabel" type="Label" parent="MarginContainer/GridContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="BottomLeft" type="Control" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BottomMiddle" type="Control" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BottomRight" type="Control" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/BottomRight"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/BottomRight/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+alignment = 1
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/BottomRight/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Velocity"
+label_settings = SubResource("LabelSettings_m44r8")
+horizontal_alignment = 2
+
+[node name="VelocityLabel" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/BottomRight/VBoxContainer/HBoxContainer"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(128, 0)
 layout_mode = 2
 label_settings = SubResource("LabelSettings_m44r8")
+horizontal_alignment = 2
