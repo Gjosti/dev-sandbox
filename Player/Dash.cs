@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 public partial class Dash : Node3D
 {
-    [Export] public CharacterBody3D Player { get; set; }
+    [Export] public Player Player { get; set; }
     [Export] public float DashCooldown { get; set; } = 0.5f;
     [Export] public int ExtraDashes { get; set; } = 1;
     [Export] public float DashDuration { get; set; } = 0.5f;
@@ -53,7 +53,7 @@ public partial class Dash : Node3D
         if (_availableDashes <= 0 || !_timer.IsStopped()) return;
 
         _availableDashes--;
-        Vector3 playerDirection = (Vector3)Player.Get("direction");
+        Vector3 playerDirection = (Vector3)Player.Direction;
 
         _direction = playerDirection.Length() > 0.1f 
             ? playerDirection.Normalized() 

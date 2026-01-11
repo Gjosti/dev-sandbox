@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://cthqdgu3mm2oo"]
 
-[ext_resource type="Script" uid="uid://cklq4tx77m38b" path="res://UI/user_interface.gd" id="1_6ogyk"]
+[ext_resource type="Script" uid="uid://l2eiotkwu53o" path="res://UI/UserInterface.cs" id="1_6ogyk"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_m44r8"]
 font_size = 64
@@ -17,8 +17,6 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_6ogyk")
-
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1

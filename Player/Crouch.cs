@@ -27,35 +27,31 @@ public partial class Crouch : Node
 	    if (Player != null)
 	    {
 	        Player.VelocityCurrent += OnPlayerVelocityCurrent;
+	        
+	        // Initialize references immediately
+	        _rig = Player.GetNode<Rig>("RigPivot/Rig");
+	        _rigPivot = Player.GetNode<Node3D>("RigPivot");
+	        _playerMesh = Player.GetNode<Node3D>("RigPivot/Rig/CharacterRig/MeshInstance3D");
+	        _collisionShape = Player.GetNode<CollisionShape3D>("CollisionShape3D");
 	    }
 	}
 
 	public override void _PhysicsProcess(double delta)
 	{
-		if (_rig == null && Player != null)
-		{
-			_rig = Player.GetNode<Rig>("RigPivot/Rig");
-			_rigPivot = Player.GetNode<Node3D>("RigPivot");
-			_playerMesh = Player.GetNode<Node3D>("RigPivot/Rig/CharacterRig/MeshInstance3D");
-			_collisionShape = Player.GetNode<CollisionShape3D>("CollisionShape3D");
-		}
+	    if (_rig == null) return;
+	    
+	    float velocityLength = _velocity.Length();
 
-		if (_rig.IsSliding())
-		{
-			ApplySimpleSlide((float)delta);
-			if (_velocity.Length() < SlideThreshold)
-			{
-				PerformCrouch();
-			}
-		}
-		else if (_rig.IsCrouching() && _velocity.Length() > SlideThreshold)
-		{
-			Slide();
-		}
-		else
-		{
-			Player.FloorStopOnSlope = true;
-		}
+	    if (_rig.IsSliding())
+	    {
+	        ApplySimpleSlide((float)delta);
+	        if (velocityLength < SlideThreshold)
+	            PerformCrouch();
+	    }
+	    else if (_rig.IsCrouching() && velocityLength > SlideThreshold)
+	        Slide();
+	    else
+	        Player.FloorStopOnSlope = true;
 	}
 
 	public override void _UnhandledInput(InputEvent @event)

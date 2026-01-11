@@ -9,7 +9,7 @@ public partial class Jump : Node3D
     [Export] public float JumpTimeToDescent { get; set; } = 0.25f;
     [Export] public int ExtraJumps { get; set; } = 1;
 
-    [ExportGroup("Crouch/High Jump")]
+    [ExportGroup("Crouch/High Jump (Crouch + Jump while still)")]
     [Export] public bool CrouchJumpEnabled { get; set; } = true;
     [Export] public float CrouchJumpHeight { get; set; } = 8f;
     [Export] public float CrouchJumpTimeToPeak { get; set; } = 0.5f;

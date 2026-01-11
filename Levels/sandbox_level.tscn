@@ -217,7 +217,8 @@ use_collision = true
 size = Vector3(6.78, 100, 100)
 material = SubResource("StandardMaterial3D_c3wst")
 
-[node name="UserInterface" parent="." instance=ExtResource("10_jct52")]
+[node name="UserInterface" parent="." node_paths=PackedStringArray("Player") instance=ExtResource("10_jct52")]
+Player = NodePath("../Player")
 
 [connection signal="VelocityCurrent" from="Player" to="Player" method="_on_velocity_current"]
 [connection signal="input_event" from="OutlinePlayground/MouseHoverOutlineBox/MeshInstance3D/StaticBody3D" to="OutlinePlayground/MouseHoverOutlineBox" method="_on_static_body_3d_input_event"]
