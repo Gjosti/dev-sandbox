@@ -17,8 +17,8 @@ script = ExtResource("1_3qydi")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_tok1r")
 
-[node name="Dash" parent="." node_paths=PackedStringArray("player") instance=ExtResource("3_tok1r")]
-player = NodePath("..")
+[node name="Dash" parent="." node_paths=PackedStringArray("Player") instance=ExtResource("3_tok1r")]
+Player = NodePath("..")
 
 [node name="RigPivot" type="Node3D" parent="."]
 
