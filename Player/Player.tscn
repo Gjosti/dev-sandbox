@@ -32,8 +32,7 @@ Player = NodePath("..")
 
 [node name="PlayerCamera" parent="." instance=ExtResource("6_6ysni")]
 
-[node name="LedgeGrab" parent="." node_paths=PackedStringArray("player") instance=ExtResource("7_vlldt")]
+[node name="LedgeGrab" parent="." instance=ExtResource("7_vlldt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8357217, -0.8784434)
-player = NodePath("..")
 
 [editable path="RigPivot/Rig"]
