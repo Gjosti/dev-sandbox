@@ -2,7 +2,7 @@ using Godot;
 
 public partial class Crouch : Node
 {
-	[Export] public Player Player { get; set; }  // Change line 5
+	[Export] public Player Player { get; set; }
 	[Export] public float SlideThreshold { get; set; } = 6.1f;
 	[Export] public float SlideMinThreshold { get; set; } = 3f;
 	[Export] public float SlideFriction { get; set; } = 0.985f;
