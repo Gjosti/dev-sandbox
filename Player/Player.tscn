@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://be1k25cx46lxo"]
+[gd_scene load_steps=10 format=3 uid="uid://be1k25cx46lxo"]
 
 [ext_resource type="Script" uid="uid://bf26qmpmlw17r" path="res://Player/player.gd" id="1_3qydi"]
 [ext_resource type="PackedScene" uid="uid://co5s7037hupeh" path="res://Player/dash.tscn" id="3_tok1r"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://bedml0okde3l1" path="res://Player/rig.tscn" id="4_ddoul"]
 [ext_resource type="PackedScene" uid="uid://b1veppx83glta" path="res://Player/jump.tscn" id="5_8g4oa"]
 [ext_resource type="PackedScene" uid="uid://bp4egawc77s6r" path="res://Player/player_camera.tscn" id="6_6ysni"]
+[ext_resource type="Script" uid="uid://de23frsa4yjqn" path="res://Player/PlayerCamera.cs" id="7_s1rgi"]
 [ext_resource type="PackedScene" uid="uid://o8io8idytia6" path="res://Player/ledge_grab.tscn" id="7_vlldt"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tok1r"]
@@ -31,9 +32,11 @@ player = NodePath("..")
 player = NodePath("..")
 
 [node name="PlayerCamera" parent="." instance=ExtResource("6_6ysni")]
+script = ExtResource("7_s1rgi")
 
-[node name="LedgeGrab" parent="." instance=ExtResource("7_vlldt")]
+[node name="LedgeGrab" parent="." node_paths=PackedStringArray("player") instance=ExtResource("7_vlldt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8357217, -0.8784434)
+player = NodePath("..")
 
 [connection signal="velocity_current" from="." to="Crouch" method="_on_player_velocity_current"]
 

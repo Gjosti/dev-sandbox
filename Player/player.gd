@@ -66,7 +66,7 @@ func get_camera_movement_direction() -> Vector3:
 	var input_dir: Vector2 = Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
 	if input_dir == Vector2.ZERO:
 		return Vector3.ZERO
-	var camera_basis: Basis = Basis(Vector3.UP, camera.horizontal_pivot.rotation.y)
+	var camera_basis: Basis = Basis(Vector3.UP, camera.HorizontalPivot.rotation.y)
 	return (camera_basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 
 func handle_movement(delta: float) -> void:
