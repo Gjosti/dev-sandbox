@@ -56,7 +56,7 @@ func apply_gravity(delta: float) -> void:
 
 func get_player_gravity() -> float:
 	if jump:
-		return jump.get_gravity(velocity.y)
+		return jump.GetGravity(velocity.y)
 	else:
 		printerr("Using project settings gravity and not jump gravity!")
 		return get_gravity().length()

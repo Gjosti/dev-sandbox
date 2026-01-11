@@ -12,7 +12,7 @@ config_version=5
 
 config/name="DevSandbox"
 run/main_scene="uid://clq4ymy58tejc"
-config/features=PackedStringArray("4.5", "Forward Plus")
+config/features=PackedStringArray("4.5", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
 [debug]

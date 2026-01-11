@@ -1,0 +1,1 @@
+1. Holding "Crouch", then dashing multiple times does not consistently put the player in either sliding or crouch, sometimes standing up. 
