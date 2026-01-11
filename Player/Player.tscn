@@ -24,8 +24,8 @@ Player = NodePath("..")
 
 [node name="Rig" parent="RigPivot" instance=ExtResource("4_ddoul")]
 
-[node name="Crouch" parent="." node_paths=PackedStringArray("player") instance=ExtResource("4_8g4oa")]
-player = NodePath("..")
+[node name="Crouch" parent="." node_paths=PackedStringArray("Player") instance=ExtResource("4_8g4oa")]
+Player = NodePath("..")
 
 [node name="Jump" parent="." node_paths=PackedStringArray("Player") instance=ExtResource("5_8g4oa")]
 Player = NodePath("..")

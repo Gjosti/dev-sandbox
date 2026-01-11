@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://dntcr487ilb6w"]
 
-[ext_resource type="Script" uid="uid://c65kxe777wxqt" path="res://Player/crouch.gd" id="1_eaxlx"]
+[ext_resource type="Script" uid="uid://dbuyl858f8j1b" path="res://Player/Crouch.cs" id="1_eaxlx"]
 
 [node name="Crouch" type="Node3D"]
 script = ExtResource("1_eaxlx")
