@@ -41,7 +41,7 @@ func dash() -> void:
 			var target_yaw: float = atan2(-direction.x, -direction.z)
 			player.rig_pivot.rotation.y = target_yaw
 
-		player.rig.travel("Dash")
+		player.rig.Travel("Dash")
 		timer.start(dash_cooldown)
 
 		# Maintain dash velocity for dash_duration

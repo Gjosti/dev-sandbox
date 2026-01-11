@@ -46,7 +46,7 @@ func _physics_process(delta: float) -> void:
 
 func handle_jump_input() -> void:
 	if Input.is_action_just_pressed("jump"): 
-		if crouch_jump_enabled and player.rig.is_crouching():
+		if crouch_jump_enabled and player.rig.IsCrouching():
 			crouch_jump()
 		else: 
 			jump()
@@ -56,22 +56,22 @@ func jump() -> void:
 	if player.is_on_floor() or coyote_timer > 0.0:
 		player.velocity.y += jump_velocity
 		coyote_timer = 0.0
-		player.rig.travel("Jump")
+		player.rig.Travel("Jump")
 	elif jumps_left > 0:
 		jumps_left -= 1
 		player.velocity.y = jump_velocity
-		player.rig.travel("Jump")
+		player.rig.Travel("Jump")
 
 
 func crouch_jump() -> void:
 	if player.is_on_floor() or coyote_timer > 0.0:
 		player.velocity.y += crouch_jump_velocity
 		coyote_timer = 0.0
-		player.rig.travel("CrouchJump")
+		player.rig.Travel("CrouchJump")
 	elif jumps_left > 0:
 		jumps_left -= 1
 		player.velocity.y = jump_velocity #So that the player cannot high jump in air.
-		player.rig.travel("Jump")
+		player.rig.Travel("Jump")
 
 # TODO Recheck if needed
 func get_gravity(current_velocity_y: float) -> float:

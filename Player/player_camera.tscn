@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://bp4egawc77s6r"]
 
-[ext_resource type="Script" uid="uid://bqod8poqpapiu" path="res://Player/player_camera.gd" id="1_ehrhw"]
+[ext_resource type="Script" uid="uid://de23frsa4yjqn" path="res://Player/PlayerCamera.cs" id="1_ehrhw"]
 
 [sub_resource type="SeparationRayShape3D" id="SeparationRayShape3D_3qydi"]
 

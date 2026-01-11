@@ -49,7 +49,7 @@ func _physics_process(delta: float) -> void:
 
 # Gravity
 func apply_gravity(delta: float) -> void:
-	if rig.is_dashing():
+	if rig.IsDashing():
 		velocity.y = 0
 	else:
 		velocity.y += get_player_gravity() * delta
@@ -70,7 +70,7 @@ func get_camera_movement_direction() -> Vector3:
 	return (camera_basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 
 func handle_movement(delta: float) -> void:
-	if rig.is_dashing() or rig.is_sliding():
+	if rig.IsDashing() or rig.IsSliding():
 		return
 	direction = get_camera_movement_direction()
 	horizontal_velocity = _get_horizontal_velocity()
@@ -81,7 +81,7 @@ func handle_movement(delta: float) -> void:
 		horizontal_velocity = _apply_air_movement(horizontal_velocity, delta)
 
 	_set_horizontal_velocity(horizontal_velocity)
-	rig.update_animation_tree(direction)
+	rig.UpdateAnimationTree(direction)
 
 # Helpers
 func _get_horizontal_velocity() -> Vector3:
@@ -121,9 +121,9 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func handle_attack_input(event: InputEvent) -> void:
-	if rig.is_idle():
+	if rig.IsIdle():
 		if event.is_action_pressed("attack"):
 			main_action()
 
 func main_action() -> void:
-	rig.travel("Attack")
+	rig.Travel("Attack")
