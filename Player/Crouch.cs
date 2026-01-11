@@ -2,7 +2,7 @@ using Godot;
 
 public partial class Crouch : Node
 {
-	[Export] public CharacterBody3D Player { get; set; }
+	[Export] public Player Player { get; set; }  // Change line 5
 	[Export] public float SlideThreshold { get; set; } = 6.1f;
 	[Export] public float SlideMinThreshold { get; set; } = 3f;
 	[Export] public float SlideFriction { get; set; } = 0.985f;
@@ -21,6 +21,14 @@ public partial class Crouch : Node
 	private Node3D _rigPivot;
 	private Node3D _playerMesh;
 	private CollisionShape3D _collisionShape;
+
+	public override void _Ready()
+	{
+	    if (Player != null)
+	    {
+	        Player.VelocityCurrent += OnPlayerVelocityCurrent;
+	    }
+	}
 
 	public override void _PhysicsProcess(double delta)
 	{
@@ -124,7 +132,7 @@ public partial class Crouch : Node
 			_velocity.Z *= SlideFriction;
 
 			Vector3 floorNormal = Player.GetFloorNormal();
-			float gravity = (float)Player.Call("get_player_gravity");
+			float gravity = (float)Player.GetPlayerGravity();
 			float steepness = 1.0f - floorNormal.Dot(Vector3.Up);
 			Vector3 slopeDir = (floorNormal * Vector3.Down.Dot(floorNormal) - Vector3.Down).Normalized();
 			Vector3 slopeAccel = slopeDir * gravity * delta * Mathf.Pow(steepness, 0.58f) * 10.0f;
@@ -136,12 +144,12 @@ public partial class Crouch : Node
 			_velocity.Z = facingDir.Z * horizontalSpeed;
 		}
 
-		_velocity.Y += (float)Player.Call("get_player_gravity") * delta;
+		_velocity.Y += Player.GetPlayerGravity() * delta;
 		Player.Velocity = _velocity;
 	}
 
-	public void _on_player_velocity_current(Vector3 currentVelocity)  // TODO: once Player.cs is done converting to C#, rename from snake_case to PascalCase
+	private void OnPlayerVelocityCurrent(Vector3 currentVelocity)
 	{
-		_velocity = currentVelocity;
+	    _velocity = currentVelocity;
 	}
 }

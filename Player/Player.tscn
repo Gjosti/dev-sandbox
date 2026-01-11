@@ -1,6 +1,6 @@
 [gd_scene load_steps=9 format=3 uid="uid://be1k25cx46lxo"]
 
-[ext_resource type="Script" uid="uid://bf26qmpmlw17r" path="res://Player/player.gd" id="1_3qydi"]
+[ext_resource type="Script" uid="uid://bu3e3fmvtvgyk" path="res://Player/Player.cs" id="1_vlldt"]
 [ext_resource type="PackedScene" uid="uid://co5s7037hupeh" path="res://Player/dash.tscn" id="3_tok1r"]
 [ext_resource type="PackedScene" uid="uid://dntcr487ilb6w" path="res://Player/crouch.tscn" id="4_8g4oa"]
 [ext_resource type="PackedScene" uid="uid://bedml0okde3l1" path="res://Player/rig.tscn" id="4_ddoul"]
@@ -11,7 +11,7 @@
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tok1r"]
 
 [node name="Player" type="CharacterBody3D"]
-script = ExtResource("1_3qydi")
+script = ExtResource("1_vlldt")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -35,7 +35,5 @@ Player = NodePath("..")
 [node name="LedgeGrab" parent="." node_paths=PackedStringArray("player") instance=ExtResource("7_vlldt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8357217, -0.8784434)
 player = NodePath("..")
-
-[connection signal="velocity_current" from="." to="Crouch" method="_on_player_velocity_current"]
 
 [editable path="RigPivot/Rig"]
