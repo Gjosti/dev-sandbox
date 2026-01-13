@@ -3,7 +3,7 @@ using Godot;
 public partial class Jump : Node3D
 {
     [ExportGroup("Jump Settings")]
-    [Export] public CharacterBody3D Player { get; set; } // TODO: Once Player is done converting to C#, remember to put "Player" instead of "CharacterBody3D"
+    [Export] public Player Player { get; set; } 
     [Export] public float JumpHeight { get; set; } = 4f;
     [Export] public float JumpTimeToPeak { get; set; } = 0.5f;
     [Export] public float JumpTimeToDescent { get; set; } = 0.25f;
