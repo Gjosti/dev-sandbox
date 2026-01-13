@@ -54,7 +54,7 @@ public partial class Player : CharacterBody3D
 		HandleMovement((float)delta);
 		MoveAndSlide();
 
-		// Push rigid bodies after movement
+		// Push rigid bodies after movement.
 		ApplyPushForce();
 
 		EmitSignal(SignalName.VelocityCurrent, Velocity);
@@ -164,6 +164,7 @@ public partial class Player : CharacterBody3D
 		return horizontal;
 	}
 
+	// 
 	private void ApplyPushForce()
 	{
 		for (int i = 0; i < GetSlideCollisionCount(); i++)
