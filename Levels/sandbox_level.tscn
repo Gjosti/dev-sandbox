@@ -10,8 +10,8 @@
 [ext_resource type="Texture2D" uid="uid://bltk7pd7kmpim" path="res://addons/kenney_prototype_textures/green/texture_09.png" id="6_qag8g"]
 [ext_resource type="Texture2D" uid="uid://d1swi8m88lyvy" path="res://addons/kenney_prototype_textures/purple/texture_09.png" id="7_nxqmx"]
 [ext_resource type="PackedScene" uid="uid://cthqdgu3mm2oo" path="res://UI/user_interface.tscn" id="10_jct52"]
-[ext_resource type="PackedScene" uid="uid://cnfy0py8hvn0r" path="res://Props/RigicBody3DProp.tscn" id="11_xuon6"]
-[ext_resource type="PackedScene" uid="uid://dh8pxd7c7qq0j" path="res://Components/rigid_body_3d_prop_destructible.tscn" id="12_soprk"]
+[ext_resource type="PackedScene" uid="uid://cnfy0py8hvn0r" path="res://Props/RigidBody3DProp.tscn" id="11_xuon6"]
+[ext_resource type="PackedScene" uid="uid://dh8pxd7c7qq0j" path="res://Props/rigid_body_3d_prop_destructible.tscn" id="12_soprk"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_e63bh"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)

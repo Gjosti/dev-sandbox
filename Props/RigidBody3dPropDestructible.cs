@@ -6,6 +6,8 @@ using System;
 public partial class RigidBody3dPropDestructible : RigidBody3D
 {
 	[Export] public bool DebugMode = false;
+	[Export] public bool DebrisEnabled = true;
+	[Export] public int DebrisAmount = 2;
 
 
 	private HealthComponent _health;
@@ -34,7 +36,12 @@ public partial class RigidBody3dPropDestructible : RigidBody3D
 		// Play effect/animation
 		// if there is an effect play this:
 		// GetTree().CreateTimer(1.0).Timeout += QueueFree; //(one second delay to avoid effects vanishing)
+		// OR spawn smaller wreckage pieces and hide/remove the first original mesh
 		// For now just this until effects/sound/etc. is added:
+		if (DebrisEnabled)
+		{
+			SpawnDebris();
+		}
 		QueueFree();
 	}
 
@@ -42,6 +49,36 @@ public partial class RigidBody3dPropDestructible : RigidBody3D
 	{
 		if (DebugMode) GD.Print($"Body entered: {body.Name} (Type: {body.GetType().Name})");
 		_health.TakeDamage(10);
+	}
+
+	private void SpawnDebris()
+	{
+		var debrisScene = GD.Load<PackedScene>("res://Props/RigidBody3DProp.tscn");
+
+		for (int i = 0; i < DebrisAmount; i++)
+		{
+			var debris = debrisScene.Instantiate<RigidBody3D>();
+
+			// Add to scene (same parent as this object)
+			GetParent().AddChild(debris);
+
+			// Position at this object's location
+			debris.GlobalPosition = GlobalPosition;
+
+			// Add random impulse/spin for visual effect
+			Vector3 randomDirection = new Vector3(
+				(float)GD.RandRange(-1, 1),
+				(float)GD.RandRange(0.5, 1.5),
+				(float)GD.RandRange(-1, 1)
+			).Normalized();
+
+			debris.ApplyCentralImpulse(randomDirection * 50.0f);
+			debris.ApplyTorqueImpulse(new Vector3(
+				(float)GD.RandRange(-2, 2),
+				(float)GD.RandRange(-2, 2),
+				(float)GD.RandRange(-2, 2)
+			));
+		}
 	}
 
 }

@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://dh8pxd7c7qq0j"]
 
-[ext_resource type="Script" uid="uid://dxylmx5w33f1h" path="res://RigidBody3dPropDestructible.cs" id="1_ueq65"]
+[ext_resource type="Script" uid="uid://dxylmx5w33f1h" path="res://Props/RigidBody3dPropDestructible.cs" id="1_ueq65"]
 [ext_resource type="PackedScene" uid="uid://cueeaxte08go5" path="res://Components/health_component.tscn" id="2_aq11s"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_tihns"]
