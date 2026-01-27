@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://be1k25cx46lxo"]
+[gd_scene format=3 uid="uid://be1k25cx46lxo"]
 
 [ext_resource type="Script" uid="uid://bu3e3fmvtvgyk" path="res://Player/Player.cs" id="1_vlldt"]
 [ext_resource type="PackedScene" uid="uid://co5s7037hupeh" path="res://Player/dash.tscn" id="3_tok1r"]
@@ -10,29 +10,29 @@
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tok1r"]
 
-[node name="Player" type="CharacterBody3D"]
+[node name="Player" type="CharacterBody3D" unique_id=1310493362]
 script = ExtResource("1_vlldt")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1474824226]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_tok1r")
 
-[node name="Dash" parent="." node_paths=PackedStringArray("Player") instance=ExtResource("3_tok1r")]
+[node name="Dash" parent="." unique_id=2076300384 node_paths=PackedStringArray("Player") instance=ExtResource("3_tok1r")]
 Player = NodePath("..")
 
-[node name="RigPivot" type="Node3D" parent="."]
+[node name="RigPivot" type="Node3D" parent="." unique_id=1550913445]
 
-[node name="Rig" parent="RigPivot" instance=ExtResource("4_ddoul")]
+[node name="Rig" parent="RigPivot" unique_id=717867393 instance=ExtResource("4_ddoul")]
 
-[node name="Crouch" parent="." node_paths=PackedStringArray("Player") instance=ExtResource("4_8g4oa")]
+[node name="Crouch" parent="." unique_id=367382624 node_paths=PackedStringArray("Player") instance=ExtResource("4_8g4oa")]
 Player = NodePath("..")
 
-[node name="Jump" parent="." node_paths=PackedStringArray("Player") instance=ExtResource("5_8g4oa")]
+[node name="Jump" parent="." unique_id=836590723 node_paths=PackedStringArray("Player") instance=ExtResource("5_8g4oa")]
 Player = NodePath("..")
 
-[node name="PlayerCamera" parent="." instance=ExtResource("6_6ysni")]
+[node name="PlayerCamera" parent="." unique_id=1151804118 instance=ExtResource("6_6ysni")]
 
-[node name="LedgeGrab" parent="." instance=ExtResource("7_vlldt")]
+[node name="LedgeGrab" parent="." unique_id=334385883 instance=ExtResource("7_vlldt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8357217, -0.8784434)
 
 [editable path="RigPivot/Rig"]

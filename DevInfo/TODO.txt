@@ -1,0 +1,19 @@
+ - Remove code from process and physics process,
+    ex: If player.isOnFloor() should instead probably be a signal. go through Player scripts
+
+ - Add VFX
+
+ 
+ - Add Sound
+
+
+ - Create assets
+    -   Crates
+    -   Barrels
+    -   Modular walls,
+    ++
+
+ - Redo / double check player state machine currently animationtree
+
+ - Jump
+    TODO: Jumping from the ground while above a certain horizontal velocity threshold adds a slight velocity boost

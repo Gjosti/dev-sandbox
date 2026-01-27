@@ -1,4 +1,4 @@
-[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://c23j08bjm2j2x"]
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://c23j08bjm2j2x"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w1y3n"]
 render_priority = -1

@@ -32,6 +32,7 @@ public partial class Jump : Node3D
     private float _coyoteTimer = 0.0f;
 
     private Rig _rig;
+    private GpuParticles3D _jumpVFX;
 
     public override void _Ready()
     {
@@ -45,6 +46,7 @@ public partial class Jump : Node3D
         _jumpsLeft = ExtraJumps;
 
 		_rig = Player.GetNode<Rig>("RigPivot/Rig");
+        _jumpVFX = GetNode<GpuParticles3D>("VFX/GPUParticles3D"); //If multiple FX change to animationplayer
     }
 
     public override void _PhysicsProcess(double delta)
@@ -95,12 +97,14 @@ public partial class Jump : Node3D
             Player.Velocity = new Vector3(Player.Velocity.X, Player.Velocity.Y + _jumpVelocity, Player.Velocity.Z);
             _coyoteTimer = 0.0f;
             _rig.Travel("Jump");
+            _jumpVFX.Restart();
         }
         else if (_jumpsLeft > 0)
         {
             _jumpsLeft--;
             Player.Velocity = new Vector3(Player.Velocity.X, _jumpVelocity, Player.Velocity.Z);
             _rig.Travel("Jump");
+            _jumpVFX.Restart();
         }
     }
 
@@ -111,12 +115,14 @@ public partial class Jump : Node3D
             Player.Velocity = new Vector3(Player.Velocity.X, Player.Velocity.Y + _crouchJumpVelocity, Player.Velocity.Z);
             _coyoteTimer = 0.0f;
             _rig.Travel("CrouchJump");
+            _jumpVFX.Restart();
         }
         else if (_jumpsLeft > 0)
         {
             _jumpsLeft--;
             Player.Velocity = new Vector3(Player.Velocity.X, _jumpVelocity, Player.Velocity.Z); // So that the player cannot high jump in air
             _rig.Travel("Jump");
+            _jumpVFX.Restart();
         }
     }
 

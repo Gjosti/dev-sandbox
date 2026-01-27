@@ -8,11 +8,15 @@
 
 config_version=5
 
+[animation]
+
+compatibility/default_parent_skeleton_in_mesh_instance_3d=true
+
 [application]
 
 config/name="DevSandbox"
 run/main_scene="uid://clq4ymy58tejc"
-config/features=PackedStringArray("4.5", "C#", "Forward Plus")
+config/features=PackedStringArray("4.6", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
 [debug]
@@ -28,6 +32,10 @@ window/size/viewport_height=1080
 [dotnet]
 
 project/assembly_name="DevSandbox"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/brackeys_particle_controls/plugin.cfg")
 
 [input]
 

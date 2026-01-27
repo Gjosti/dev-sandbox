@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=3 uid="uid://clq4ymy58tejc"]
+[gd_scene format=3 uid="uid://clq4ymy58tejc"]
 
 [ext_resource type="PackedScene" uid="uid://be1k25cx46lxo" path="res://Player/Player.tscn" id="1_e63bh"]
 [ext_resource type="Texture2D" uid="uid://ctu34g88n34r" path="res://addons/kenney_prototype_textures/dark/texture_09.png" id="1_l7jkp"]
@@ -92,85 +92,85 @@ albedo_texture = ExtResource("6_qag8g")
 uv1_scale = Vector3(0.5, 0.5, 0.5)
 uv1_triplanar = true
 
-[node name="SandboxLevel" type="Node3D"]
+[node name="SandboxLevel" type="Node3D" unique_id=1734873362]
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1340693185]
 environment = SubResource("Environment_67hdk")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=827759953]
 transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
 shadow_enabled = true
 
-[node name="Ground" type="StaticBody3D" parent="."]
+[node name="Ground" type="StaticBody3D" parent="." unique_id=1456082757]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground" unique_id=940782526]
 shape = SubResource("BoxShape3D_c1o2k")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Ground"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ground" unique_id=437172261]
 mesh = SubResource("BoxMesh_e63bh")
 surface_material_override/0 = SubResource("StandardMaterial3D_i8ax3")
 
-[node name="Player" parent="." instance=ExtResource("1_e63bh")]
+[node name="Player" parent="." unique_id=1849666766 instance=ExtResource("1_e63bh")]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4307022, -7.6293945e-06, 9.739891)
 
-[node name="CollisionWalls" type="Node3D" parent="."]
+[node name="CollisionWalls" type="Node3D" parent="." unique_id=490565258]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.8392062, 0, -5.5322585)
 
-[node name="CSGBox3D" type="CSGBox3D" parent="CollisionWalls"]
+[node name="CSGBox3D" type="CSGBox3D" parent="CollisionWalls" unique_id=281764723]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, -9.145692)
 use_collision = true
 size = Vector3(3, 5, 1)
 
-[node name="CollisionOnLabel" type="Label3D" parent="CollisionWalls/CSGBox3D"]
+[node name="CollisionOnLabel" type="Label3D" parent="CollisionWalls/CSGBox3D" unique_id=1048141366]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.5279131)
 text = "I have collision"
 font_size = 52
 
-[node name="CSGBox3D2" type="CSGBox3D" parent="CollisionWalls"]
+[node name="CSGBox3D2" type="CSGBox3D" parent="CollisionWalls" unique_id=503362309]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5011451, 2.5, -9.145692)
 size = Vector3(3, 5, 1)
 material = SubResource("StandardMaterial3D_qag8g")
 
-[node name="CollisionOffLabel" type="Label3D" parent="CollisionWalls/CSGBox3D2"]
+[node name="CollisionOffLabel" type="Label3D" parent="CollisionWalls/CSGBox3D2" unique_id=1866450710]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.5279131)
 text = "I do not have collision"
 font_size = 52
 
-[node name="CSGBox3D3" type="CSGBox3D" parent="CollisionWalls"]
+[node name="CSGBox3D3" type="CSGBox3D" parent="CollisionWalls" unique_id=35004832]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2074997, 0)
 use_collision = true
 size = Vector3(1, 2.415, 1)
 
-[node name="OutlinePlayground" type="Node3D" parent="."]
+[node name="OutlinePlayground" type="Node3D" parent="." unique_id=897731493]
 
-[node name="MouseHoverOutlineBox" type="Node3D" parent="OutlinePlayground" node_paths=PackedStringArray("mesh")]
+[node name="MouseHoverOutlineBox" type="Node3D" parent="OutlinePlayground" unique_id=846177224 node_paths=PackedStringArray("mesh")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6968603, 0.87252474, -7.8347826)
 script = ExtResource("2_bu5p0")
 mesh = NodePath("MeshInstance3D")
 outline_material = ExtResource("3_67hdk")
 selected_material = ExtResource("4_oyyku")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="OutlinePlayground/MouseHoverOutlineBox"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="OutlinePlayground/MouseHoverOutlineBox" unique_id=1145956423]
 transform = Transform3D(1.835, 0, 0, 0, 1.835, 0, 0, 0, 1.835, 0, 0, 0)
 material_override = SubResource("StandardMaterial3D_l7jkp")
 mesh = SubResource("TorusMesh_67hdk")
 skeleton = NodePath("../../..")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="OutlinePlayground/MouseHoverOutlineBox/MeshInstance3D"]
+[node name="StaticBody3D" type="StaticBody3D" parent="OutlinePlayground/MouseHoverOutlineBox/MeshInstance3D" unique_id=1275662347]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="OutlinePlayground/MouseHoverOutlineBox/MeshInstance3D/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="OutlinePlayground/MouseHoverOutlineBox/MeshInstance3D/StaticBody3D" unique_id=1932856415]
 shape = SubResource("CylinderShape3D_oyyku")
 
-[node name="Label3D" type="Label3D" parent="OutlinePlayground/MouseHoverOutlineBox"]
+[node name="Label3D" type="Label3D" parent="OutlinePlayground/MouseHoverOutlineBox" unique_id=1758136920]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.99030495, 0)
 billboard = 2
 text = "Click me!"
 font_size = 64
 outline_size = 32
 
-[node name="AnotherObject" type="Node3D" parent="OutlinePlayground" node_paths=PackedStringArray("mesh", "body")]
+[node name="AnotherObject" type="Node3D" parent="OutlinePlayground" unique_id=891893223 node_paths=PackedStringArray("mesh", "body")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.19974, 0, -8.379846)
 script = ExtResource("2_bu5p0")
 mesh = NodePath("MeshInstance3D")
@@ -178,58 +178,59 @@ outline_material = ExtResource("3_67hdk")
 selected_material = ExtResource("4_oyyku")
 body = NodePath("MeshInstance3D/StaticBody3D")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="OutlinePlayground/AnotherObject"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="OutlinePlayground/AnotherObject" unique_id=398850116]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1125, 1.3431511)
 mesh = SubResource("PrismMesh_oyyku")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="OutlinePlayground/AnotherObject/MeshInstance3D"]
+[node name="StaticBody3D" type="StaticBody3D" parent="OutlinePlayground/AnotherObject/MeshInstance3D" unique_id=106482650]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="OutlinePlayground/AnotherObject/MeshInstance3D/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="OutlinePlayground/AnotherObject/MeshInstance3D/StaticBody3D" unique_id=185433293]
 shape = SubResource("ConvexPolygonShape3D_oyyku")
 
-[node name="ObstacleCourse" type="Node3D" parent="."]
+[node name="ObstacleCourse" type="Node3D" parent="." unique_id=1129479891]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.318405, 0, 0)
 
-[node name="CSGMesh3D" type="CSGMesh3D" parent="ObstacleCourse"]
+[node name="CSGMesh3D" type="CSGMesh3D" parent="ObstacleCourse" unique_id=1641494109]
 transform = Transform3D(16.453428, 0, 0, 0, 3.4593942, 0, 0, 0, 7.539881, 3.9389381, 1.7296968, -0.16828847)
 use_collision = true
 mesh = SubResource("PrismMesh_l7jkp")
 material = SubResource("StandardMaterial3D_soprk")
 
-[node name="CSGMesh3D2" type="CSGMesh3D" parent="ObstacleCourse"]
+[node name="CSGMesh3D2" type="CSGMesh3D" parent="ObstacleCourse" unique_id=1720620610]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 73.287926, 50, 35.053024)
 use_collision = true
 mesh = SubResource("PrismMesh_qag8g")
 material = SubResource("StandardMaterial3D_jct52")
 
-[node name="CSGBox3D" type="CSGBox3D" parent="ObstacleCourse"]
+[node name="CSGBox3D" type="CSGBox3D" parent="ObstacleCourse" unique_id=436190437]
 transform = Transform3D(0.69906455, 0.71505857, 0, -0.71505857, 0.69906455, 0, 0, 0, 1, 42.20629, 53.944805, 45.356552)
 use_collision = true
 size = Vector3(6.78, 100, 10)
 material = SubResource("StandardMaterial3D_xuon6")
 
-[node name="CSGBox3D2" type="CSGBox3D" parent="ObstacleCourse"]
+[node name="CSGBox3D2" type="CSGBox3D" parent="ObstacleCourse" unique_id=1199761011]
 transform = Transform3D(0.25881907, 0.9659258, 0, -0.9659258, 0.25881907, 0, 0, 0, 1, 42.20629, 53.944805, 24.656487)
 use_collision = true
 size = Vector3(6.78, 100, 10)
 material = SubResource("StandardMaterial3D_nxqmx")
 
-[node name="CSGBox3D3" type="CSGBox3D" parent="ObstacleCourse"]
+[node name="CSGBox3D3" type="CSGBox3D" parent="ObstacleCourse" unique_id=714892311]
 transform = Transform3D(0.08715576, 0.9961946, -8.742278e-08, 0.9961946, -0.08715576, 0, -7.6193984e-09, -8.70901e-08, -1, 115.66521, 53.944805, -30.922218)
 use_collision = true
 size = Vector3(6.78, 100, 100)
 material = SubResource("StandardMaterial3D_c3wst")
 
-[node name="UserInterface" parent="." node_paths=PackedStringArray("Player") instance=ExtResource("10_jct52")]
+[node name="UserInterface" parent="." unique_id=1027928503 node_paths=PackedStringArray("Player") instance=ExtResource("10_jct52")]
 Player = NodePath("../Player")
 
-[node name="Boxes" type="Node3D" parent="."]
+[node name="Boxes" type="Node3D" parent="." unique_id=1846616897]
 
-[node name="PhysicsDestructibleBase" parent="Boxes" instance=ExtResource("11_xuon6")]
+[node name="PhysicsDestructibleBase" parent="Boxes" unique_id=1060729228 instance=ExtResource("11_xuon6")]
 transform = Transform3D(0.9810297, 0.19385767, 0, -0.19385767, 0.9810297, 0, 0, 0, 1, 6.052306, 4.831397, 0)
 
-[node name="RigidBody3DPropDestructible" parent="." instance=ExtResource("12_soprk")]
+[node name="RigidBody3DPropDestructible" parent="." unique_id=1367550835 instance=ExtResource("12_soprk")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
+DebugMode = true
 
 [connection signal="VelocityCurrent" from="Player" to="Player" method="_on_velocity_current"]
 [connection signal="input_event" from="OutlinePlayground/MouseHoverOutlineBox/MeshInstance3D/StaticBody3D" to="OutlinePlayground/MouseHoverOutlineBox" method="_on_static_body_3d_input_event"]

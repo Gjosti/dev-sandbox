@@ -1,4 +1,4 @@
-[gd_resource type="ShaderMaterial" load_steps=3 format=3 uid="uid://bncutmpqxq13f"]
+[gd_resource type="ShaderMaterial" format=3 uid="uid://bncutmpqxq13f"]
 
 [ext_resource type="Shader" uid="uid://b4bauf6b0u0gq" path="res://Player/PerfectOutlineShader.gdshader" id="1_6qwqb"]
 
