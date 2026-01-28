@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://b1veppx83glta"]
 
 [ext_resource type="Script" uid="uid://d4cp5tupcj1lr" path="res://Player/Jump.cs" id="1_qnl1h"]
+[ext_resource type="Texture2D" uid="uid://dial7kbq3mom3" path="res://addons/brackeys_vfx_bundle/particles/alpha/circle_02_a.png" id="2_ogch6"]
 
 [sub_resource type="Curve" id="Curve_qnl1h"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
@@ -32,12 +33,45 @@ vertex_color_use_as_albedo = true
 [sub_resource type="SphereMesh" id="SphereMesh_ogch6"]
 material = SubResource("StandardMaterial3D_qnl1h")
 
-[node name="Jump" type="Node3D" unique_id=1508996925]
+[sub_resource type="Curve" id="Curve_k3h6u"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.8734492, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_7f04u"]
+curve = SubResource("Curve_k3h6u")
+
+[sub_resource type="Curve" id="Curve_s33br"]
+_data = [Vector2(0.0024813898, 0), 0.0, 0.0, 0, 0, Vector2(0.8411911, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_ay7oo"]
+curve = SubResource("Curve_s33br")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_u8siy"]
+radial_velocity_min = -2.2351742e-05
+radial_velocity_max = -2.2351742e-05
+gravity = Vector3(0, 0, 0)
+scale_curve = SubResource("CurveTexture_ay7oo")
+alpha_curve = SubResource("CurveTexture_7f04u")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pki28"]
+transparency = 1
+cull_mode = 2
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("2_ogch6")
+
+[sub_resource type="QuadMesh" id="QuadMesh_mftj8"]
+material = SubResource("StandardMaterial3D_pki28")
+orientation = 1
+
+[node name="Jump" type="Node3D" unique_id=1508996925 node_paths=PackedStringArray("_jumpVFX", "_landVFX")]
 script = ExtResource("1_qnl1h")
+_jumpVFX = NodePath("VFX/JumpGPUParticles3D")
+_landVFX = NodePath("VFX/ImpactGPUParticles3D")
 
 [node name="VFX" type="Node3D" parent="." unique_id=651416896]
 
-[node name="GPUParticles3D" type="GPUParticles3D" parent="VFX" unique_id=1264973594]
+[node name="JumpGPUParticles3D" type="GPUParticles3D" parent="VFX" unique_id=1264973594]
 emitting = false
 amount = 6
 lifetime = 0.5
@@ -46,3 +80,12 @@ explosiveness = 1.0
 fixed_fps = 0
 process_material = SubResource("ParticleProcessMaterial_qnl1h")
 draw_pass_1 = SubResource("SphereMesh_ogch6")
+
+[node name="ImpactGPUParticles3D" type="GPUParticles3D" parent="VFX" unique_id=1519336933]
+emitting = false
+amount = 1
+lifetime = 0.5
+one_shot = true
+fixed_fps = 0
+process_material = SubResource("ParticleProcessMaterial_u8siy")
+draw_pass_1 = SubResource("QuadMesh_mftj8")

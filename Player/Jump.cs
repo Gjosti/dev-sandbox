@@ -18,6 +18,10 @@ public partial class Jump : Node3D
     [ExportGroup("Speed Jump")]
     [Export] public bool SpeedJumpEnabled { get; set; } = true; // TODO: Jumping from the ground while above a certain horizontal velocity threshold adds a slight velocity boost
 
+    [ExportGroup("VFX")]
+    [Export] private GpuParticles3D _jumpVFX; //If multiple FX change to animationplayer
+    [Export] private GpuParticles3D _landVFX;
+
     // Regular Jump - calculated values
     private float _jumpVelocity;
     private float _jumpGravity;
@@ -32,7 +36,6 @@ public partial class Jump : Node3D
     private float _coyoteTimer = 0.0f;
 
     private Rig _rig;
-    private GpuParticles3D _jumpVFX;
 
     public override void _Ready()
     {
@@ -45,15 +48,17 @@ public partial class Jump : Node3D
 
         _jumpsLeft = ExtraJumps;
 
-		_rig = Player.GetNode<Rig>("RigPivot/Rig");
-        _jumpVFX = GetNode<GpuParticles3D>("VFX/GPUParticles3D"); //If multiple FX change to animationplayer
+		_rig = Player.GetNode<Rig>("RigPivot/Rig"); 
+        
     }
 
     public override void _PhysicsProcess(double delta)
     {
-        if (Player.IsOnFloor())
+        if (Player.IsOnFloor()) //TODO should this be an event instead of clogging the physicsprocess?
         {
             _jumpsLeft = ExtraJumps;
+            
+            _landVFX.Restart(); //TODO should run when the player lands.
         }
 
         HandleJumpInput();
