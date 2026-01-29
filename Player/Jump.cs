@@ -3,7 +3,7 @@ using Godot;
 public partial class Jump : Node3D
 {
     [ExportGroup("Jump Settings")]
-    [Export] public Player Player { get; set; } 
+    [Export] public Player Player { get; set; }
     [Export] public float JumpHeight { get; set; } = 4f;
     [Export] public float JumpTimeToPeak { get; set; } = 0.5f;
     [Export] public float JumpTimeToDescent { get; set; } = 0.25f;
@@ -29,11 +29,13 @@ public partial class Jump : Node3D
 
     // Crouch/High Jump - calculated values
     private float _crouchJumpVelocity;
-
     private int _jumpsLeft;
-
     private const float CoyoteTime = 0.1f;
     private float _coyoteTimer = 0.0f;
+
+    // landing detection
+    private bool _wasOnFloor = false;
+
 
     private Rig _rig;
 
@@ -48,18 +50,16 @@ public partial class Jump : Node3D
 
         _jumpsLeft = ExtraJumps;
 
-		_rig = Player.GetNode<Rig>("RigPivot/Rig"); 
-        
+        _rig = Player.GetNode<Rig>("RigPivot/Rig");
+
+        _wasOnFloor = Player.IsOnFloor();
     }
 
     public override void _PhysicsProcess(double delta)
     {
-        if (Player.IsOnFloor()) //TODO should this be an event instead of clogging the physicsprocess?
-        {
-            _jumpsLeft = ExtraJumps;
-            
-            _landVFX.Restart(); //TODO should run when the player lands.
-        }
+        RefreshJumps();
+        DetectLanding();
+
 
         HandleJumpInput();
 
@@ -93,6 +93,25 @@ public partial class Jump : Node3D
                 PerformJump();
             }
         }
+    }
+
+    private void RefreshJumps()
+    {
+        if (Player.IsOnFloor() && (_jumpsLeft != ExtraJumps)) //TODO should this be an event instead of clogging the physicsprocess?
+        {
+            _jumpsLeft = ExtraJumps;
+        }
+    }
+
+    private void DetectLanding()
+    {
+        bool isOnFloor = Player.IsOnFloor();
+        
+        if (isOnFloor && !_wasOnFloor)
+        {
+            _landVFX?.Restart();
+        }
+        _wasOnFloor = isOnFloor;
     }
 
     private void PerformJump()

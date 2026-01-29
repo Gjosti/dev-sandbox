@@ -41,7 +41,8 @@ point_count = 2
 curve = SubResource("Curve_k3h6u")
 
 [sub_resource type="Curve" id="Curve_s33br"]
-_data = [Vector2(0.0024813898, 0), 0.0, 0.0, 0, 0, Vector2(0.8411911, 1), 0.0, 0.0, 0, 0]
+_limits = [0.0, 2.0, 0.0, 1.0]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 2), 0.0, 0.0, 0, 0]
 point_count = 2
 
 [sub_resource type="CurveTexture" id="CurveTexture_ay7oo"]
@@ -86,6 +87,7 @@ emitting = false
 amount = 1
 lifetime = 0.5
 one_shot = true
+preprocess = 0.2
 fixed_fps = 0
 process_material = SubResource("ParticleProcessMaterial_u8siy")
 draw_pass_1 = SubResource("QuadMesh_mftj8")
