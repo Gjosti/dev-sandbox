@@ -9,9 +9,8 @@ public partial class Player : CharacterBody3D
 	public delegate void VelocityCurrentEventHandler(Vector3 currentVelocity);
 
 	[ExportGroup("Movement Settings")]
-	[Export] public float MovementSpeed { get; set; } = 6.0f;
+	[Export] public float MovementSpeed { get; set; } = 10.0f;
 	[Export] public float PushForce = 60f;
-	[Export] public float CrouchMovementModifier { get; set; }
 	[Export] public float Acceleration { get; set; } = 30f;
 	[Export] public float AirAcceleration { get; set; } = 10.0f;
 	[Export] public float AirDrag { get; set; } = 0.5f;
