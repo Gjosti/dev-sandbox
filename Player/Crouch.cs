@@ -3,7 +3,8 @@ using Godot;
 public partial class Crouch : Node
 {
 	[Export] public Player Player { get; set; }
-	[Export] public float SlideThreshold { get; set; } = 6.1f;
+	[Export] public float CrouchMovementModifier { get; set; }
+	[Export] public float SlideThreshold { get; set; } = 10.1f;
 	[Export] public float SlideMinThreshold { get; set; } = 3f;
 	[Export] public float SlideFriction { get; set; } = 0.985f;
 	[Export] public float SlideTurnRate { get; set; } = 0.05f;
@@ -45,7 +46,7 @@ public partial class Crouch : Node
 	    if (_rig.IsSliding())
 	    {
 	        ApplySimpleSlide((float)delta);
-	        if (velocityLength < SlideThreshold)
+	        if (velocityLength < SlideMinThreshold)
 	            PerformCrouch();
 	    }
 	    else if (_rig.IsCrouching() && velocityLength > SlideThreshold)
