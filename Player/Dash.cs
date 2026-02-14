@@ -68,7 +68,7 @@ public partial class Dash : Node3D
 
     private bool CanDash()
     {
-        return _availableDashes > 0 && _timer.IsStopped();
+        return _availableDashes > 0 && _timer.IsStopped() && !_rig.IsCrouching();
     }
 
     private Vector3 CalculateDashDirection()
@@ -102,7 +102,14 @@ public partial class Dash : Node3D
         
         while (dashTimer.TimeLeft > 0)
         {
-            Player.Velocity = new Vector3(dashVelocity.X, Player.Velocity.Y, dashVelocity.Z);
+            Vector3 currentHorizontalVelocity = new Vector3(Player.Velocity.X, 0, Player.Velocity.Z);
+            
+            // Only apply dash velocity if it's faster than current velocity
+            Vector3 finalVelocity = currentHorizontalVelocity.Length() > dashVelocity.Length() 
+                ? currentHorizontalVelocity 
+                : dashVelocity;
+            
+            Player.Velocity = new Vector3(finalVelocity.X, Player.Velocity.Y, finalVelocity.Z);
             await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
         }
     }
