@@ -9,61 +9,92 @@ public partial class Jump : Node3D
     [Export] public float JumpTimeToDescent { get; set; } = 0.25f;
     [Export] public int ExtraJumps { get; set; } = 1;
 
-    [ExportGroup("Crouch/High Jump (Crouch + Jump while still)")]
+    [ExportGroup("Crouch/High Jump")]
     [Export] public bool CrouchJumpEnabled { get; set; } = true;
     [Export] public float CrouchJumpHeight { get; set; } = 8f;
     [Export] public float CrouchJumpTimeToPeak { get; set; } = 0.5f;
     [Export] public float CrouchJumpTimeToDescent { get; set; } = 0.25f;
 
+    [ExportGroup("Coyote Time")]
+    [Export] public float CoyoteTime { get; set; } = 0.1f;
+
+    [ExportGroup("Jump Cancel")]
+    [Export] public float JumpCancelMultiplier { get; set; } = 0.4f;
+
+    [ExportGroup("Bunny Hop")]
+    [Export] public bool BunnyHopEnabled { get; set; } = true;
+    [Export] public float BunnyHopTimeWindow { get; set; } = 0.2f;
+    [Export] public float BunnyHopSpeedThreshold { get; set; } = 9.0f;
+    [Export] public float BunnyHopSpeedBoost { get; set; } = 5.0f;
+
     [ExportGroup("Speed Jump")]
-    [Export] public bool SpeedJumpEnabled { get; set; } = true; // TODO: Jumping from the ground while above a certain horizontal velocity threshold adds a slight velocity boost
+    [Export] public bool SpeedJumpEnabled { get; set; } = true;
 
     [ExportGroup("VFX")]
-    [Export] private GpuParticles3D _jumpVFX; //If multiple FX change to animationplayer
+    [Export] private GpuParticles3D _jumpVFX;
     [Export] private GpuParticles3D _landVFX;
 
-    // Regular Jump - calculated values
+    // Calculated jump physics
     private float _jumpVelocity;
     private float _jumpGravity;
     private float _fallGravity;
-
-    // Crouch/High Jump - calculated values
     private float _crouchJumpVelocity;
+
+    // Jump state
     private int _jumpsLeft;
-    private const float CoyoteTime = 0.1f;
-    private float _coyoteTimer = 0.0f;
-
-    // landing detection
-    private bool _wasOnFloor = false;
-
-
+    private float _coyoteTimer;
+    private bool _wasOnFloor;
+    private float _timeSinceLanding;
     private Rig _rig;
 
     public override void _Ready()
     {
-        // Calculate jump physics values
-        _jumpVelocity = (2.0f * JumpHeight) / JumpTimeToPeak;
-        _jumpGravity = (-2.0f * JumpHeight) / (JumpTimeToPeak * JumpTimeToPeak);
-        _fallGravity = (-2.0f * JumpHeight) / (JumpTimeToPeak * JumpTimeToDescent);
-
-        _crouchJumpVelocity = (2.0f * CrouchJumpHeight) / CrouchJumpTimeToPeak;
-
-        _jumpsLeft = ExtraJumps;
-
-        _rig = Player.GetNode<Rig>("RigPivot/Rig");
-
-        _wasOnFloor = Player.IsOnFloor();
+        InitializeJumpPhysics();
+        InitializeReferences();
     }
 
     public override void _PhysicsProcess(double delta)
     {
-        RefreshJumps();
+        UpdateCoyoteTimer(delta);
+        UpdateBunnyHopTimer(delta);
+        RefreshJumpsOnGround();
         DetectLanding();
-
-
         HandleJumpInput();
+        HandleJumpCancel();
+    }
 
-        // Coyote time
+    private void InitializeJumpPhysics()
+    {
+        _jumpVelocity = CalculateJumpVelocity(JumpHeight, JumpTimeToPeak);
+        _jumpGravity = CalculateJumpGravity(JumpHeight, JumpTimeToPeak);
+        _fallGravity = CalculateFallGravity(JumpHeight, JumpTimeToPeak, JumpTimeToDescent);
+        _crouchJumpVelocity = CalculateJumpVelocity(CrouchJumpHeight, CrouchJumpTimeToPeak);
+        _jumpsLeft = ExtraJumps;
+    }
+
+    private void InitializeReferences()
+    {
+        _rig = Player.GetNode<Rig>("RigPivot/Rig");
+        _wasOnFloor = Player.IsOnFloor();
+    }
+
+    private float CalculateJumpVelocity(float height, float timeToPeak)
+    {
+        return (2.0f * height) / timeToPeak;
+    }
+
+    private float CalculateJumpGravity(float height, float timeToPeak)
+    {
+        return (-2.0f * height) / (timeToPeak * timeToPeak);
+    }
+
+    private float CalculateFallGravity(float height, float timeToPeak, float timeToDescent)
+    {
+        return (-2.0f * height) / (timeToPeak * timeToDescent);
+    }
+
+    private void UpdateCoyoteTimer(double delta)
+    {
         if (Player.IsOnFloor())
         {
             _coyoteTimer = CoyoteTime;
@@ -72,32 +103,23 @@ public partial class Jump : Node3D
         {
             _coyoteTimer = Mathf.Max(0.0f, _coyoteTimer - (float)delta);
         }
+    }
 
-        // Cancel jump early
-        if (Input.IsActionJustReleased("jump") && Player.Velocity.Y >= 0)
+    private void UpdateBunnyHopTimer(double delta)
+    {
+        if (Player.IsOnFloor())
         {
-            Player.Velocity = new Vector3(Player.Velocity.X, Player.Velocity.Y * 0.4f, Player.Velocity.Z);
+            _timeSinceLanding += (float)delta;
+        }
+        else
+        {
+            _timeSinceLanding = 0.0f;
         }
     }
 
-    private void HandleJumpInput()
+    private void RefreshJumpsOnGround()
     {
-        if (Input.IsActionJustPressed("jump"))
-        {
-            if (CrouchJumpEnabled && _rig.IsCrouching())
-            {
-                CrouchJump();
-            }
-            else
-            {
-                PerformJump();
-            }
-        }
-    }
-
-    private void RefreshJumps()
-    {
-        if (Player.IsOnFloor() && (_jumpsLeft != ExtraJumps)) //TODO should this be an event instead of clogging the physicsprocess?
+        if (Player.IsOnFloor() && _jumpsLeft != ExtraJumps)
         {
             _jumpsLeft = ExtraJumps;
         }
@@ -110,47 +132,118 @@ public partial class Jump : Node3D
         if (isOnFloor && !_wasOnFloor)
         {
             _landVFX?.Restart();
+            _timeSinceLanding = 0.0f;
         }
+        
         _wasOnFloor = isOnFloor;
+    }
+
+    private void HandleJumpInput()
+    {
+        if (Input.IsActionJustPressed("jump"))
+        {
+            if (CrouchJumpEnabled && _rig.IsCrouching())
+            {
+                PerformCrouchJump();
+            }
+            else
+            {
+                PerformJump();
+            }
+        }
+    }
+
+    private void HandleJumpCancel()
+    {
+        if (Input.IsActionJustReleased("jump") && Player.Velocity.Y > 0)
+        {
+            Player.Velocity = new Vector3(
+                Player.Velocity.X, 
+                Player.Velocity.Y * JumpCancelMultiplier, 
+                Player.Velocity.Z
+            );
+        }
     }
 
     private void PerformJump()
     {
-        if (Player.IsOnFloor() || _coyoteTimer > 0.0f)
+        if (CanGroundJump())
         {
-            Player.Velocity = new Vector3(Player.Velocity.X, Player.Velocity.Y + _jumpVelocity, Player.Velocity.Z);
-            _coyoteTimer = 0.0f;
-            _rig.Travel("Jump");
-            _jumpVFX.Restart();
+            bool applyBunnyHop = ShouldApplyBunnyHop();
+            ExecuteGroundJump(_jumpVelocity, "Jump", applyBunnyHop);
         }
-        else if (_jumpsLeft > 0)
+        else if (CanAirJump())
         {
-            _jumpsLeft--;
-            Player.Velocity = new Vector3(Player.Velocity.X, _jumpVelocity, Player.Velocity.Z);
-            _rig.Travel("Jump");
-            _jumpVFX.Restart();
+            ExecuteAirJump(_jumpVelocity, "Jump");
         }
     }
 
-    private void CrouchJump()
+    private void PerformCrouchJump()
     {
-        if (Player.IsOnFloor() || _coyoteTimer > 0.0f)
+        if (CanGroundJump())
         {
-            Player.Velocity = new Vector3(Player.Velocity.X, Player.Velocity.Y + _crouchJumpVelocity, Player.Velocity.Z);
-            _coyoteTimer = 0.0f;
-            _rig.Travel("CrouchJump");
-            _jumpVFX.Restart();
+            ExecuteGroundJump(_crouchJumpVelocity, "CrouchJump", false);
         }
-        else if (_jumpsLeft > 0)
+        else if (CanAirJump())
         {
-            _jumpsLeft--;
-            Player.Velocity = new Vector3(Player.Velocity.X, _jumpVelocity, Player.Velocity.Z); // So that the player cannot high jump in air
-            _rig.Travel("Jump");
-            _jumpVFX.Restart();
+            // Prevent high jump in air - use regular jump velocity
+            ExecuteAirJump(_jumpVelocity, "Jump");
         }
     }
 
-    // TODO: Recheck if needed
+    private bool CanGroundJump()
+    {
+        return Player.IsOnFloor() || _coyoteTimer > 0.0f;
+    }
+
+    private bool CanAirJump()
+    {
+        return _jumpsLeft > 0;
+    }
+
+    private bool ShouldApplyBunnyHop()
+    {
+        if (!BunnyHopEnabled) return false;
+
+        Vector3 horizontalVelocity = new Vector3(Player.Velocity.X, 0, Player.Velocity.Z);
+        float currentSpeed = horizontalVelocity.Length();
+
+        return _timeSinceLanding <= BunnyHopTimeWindow && currentSpeed >= BunnyHopSpeedThreshold;
+    }
+
+    private void ExecuteGroundJump(float jumpVelocity, string animationName, bool applyBunnyHop = false)
+    {
+        Player.Velocity = new Vector3(Player.Velocity.X, Player.Velocity.Y + jumpVelocity, Player.Velocity.Z);
+        
+        if (applyBunnyHop)
+        {
+            ApplyBunnyHopBoost();
+        }
+        
+        _coyoteTimer = 0.0f;
+        PlayJumpEffects(animationName);
+    }
+
+    private void ApplyBunnyHopBoost()
+    {
+        Vector3 horizontalVelocity = new Vector3(Player.Velocity.X, 0, Player.Velocity.Z);
+        Vector3 boostedVelocity = horizontalVelocity.Normalized() * (horizontalVelocity.Length() + BunnyHopSpeedBoost);
+        Player.Velocity = new Vector3(boostedVelocity.X, Player.Velocity.Y, boostedVelocity.Z);
+    }
+
+    private void ExecuteAirJump(float jumpVelocity, string animationName)
+    {
+        _jumpsLeft--;
+        Player.Velocity = new Vector3(Player.Velocity.X, jumpVelocity, Player.Velocity.Z);
+        PlayJumpEffects(animationName);
+    }
+
+    private void PlayJumpEffects(string animationName)
+    {
+        _rig.Travel(animationName);
+        _jumpVFX?.Restart();
+    }
+
     public float GetGravity(float currentVelocityY)
     {
         return currentVelocityY > 0.0f ? _jumpGravity : _fallGravity;
