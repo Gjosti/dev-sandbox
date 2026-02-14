@@ -1,4 +1,4 @@
-[gd_scene load_steps=49 format=3 uid="uid://bedml0okde3l1"]
+[gd_scene format=3 uid="uid://bedml0okde3l1"]
 
 [ext_resource type="Script" uid="uid://mxcve1proabf" path="res://Player/Rig.cs" id="1_wer68"]
 [ext_resource type="Material" uid="uid://c23j08bjm2j2x" path="res://Outlines/XRayOutline.tres" id="1_ydo8n"]
@@ -149,7 +149,7 @@ tracks/2/keys = {
 
 [sub_resource type="Animation" id="Animation_vcvy3"]
 resource_name = "Dash"
-length = 0.5
+length = 0.3
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -157,10 +157,10 @@ tracks/0/path = NodePath(".:rotation")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.05, 0.5),
+"times": PackedFloat32Array(0, 0.05, 0.23333335),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
-"values": [Vector3(0, 0, 0), Vector3(0.7853982, 0, 0), Vector3(0, 0, 0)]
+"values": [Vector3(0, 0, 0), Vector3(-0.7853982, 0, 0), Vector3(0, 0, 0)]
 }
 
 [sub_resource type="Animation" id="Animation_ydo8n"]
@@ -732,37 +732,35 @@ states/Slide/position = Vector2(626, -65)
 transitions = ["Start", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_8s7l5"), "MoveSpace", "Attack", SubResource("AnimationNodeStateMachineTransition_ojd8b"), "Attack", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_awthv"), "MoveSpace", "Jump", SubResource("AnimationNodeStateMachineTransition_wer68"), "Jump", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_32kt2"), "Dash", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_vcvy3"), "MoveSpace", "Dash", SubResource("AnimationNodeStateMachineTransition_icx30"), "MoveSpace", "Crouch", SubResource("AnimationNodeStateMachineTransition_80s3x"), "Crouch", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_r5mnt"), "MoveSpace", "Slide", SubResource("AnimationNodeStateMachineTransition_n25uh"), "Slide", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_856ud"), "Dash", "Jump", SubResource("AnimationNodeStateMachineTransition_sy1xi"), "Crouch", "CrouchJump", SubResource("AnimationNodeStateMachineTransition_fugc2"), "CrouchJump", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_srgp2"), "MoveSpace", "LedgeGrab", SubResource("AnimationNodeStateMachineTransition_fruns"), "LedgeGrab", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_8qp75")]
 graph_offset = Vector2(243, -132)
 
-[node name="Rig" type="Node3D"]
+[node name="Rig" type="Node3D" unique_id=1874133142]
 script = ExtResource("1_wer68")
 
-[node name="CharacterRig" type="Node3D" parent="."]
+[node name="CharacterRig" type="Node3D" parent="." unique_id=1691362031]
 transform = Transform3D(0.9, 0, 0, 0, 0.9, 0, 0, 0, 0.9, 0, 0, 0)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterRig"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterRig" unique_id=961432655]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 material_override = SubResource("StandardMaterial3D_wer68")
 material_overlay = ExtResource("1_ydo8n")
 mesh = SubResource("CapsuleMesh_ojd8b")
 skeleton = NodePath("")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterRig/MeshInstance3D"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="CharacterRig/MeshInstance3D" unique_id=1436826151]
 transform = Transform3D(0.69, 0, 0, 0, 0.27, 0, 0, 0, 0.445, 0, 0.94, -0.412)
 material_override = SubResource("StandardMaterial3D_awthv")
 mesh = SubResource("BoxMesh_32kt2")
 surface_material_override/0 = SubResource("StandardMaterial3D_8s7l5")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="CharacterRig"]
-libraries = {
-&"": SubResource("AnimationLibrary_awthv")
-}
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CharacterRig" unique_id=1026358355]
+libraries/ = SubResource("AnimationLibrary_awthv")
 
-[node name="AnimationTree" type="AnimationTree" parent="."]
+[node name="AnimationTree" type="AnimationTree" parent="." unique_id=1263848157]
 root_node = NodePath("../CharacterRig")
 tree_root = SubResource("AnimationNodeStateMachine_ydo8n")
 anim_player = NodePath("../CharacterRig/AnimationPlayer")
 parameters/MoveSpace/blend_position = -1.1567165
 
-[node name="StateLabel" type="Label3D" parent="."]
+[node name="StateLabel" type="Label3D" parent="." unique_id=254855980]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2260134, 2.5220368, 0)
 billboard = 1
 text = "State"

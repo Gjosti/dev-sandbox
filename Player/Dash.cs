@@ -1,24 +1,18 @@
 using Godot;
-using System.Threading.Tasks;
 
 public partial class Dash : Node3D
 {
     [Export] public Player Player { get; set; }
     [Export] public float DashCooldown { get; set; } = 0.5f;
     [Export] public int ExtraDashes { get; set; } = 1;
-    [Export] public float DashDuration { get; set; } = 0.5f;
-    [Export] public float DashSpeedModifier { get; set; } = 2.0f;
-    [Export] public float MinDashSpeed { get; set; } = 6f;
-    [Export] public float MaxDashSpeed { get; set; } = 25f;
+    [Export] public float DashSpeed { get; set; } = 20f;
 
     private Timer _timer;
     private Rig _rig;
     private Node3D _rigPivot;
-    private Vector3 _direction = Vector3.Zero;
-    private Vector3 _dashVelocity;
+    private AnimationPlayer _animationPlayer;
     private int _availableDashes;
 
-    // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
         _timer = GetNode<Timer>("Timer");
@@ -35,13 +29,22 @@ public partial class Dash : Node3D
 
     public override void _PhysicsProcess(double delta)
     {
-        // Lazy initialize references
+        InitializeReferences();
+        RefreshDashesOnGround();
+    }
+
+    private void InitializeReferences()
+    {
         if (_rig == null && Player != null)
         {
             _rig = Player.GetNode<Rig>("RigPivot/Rig");
             _rigPivot = Player.GetNode<Node3D>("RigPivot");
+            _animationPlayer = Player.GetNode<AnimationPlayer>("RigPivot/Rig/CharacterRig/AnimationPlayer");
         }
+    }
 
+    private void RefreshDashesOnGround()
+    {
         if (Player != null && Player.IsOnFloor() && _timer.IsStopped())
         {
             _availableDashes = ExtraDashes;
@@ -50,31 +53,56 @@ public partial class Dash : Node3D
 
     private async void PerformDash()
     {
-        if (_availableDashes <= 0 || !_timer.IsStopped()) return;
+        if (!CanDash()) return;
 
         _availableDashes--;
-        Vector3 playerDirection = (Vector3)Player.Direction;
+        
+        Vector3 dashDirection = CalculateDashDirection();
+        Vector3 dashVelocity = dashDirection * DashSpeed;
+        
+        RotatePlayerToDashDirection(dashDirection);
+        StartDashAnimation();
+        
+        await ApplyDashMovement(dashVelocity);
+    }
 
-        _direction = playerDirection.Length() > 0.1f 
+    private bool CanDash()
+    {
+        return _availableDashes > 0 && _timer.IsStopped();
+    }
+
+    private Vector3 CalculateDashDirection()
+    {
+        Vector3 playerDirection = (Vector3)Player.Direction;
+        
+        return playerDirection.Length() > 0.1f 
             ? playerDirection.Normalized() 
             : -_rigPivot.GlobalTransform.Basis.Z.Normalized();
+    }
 
-        Vector3 horizontalVel = new Vector3(Player.Velocity.X, 0, Player.Velocity.Z);
-        float baseDashSpeed = Mathf.Max(horizontalVel.Length(), MinDashSpeed);
-        _dashVelocity = _direction * Mathf.Clamp(baseDashSpeed * DashSpeedModifier, MinDashSpeed, MaxDashSpeed);
-
-        if (_direction.Length() > 0.01f)
+    private void RotatePlayerToDashDirection(Vector3 direction)
+    {
+        if (direction.Length() > 0.01f)
         {
-            _rigPivot.Rotation = new Vector3(_rigPivot.Rotation.X, Mathf.Atan2(-_direction.X, -_direction.Z), _rigPivot.Rotation.Z);
+            float targetYaw = Mathf.Atan2(-direction.X, -direction.Z);
+            _rigPivot.Rotation = new Vector3(_rigPivot.Rotation.X, targetYaw, _rigPivot.Rotation.Z);
         }
+    }
 
+    private void StartDashAnimation()
+    {
         _rig.Travel("Dash");
         _timer.Start(DashCooldown);
+    }
 
-        SceneTreeTimer dashTimer = GetTree().CreateTimer(DashDuration);
+    private async System.Threading.Tasks.Task ApplyDashMovement(Vector3 dashVelocity)
+    {
+        float dashDuration = (float)_animationPlayer.GetAnimation("Dash").Length;
+        SceneTreeTimer dashTimer = GetTree().CreateTimer(dashDuration);
+        
         while (dashTimer.TimeLeft > 0)
         {
-            Player.Velocity = new Vector3(_dashVelocity.X, Player.Velocity.Y, _dashVelocity.Z);
+            Player.Velocity = new Vector3(dashVelocity.X, Player.Velocity.Y, dashVelocity.Z);
             await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
         }
     }
