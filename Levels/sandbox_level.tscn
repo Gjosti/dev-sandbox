@@ -2,6 +2,8 @@
 
 [ext_resource type="PackedScene" uid="uid://be1k25cx46lxo" path="res://Player/Player.tscn" id="1_e63bh"]
 [ext_resource type="Texture2D" uid="uid://ctu34g88n34r" path="res://addons/kenney_prototype_textures/dark/texture_09.png" id="1_l7jkp"]
+[ext_resource type="PackedScene" uid="uid://c7dqjj2iyddur" path="res://Assets/BarrelLowPoly.glb" id="2_13i6n"]
+[ext_resource type="PackedScene" uid="uid://4w5i5aiah4u4" path="res://Assets/Crate.glb" id="2_a4loo"]
 [ext_resource type="Script" uid="uid://c3asycq8nnahh" path="res://Outlines/select_highlight.gd" id="2_bu5p0"]
 [ext_resource type="Material" uid="uid://nrcomeem7x3v" path="res://Outlines/OutlineMaterial.tres" id="3_67hdk"]
 [ext_resource type="Material" uid="uid://bncutmpqxq13f" path="res://Outlines/SelectionMaterial.tres" id="4_oyyku"]
@@ -10,8 +12,14 @@
 [ext_resource type="Texture2D" uid="uid://bltk7pd7kmpim" path="res://addons/kenney_prototype_textures/green/texture_09.png" id="6_qag8g"]
 [ext_resource type="Texture2D" uid="uid://d1swi8m88lyvy" path="res://addons/kenney_prototype_textures/purple/texture_09.png" id="7_nxqmx"]
 [ext_resource type="PackedScene" uid="uid://cthqdgu3mm2oo" path="res://UI/user_interface.tscn" id="10_jct52"]
-[ext_resource type="PackedScene" uid="uid://cnfy0py8hvn0r" path="res://Props/RigidBody3DProp.tscn" id="11_xuon6"]
-[ext_resource type="PackedScene" uid="uid://dh8pxd7c7qq0j" path="res://Props/rigid_body_3d_prop_destructible.tscn" id="12_soprk"]
+[ext_resource type="PackedScene" uid="uid://cnfy0py8hvn0r" path="res://Assets/RigidBody3DProp.tscn" id="11_xuon6"]
+[ext_resource type="PackedScene" uid="uid://dh8pxd7c7qq0j" path="res://Assets/rigid_body_3d_prop_destructible.tscn" id="12_soprk"]
+[ext_resource type="PackedScene" uid="uid://m6t36kcl1y7v" path="res://Assets/BarrelLowPolyPrincipledBSDF.glb" id="14_htmm5"]
+[ext_resource type="PackedScene" uid="uid://dhdq7s78udcta" path="res://Assets/BarrelLowPolyPrincipledBSDF1.glb" id="15_pks15"]
+[ext_resource type="PackedScene" uid="uid://1in2onxhtwk0" path="res://Assets/BarrelLowPolyPrincipledBSDF2.glb" id="16_c5fsi"]
+[ext_resource type="PackedScene" uid="uid://ngrlaupkdu47" path="res://Assets/BarrelLowPolyPrincipledBSDF3.glb" id="17_68bwi"]
+[ext_resource type="PackedScene" uid="uid://cwepqpoqn4n1s" path="res://Assets/Pot.glb" id="19_xj1pn"]
+[ext_resource type="PackedScene" uid="uid://cg1wchvn6y7cr" path="res://Assets/TerrainTest.glb" id="20_o8sed"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_e63bh"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -23,7 +31,6 @@ sky_material = SubResource("ProceduralSkyMaterial_e63bh")
 [sub_resource type="Environment" id="Environment_67hdk"]
 background_mode = 2
 sky = SubResource("Sky_bu5p0")
-tonemap_mode = 2
 glow_enabled = true
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_c1o2k"]
@@ -99,7 +106,6 @@ environment = SubResource("Environment_67hdk")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=827759953]
 transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
-shadow_enabled = true
 
 [node name="Ground" type="StaticBody3D" parent="." unique_id=1456082757]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
@@ -108,8 +114,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 shape = SubResource("BoxShape3D_c1o2k")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Ground" unique_id=437172261]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.025826454, 0, -0.058774233)
 mesh = SubResource("BoxMesh_e63bh")
 surface_material_override/0 = SubResource("StandardMaterial3D_i8ax3")
+
+[node name="Crate" parent="Ground" unique_id=1222863962 instance=ExtResource("2_a4loo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3433447, 1.5000005, 5.349768)
 
 [node name="Player" parent="." unique_id=1849666766 instance=ExtResource("1_e63bh")]
 unique_name_in_owner = true
@@ -228,11 +238,37 @@ Player = NodePath("../Player")
 [node name="PhysicsDestructibleBase" parent="Boxes" unique_id=1060729228 instance=ExtResource("11_xuon6")]
 transform = Transform3D(0.9810297, 0.19385767, 0, -0.19385767, 0.9810297, 0, 0, 0, 1, 6.052306, 4.831397, 0)
 
+[node name="BarrelLowPoly" parent="Boxes" unique_id=1915924149 instance=ExtResource("2_13i6n")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.1710248, 5.9604645e-08, -1.3336802)
+
+[node name="Cylinder" parent="Boxes/BarrelLowPoly" index="0" unique_id=708919681]
+transform = Transform3D(0.67223, 0, 0, 0, 0.6473591, 0, 0, 0, 0.6723046, -0.005483389, 0.7499999, 0.00056648254)
+
 [node name="RigidBody3DPropDestructible" parent="." unique_id=1367550835 instance=ExtResource("12_soprk")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
 DebugMode = true
+
+[node name="BarrelLowPolyPrincipledBSDF" parent="." unique_id=1715417153 instance=ExtResource("14_htmm5")]
+transform = Transform3D(0.9999932, -0.0036826364, 0, 0.0036826364, 0.9999932, 0, 0, 0, 1, 4.9511967, 5.9604645e-08, -0.95259905)
+
+[node name="BarrelLowPolyPrincipledBSDF1" parent="." unique_id=1673186916 instance=ExtResource("15_pks15")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.7537394, 5.9604645e-08, 0.7793844)
+
+[node name="BarrelLowPolyPrincipledBSDF2" parent="." unique_id=1278549934 instance=ExtResource("16_c5fsi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.7485582, 5.9604645e-08, 0.41331482)
+
+[node name="BarrelLowPolyPrincipledBSDF3" parent="." unique_id=586217697 instance=ExtResource("17_68bwi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.880987, 5.9604645e-08, 2.902148)
+
+[node name="Pot" parent="." unique_id=1150363175 instance=ExtResource("19_xj1pn")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -2.0436997, 0.5, 0.45873547)
+
+[node name="TerrainTest" parent="." unique_id=1378869508 instance=ExtResource("20_o8sed")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -99.4713, 0.32687378, -41.90071)
 
 [connection signal="VelocityCurrent" from="Player" to="Player" method="_on_velocity_current"]
 [connection signal="input_event" from="OutlinePlayground/MouseHoverOutlineBox/MeshInstance3D/StaticBody3D" to="OutlinePlayground/MouseHoverOutlineBox" method="_on_static_body_3d_input_event"]
 [connection signal="mouse_entered" from="OutlinePlayground/MouseHoverOutlineBox/MeshInstance3D/StaticBody3D" to="OutlinePlayground/MouseHoverOutlineBox" method="_on_static_body_3d_mouse_entered"]
 [connection signal="mouse_exited" from="OutlinePlayground/MouseHoverOutlineBox/MeshInstance3D/StaticBody3D" to="OutlinePlayground/MouseHoverOutlineBox" method="_on_static_body_3d_mouse_exited"]
+
+[editable path="Boxes/BarrelLowPoly"]

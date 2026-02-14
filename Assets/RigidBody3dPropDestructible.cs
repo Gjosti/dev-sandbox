@@ -54,7 +54,7 @@ public partial class RigidBody3dPropDestructible : RigidBody3D
 	private void SpawnDebris()
 	{
 		// Debris to be spawned
-		var debrisScene = GD.Load<PackedScene>("res://Props/RigidBody3DProp.tscn");
+		var debrisScene = GD.Load<PackedScene>("res://Assets/RigidBody3DProp.tscn");
 
 		for (int i = 0; i < DebrisAmount; i++)
 		{
