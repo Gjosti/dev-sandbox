@@ -48,9 +48,23 @@ public partial class Crouch : Node
 	            PerformCrouch();
 	    }
 	    else if (Player.CurrentState == PlayerState.Crouching && velocityLength > SlideThreshold)
+	    {
 	        Slide();
+	    }
+	    // Auto-slide: If holding crouch, on ground, and velocity exceeds threshold, start sliding
+	    else if (Input.IsActionPressed("crouch") && 
+	             Player.IsOnFloor() && 
+	             velocityLength > SlideThreshold &&
+	             Player.CurrentState != PlayerState.LedgeGrabbing)
+	    {
+	        // Enter slide from any grounded state (Idle, Running, etc.)
+	        GD.Print("Auto-sliding at velocity: ", velocityLength);
+	        Slide();
+	    }
 	    else
+	    {
 	        Player.FloorStopOnSlope = true;
+	    }
 	}
 
 	public override void _UnhandledInput(InputEvent @event)
@@ -63,16 +77,29 @@ public partial class Crouch : Node
 
 		if (@event.IsActionPressed("crouch") && _velocity.Length() < SlideThreshold)
 		{
-			PerformCrouch();
+			// Only allow crouch when on floor (prevents air-crouch exploits)
+			if (Player.IsOnFloor())
+			{
+				PerformCrouch();
+			}
 		}
 		else if (@event.IsActionPressed("crouch") && _velocity.Length() > SlideThreshold)
 		{
-			GD.Print("trying to slide at ", _velocity);
-			Slide();
+			// Only allow slide when on floor
+			if (Player.IsOnFloor())
+			{
+				GD.Print("trying to slide at ", _velocity);
+				Slide();
+			}
 		}
 		else if (@event.IsActionReleased("crouch"))
 		{
-			Stand();
+			// Only allow standing up when on floor OR already crouching/sliding
+			// Prevents state changes while airborne
+			if (Player.IsOnFloor() || Player.CurrentState == PlayerState.Crouching || Player.CurrentState == PlayerState.Sliding)
+			{
+				Stand();
+			}
 		}
 	}
 
@@ -100,6 +127,15 @@ public partial class Crouch : Node
 		if (Player.CurrentState == PlayerState.Sliding) return;
 		if (_velocity.Length() > SlideThreshold)
 		{
+			// Apply crouch visuals if not already crouched
+			if (Player.CurrentState != PlayerState.Crouching)
+			{
+				_playerMesh.Scale = _crouchMeshScale;
+				var capsule = (CapsuleShape3D)_collisionShape.Shape;
+				_collisionShape.Position = new Vector3(_collisionShape.Position.X, 0.5f, _collisionShape.Position.Z);
+				capsule.Height = CrouchHeight;
+			}
+			
 			Player.SetState(PlayerState.Sliding);
 		}
 	}
