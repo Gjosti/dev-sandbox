@@ -33,10 +33,12 @@ Player = NodePath("..")
 
 [node name="PlayerCamera" parent="." unique_id=1151804118 instance=ExtResource("6_6ysni")]
 
-[node name="LedgeGrab" parent="." unique_id=334385883 instance=ExtResource("7_vlldt")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8357217, -0.8784434)
-
 [node name="Attack" parent="." unique_id=98067112 node_paths=PackedStringArray("Player") instance=ExtResource("8_s1rgi")]
 Player = NodePath("..")
+
+[node name="LedgeGrab" parent="." unique_id=996177275 node_paths=PackedStringArray("Player") instance=ExtResource("7_vlldt")]
+Player = NodePath("..")
+HangOffsetFromWall = 0.6
+HangHeightBelowLedge = -0.2
 
 [editable path="RigPivot/Rig"]

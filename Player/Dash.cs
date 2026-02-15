@@ -41,7 +41,9 @@ public partial class Dash : Node3D
 
     private async void PerformDash()
     {
-        if (_availableDashes <= 0 || !_dashCooldownTimer.IsStopped() || Player.CurrentState == PlayerState.Crouching)
+        if (_availableDashes <= 0 || !_dashCooldownTimer.IsStopped() || 
+            Player.CurrentState == PlayerState.Crouching || 
+            Player.CurrentState == PlayerState.LedgeGrabbing)
             return;
 
         _availableDashes--;

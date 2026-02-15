@@ -58,9 +58,9 @@ public partial class Jump : Node3D
 
     private void OnPlayerStateChanged(PlayerState newState, PlayerState oldState)
     {
-        // Refresh jumps when transitioning from Jumping to a grounded state
+        // Refresh jumps when transitioning from Jumping to a grounded state or ledge grab
         if (oldState == PlayerState.Jumping && 
-            (newState == PlayerState.Idle || newState == PlayerState.Running || newState == PlayerState.Crouching))
+            (newState == PlayerState.Idle || newState == PlayerState.Running || newState == PlayerState.Crouching || newState == PlayerState.LedgeGrabbing))
         {
             _jumpsLeft = ExtraJumps;
         }
@@ -144,6 +144,10 @@ public partial class Jump : Node3D
 
     private void HandleJumpInput()
     {
+        // Don't handle jump input if hanging on ledge (LedgeGrab handles it)
+        if (Player.CurrentState == PlayerState.LedgeGrabbing)
+            return;
+            
         if (Input.IsActionJustPressed("jump"))
         {
             if (CrouchJumpEnabled && Player.CurrentState == PlayerState.Crouching)

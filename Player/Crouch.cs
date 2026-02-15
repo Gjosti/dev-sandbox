@@ -55,6 +55,10 @@ public partial class Crouch : Node
 
 	public override void _UnhandledInput(InputEvent @event)
 	{
+		// Don't handle crouch input during ledge grab (LedgeGrab uses it for release)
+		if (Player.CurrentState == PlayerState.LedgeGrabbing)
+			return;
+
 		SlideMovement(@event);
 
 		if (@event.IsActionPressed("crouch") && _velocity.Length() < SlideThreshold)

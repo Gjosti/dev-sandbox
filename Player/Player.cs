@@ -39,6 +39,9 @@ public partial class Player : CharacterBody3D
 	[Export] public float MinCameraDistance { get; set; } = 1f;
 	[Export] public float MaxCameraDistance { get; set; } = 15f;
 
+	[ExportGroup("Debug")]
+	[Export] public bool DebugMode { get; set; } = false;
+
 	public Vector3 Direction { get; set; } = Vector3.Zero;
 	private Vector3 _horizontalVelocity = Vector3.Zero;
 
@@ -54,6 +57,7 @@ public partial class Player : CharacterBody3D
 	public Node3D RigPivot { get; private set; }
 	public Rig Rig { get; private set; }
 	private Jump _jump;
+	private LedgeGrab _ledgeGrab;
 	private PlayerCamera _camera;
 
 	public override void _Ready()
@@ -63,6 +67,7 @@ public partial class Player : CharacterBody3D
 		RigPivot = GetNode<Node3D>("RigPivot");
 		Rig = GetNode<Rig>("RigPivot/Rig");
 		_jump = GetNode<Jump>("Jump");
+		_ledgeGrab = GetNode<LedgeGrab>("LedgeGrab");
 		_camera = GetNode<PlayerCamera>("PlayerCamera");
 	}
 
@@ -71,6 +76,9 @@ public partial class Player : CharacterBody3D
 		ApplyGravity((float)delta);
 		HandleMovement((float)delta);
 		MoveAndSlide();
+
+		// Apply hang position after MoveAndSlide if hanging on ledge
+		_ledgeGrab?.ApplyHangPosition();
 
 		// Push rigid bodies after movement.
 		ApplyPushForce();
@@ -89,6 +97,11 @@ public partial class Player : CharacterBody3D
 		if (CurrentState == PlayerState.Dashing)
 		{
 			Velocity = new Vector3(Velocity.X, 0, Velocity.Z);
+		}
+		else if (CurrentState == PlayerState.LedgeGrabbing)
+		{
+			// Gravity is handled by LedgeGrab component
+			// Don't apply normal gravity while hanging
 		}
 		else
 		{
@@ -121,7 +134,7 @@ public partial class Player : CharacterBody3D
 
 	private void HandleMovement(float delta)
 	{
-		if (CurrentState == PlayerState.Dashing || CurrentState == PlayerState.Sliding)
+		if (CurrentState == PlayerState.Dashing || CurrentState == PlayerState.Sliding || CurrentState == PlayerState.LedgeGrabbing)
 			return;
 
 		Direction = GetCameraMovementDirection();
