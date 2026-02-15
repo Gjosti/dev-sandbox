@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://cthqdgu3mm2oo"]
+[gd_scene format=3 uid="uid://cthqdgu3mm2oo"]
 
 [ext_resource type="Script" uid="uid://l2eiotkwu53o" path="res://UI/UserInterface.cs" id="1_6ogyk"]
+[ext_resource type="PackedScene" uid="uid://bx7m3n8pvq2kj" path="res://UI/pause_menu.tscn" id="3_pause"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_m44r8"]
 font_size = 64
@@ -8,7 +9,7 @@ outline_color = Color(0, 0, 0, 1)
 shadow_size = 4
 shadow_color = Color(0, 0, 0, 1)
 
-[node name="UserInterface" type="Control"]
+[node name="UserInterface" type="Control" unique_id=1016089282]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -17,8 +18,9 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_6ogyk")
+PauseMenuScene = ExtResource("3_pause")
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=135556445]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -31,51 +33,57 @@ theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1613371695]
 layout_mode = 2
 mouse_filter = 2
 
-[node name="Control" type="Control" parent="MarginContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+[node name="Control" type="Control" parent="MarginContainer/VBoxContainer" unique_id=1761802851]
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
 
-[node name="BottomLeft" type="Control" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=1256355389]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="BottomLeft" type="Control" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=619235077]
 layout_mode = 2
 size_flags_horizontal = 3
+mouse_filter = 2
 
-[node name="BottomMiddle" type="Control" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="BottomMiddle" type="Control" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=1705057281]
 layout_mode = 2
 size_flags_horizontal = 3
+mouse_filter = 2
 
-[node name="BottomRight" type="Control" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="BottomRight" type="Control" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=892041080]
 layout_mode = 2
 size_flags_horizontal = 3
+mouse_filter = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/BottomRight"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/BottomRight" unique_id=22988816]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/BottomRight/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/HBoxContainer/BottomRight/VBoxContainer" unique_id=242859499]
 layout_mode = 2
 size_flags_vertical = 3
+mouse_filter = 2
 alignment = 2
 
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/BottomRight/VBoxContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/BottomRight/VBoxContainer/HBoxContainer" unique_id=845932464]
 layout_mode = 2
 text = "Velocity"
 label_settings = SubResource("LabelSettings_m44r8")
 horizontal_alignment = 2
 
-[node name="VelocityLabel" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/BottomRight/VBoxContainer/HBoxContainer"]
+[node name="VelocityLabel" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer/BottomRight/VBoxContainer/HBoxContainer" unique_id=1262736637]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(128, 0)
 layout_mode = 2

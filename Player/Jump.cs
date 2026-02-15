@@ -58,11 +58,14 @@ public partial class Jump : Node3D
 
     private void OnPlayerStateChanged(PlayerState newState, PlayerState oldState)
     {
-        // Refresh jumps when transitioning from Jumping to a grounded state or ledge grab
-        if (oldState == PlayerState.Jumping && 
-            (newState == PlayerState.Idle || newState == PlayerState.Running || newState == PlayerState.Crouching || newState == PlayerState.LedgeGrabbing))
+        // Refresh jumps ONLY when actually grounded or on ledge (prevents all air-state exploits)
+        if (oldState == PlayerState.Jumping)
         {
-            _jumpsLeft = ExtraJumps;
+            // Only reset jumps if on floor OR grabbing ledge
+            if (Player.IsOnFloor() || newState == PlayerState.LedgeGrabbing)
+            {
+                _jumpsLeft = ExtraJumps;
+            }
         }
     }
 

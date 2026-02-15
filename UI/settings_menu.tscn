@@ -1,0 +1,259 @@
+[gd_scene load_steps=2 format=3 uid="uid://dw8p4n7xmk2qj"]
+
+[ext_resource type="Script" path="res://UI/SettingsMenu.cs" id="1_settings"]
+
+[node name="SettingsMenu" type="Control"]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_settings")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.7)
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -500.0
+offset_top = -350.0
+offset_right = 500.0
+offset_bottom = 350.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Title" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Settings"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ContentContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 20
+
+[node name="CategoryButtons" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="GameplayButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/CategoryButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+toggle_mode = true
+text = "Gameplay"
+
+[node name="VideoButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/CategoryButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+toggle_mode = true
+text = "Video"
+
+[node name="SoundButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/CategoryButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+toggle_mode = true
+text = "Sound"
+
+[node name="KeybindingsButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/CategoryButtons"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+toggle_mode = true
+text = "Keybindings"
+
+[node name="PanelContent" type="PanelContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="GameplayPanel" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer/GameplayPanel"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Gameplay Settings"
+
+[node name="HSeparator" type="HSeparator" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer/GameplayPanel"]
+layout_mode = 2
+
+[node name="Spacer" type="Control" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer/GameplayPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PlaceholderLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer/GameplayPanel"]
+layout_mode = 2
+text = "More gameplay options coming soon..."
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VideoPanel" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer/VideoPanel"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Video Settings"
+
+[node name="HSeparator" type="HSeparator" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer/VideoPanel"]
+layout_mode = 2
+
+[node name="ResolutionContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer/VideoPanel"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer/VideoPanel/ResolutionContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "Resolution:"
+vertical_alignment = 1
+
+[node name="ResolutionOption" type="OptionButton" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer/VideoPanel/ResolutionContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="WindowModeContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer/VideoPanel"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer/VideoPanel/WindowModeContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "Window Mode:"
+vertical_alignment = 1
+
+[node name="WindowModeOption" type="OptionButton" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer/VideoPanel/WindowModeContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VsyncContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer/VideoPanel"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer/VideoPanel/VsyncContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "VSync:"
+vertical_alignment = 1
+
+[node name="VsyncCheckButton" type="CheckButton" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer/VideoPanel/VsyncContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Spacer" type="Control" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer/VideoPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ApplyVideoButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer/VideoPanel"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+text = "Apply Changes"
+
+[node name="SoundPanel" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer/SoundPanel"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Sound Settings"
+
+[node name="HSeparator" type="HSeparator" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer/SoundPanel"]
+layout_mode = 2
+
+[node name="Spacer" type="Control" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer/SoundPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PlaceholderLabel" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer/SoundPanel"]
+layout_mode = 2
+text = "Sound options coming soon..."
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="KeybindingsPanel" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer/KeybindingsPanel"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Keybindings"
+
+[node name="HSeparator" type="HSeparator" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer/KeybindingsPanel"]
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer/KeybindingsPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="BindingsContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer/KeybindingsPanel/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 5
+
+[node name="HSeparator2" type="HSeparator" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer/KeybindingsPanel"]
+layout_mode = 2
+
+[node name="ResetAllBindingsButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer/KeybindingsPanel"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+text = "Reset All to Defaults"
+
+[node name="HSeparator2" type="HSeparator" parent="PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="BackButton" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 45)
+layout_mode = 2
+text = "Back"
