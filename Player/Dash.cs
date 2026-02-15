@@ -25,6 +25,7 @@ public partial class Dash : Node3D
         if (Player != null)
         {
             _rigPivot = Player.GetNode<Node3D>("RigPivot");
+            _animationPlayer = Player.GetNode<AnimationPlayer>("RigPivot/Rig/CharacterRig/AnimationPlayer");
         }
         
         _dashCooldownTimer.Timeout += RefreshDashes;

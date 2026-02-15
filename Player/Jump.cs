@@ -51,13 +51,25 @@ public partial class Jump : Node3D
     {
         InitializeJumpPhysics();
         InitializeReferences();
+        
+        // Connect to Player's state change signal
+        Player.StateChanged += OnPlayerStateChanged;
+    }
+
+    private void OnPlayerStateChanged(PlayerState newState, PlayerState oldState)
+    {
+        // Refresh jumps when transitioning from Jumping to a grounded state
+        if (oldState == PlayerState.Jumping && 
+            (newState == PlayerState.Idle || newState == PlayerState.Running || newState == PlayerState.Crouching))
+        {
+            _jumpsLeft = ExtraJumps;
+        }
     }
 
     public override void _PhysicsProcess(double delta)
     {
         UpdateCoyoteTimer(delta);
         UpdateBunnyHopTimer(delta);
-        RefreshJumpsOnGround();
         DetectLanding();
         HandleJumpInput();
         HandleJumpCancel();
@@ -114,14 +126,6 @@ public partial class Jump : Node3D
         else
         {
             _timeSinceLanding = 0.0f;
-        }
-    }
-
-    private void RefreshJumpsOnGround()
-    {
-        if (Player.IsOnFloor() && _jumpsLeft != ExtraJumps)
-        {
-            _jumpsLeft = ExtraJumps;
         }
     }
 
