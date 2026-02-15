@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://b1veppx83glta" path="res://Player/jump.tscn" id="5_8g4oa"]
 [ext_resource type="PackedScene" uid="uid://bp4egawc77s6r" path="res://Player/player_camera.tscn" id="6_6ysni"]
 [ext_resource type="PackedScene" uid="uid://o8io8idytia6" path="res://Player/ledge_grab.tscn" id="7_vlldt"]
+[ext_resource type="PackedScene" uid="uid://dagbryuxta64w" path="res://Player/attack.tscn" id="8_s1rgi"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tok1r"]
 
@@ -34,5 +35,8 @@ Player = NodePath("..")
 
 [node name="LedgeGrab" parent="." unique_id=334385883 instance=ExtResource("7_vlldt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8357217, -0.8784434)
+
+[node name="Attack" parent="." unique_id=98067112 node_paths=PackedStringArray("Player") instance=ExtResource("8_s1rgi")]
+Player = NodePath("..")
 
 [editable path="RigPivot/Rig"]

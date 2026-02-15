@@ -1,5 +1,17 @@
 using Godot;
 
+// Player state machine for game logic (decoupled from animation state)
+public enum PlayerState
+{
+	Idle,
+	Running,
+	Jumping,
+	Dashing,
+	Crouching,
+	Sliding,
+	LedgeGrabbing,
+	Attacking
+}
 
 // Additional movement and abilities are added as separate nodes under this node/class.
 // Remember to attach this node to subnodes mentioned above.
@@ -30,6 +42,13 @@ public partial class Player : CharacterBody3D
 	public Vector3 Direction { get; set; } = Vector3.Zero;
 	private Vector3 _horizontalVelocity = Vector3.Zero;
 
+	// Game logic state (source of truth)
+	public PlayerState CurrentState { get; private set; } = PlayerState.Idle;
+	public PlayerState PreviousState { get; private set; } = PlayerState.Idle;
+	
+	[Signal]
+	public delegate void StateChangedEventHandler(PlayerState newState, PlayerState oldState);
+
 	public Node3D PlayerMesh { get; private set; }
 	public CollisionShape3D CollisionShape { get; private set; }
 	public Node3D RigPivot { get; private set; }
@@ -56,12 +75,18 @@ public partial class Player : CharacterBody3D
 		// Push rigid bodies after movement.
 		ApplyPushForce();
 
+		// Update game state based on movement
+		UpdatePlayerState();
+
+		// Drive animations from game state
+		Rig.UpdateFromGameState(CurrentState, Direction);
+
 		EmitSignal(SignalName.VelocityCurrent, Velocity);
 	}
 
 	private void ApplyGravity(float delta)
 	{
-		if (Rig.IsDashing())
+		if (CurrentState == PlayerState.Dashing)
 		{
 			Velocity = new Vector3(Velocity.X, 0, Velocity.Z);
 		}
@@ -96,7 +121,7 @@ public partial class Player : CharacterBody3D
 
 	private void HandleMovement(float delta)
 	{
-		if (Rig.IsDashing() || Rig.IsSliding())
+		if (CurrentState == PlayerState.Dashing || CurrentState == PlayerState.Sliding)
 			return;
 
 		Direction = GetCameraMovementDirection();
@@ -112,7 +137,6 @@ public partial class Player : CharacterBody3D
 		}
 
 		SetHorizontalVelocity(_horizontalVelocity);
-		Rig.UpdateAnimationTree(Direction);
 	}
 
 	private Vector3 GetHorizontalVelocity()
@@ -187,24 +211,91 @@ public partial class Player : CharacterBody3D
 		}
 	}
 
-	public override void _UnhandledInput(InputEvent @event)
+	
+	// ============================================================
+	// State Management System
+	// ============================================================
+	
+	/// <summary>
+	/// Sets the player's game logic state. This is the source of truth for gameplay logic.
+	/// The Rig will read this state to drive animations.
+	/// </summary>
+	public void SetState(PlayerState newState)
 	{
-		HandleAttackInput(@event);
+		if (CurrentState == newState)
+			return;
+
+		PreviousState = CurrentState;
+		CurrentState = newState;
+		EmitSignal(SignalName.StateChanged, (int)newState, (int)PreviousState);
 	}
 
-	private void HandleAttackInput(InputEvent @event)
+	/// <summary>
+	/// Automatically determines and updates player state based on current conditions.
+	/// Called every physics frame to keep state synchronized with gameplay.
+	/// </summary>
+	private void UpdatePlayerState()
 	{
-		if (Rig.IsIdle())
+		// Don't auto-update certain states that are managed by ability components
+		if (CurrentState == PlayerState.Dashing 
+		    || CurrentState == PlayerState.Attacking 
+		    || CurrentState == PlayerState.LedgeGrabbing)
 		{
-			if (@event.IsActionPressed("attack"))
+			return;
+		}
+
+		// Crouching and Sliding are managed by Crouch component
+		if (CurrentState == PlayerState.Crouching || CurrentState == PlayerState.Sliding)
+		{
+			return;
+		}
+
+		// Auto-update based on ground state and movement
+		if (!IsOnFloor())
+		{
+			// If airborne and not already jumping, transition to jumping
+			// This handles falling off edges
+			if (CurrentState != PlayerState.Jumping)
 			{
-				MainAction();
+				SetState(PlayerState.Jumping);
+			}
+			// Stay in Jumping state while airborne - don't check anything else
+		}
+		else if (IsOnFloor() && CurrentState == PlayerState.Jumping)
+		{
+			// Just landed from a jump - transition to ground movement
+			Vector3 horizontalVel = new Vector3(Velocity.X, 0, Velocity.Z);
+			
+			if (horizontalVel.Length() > 0.1f || Direction.Length() > 0.1f)
+			{
+				SetState(PlayerState.Running);
+			}
+			else
+			{
+				SetState(PlayerState.Idle);
+			}
+		}
+		else if (IsOnFloor() && CurrentState != PlayerState.Jumping)
+		{
+			// Normal ground movement state updates
+			Vector3 horizontalVel = new Vector3(Velocity.X, 0, Velocity.Z);
+			
+			if (horizontalVel.Length() > 0.1f || Direction.Length() > 0.1f)
+			{
+				SetState(PlayerState.Running);
+			}
+			else
+			{
+				SetState(PlayerState.Idle);
 			}
 		}
 	}
 
-	private void MainAction()
+	/// <summary>
+	/// Check if player is in a specific state.
+	/// </summary>
+	public bool IsInState(PlayerState state)
 	{
-		Rig.Travel("Attack");
+		return CurrentState == state;
 	}
 }

@@ -1,11 +1,11 @@
-[gd_scene load_steps=2 format=3 uid="uid://co5s7037hupeh"]
+[gd_scene format=3 uid="uid://co5s7037hupeh"]
 
 [ext_resource type="Script" uid="uid://cxg55nb3hr1oo" path="res://Player/Dash.cs" id="1_bedmj"]
 
-[node name="Dash" type="Node3D"]
+[node name="Dash" type="Node3D" unique_id=1684115592]
 script = ExtResource("1_bedmj")
 
-[node name="Timer" type="Timer" parent="."]
+[node name="Timer" type="Timer" parent="." unique_id=974665941]
 one_shot = true
 
-[node name="GPUParticles3D" type="GPUParticles3D" parent="."]
+[node name="DashParticleEffects" type="Node3D" parent="." unique_id=76738886]

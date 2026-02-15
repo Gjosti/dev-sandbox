@@ -142,7 +142,7 @@ public partial class Jump : Node3D
     {
         if (Input.IsActionJustPressed("jump"))
         {
-            if (CrouchJumpEnabled && _rig.IsCrouching())
+            if (CrouchJumpEnabled && Player.CurrentState == PlayerState.Crouching)
             {
                 PerformCrouchJump();
             }
@@ -240,7 +240,7 @@ public partial class Jump : Node3D
 
     private void PlayJumpEffects(string animationName)
     {
-        _rig.Travel(animationName);
+        Player.SetState(PlayerState.Jumping);
         _jumpVFX?.Restart();
     }
 

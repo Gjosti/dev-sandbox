@@ -18,7 +18,6 @@ public partial class Crouch : Node
 	private bool _rotatePlayerLeft = false;
 	private bool _rotatePlayerRight = false;
 
-	private Rig _rig;
 	private Node3D _rigPivot;
 	private Node3D _playerMesh;
 	private CollisionShape3D _collisionShape;
@@ -30,7 +29,6 @@ public partial class Crouch : Node
 	        Player.VelocityCurrent += OnPlayerVelocityCurrent;
 	        
 	        // Initialize references immediately
-	        _rig = Player.GetNode<Rig>("RigPivot/Rig");
 	        _rigPivot = Player.GetNode<Node3D>("RigPivot");
 	        _playerMesh = Player.GetNode<Node3D>("RigPivot/Rig/CharacterRig/MeshInstance3D");
 	        _collisionShape = Player.GetNode<CollisionShape3D>("CollisionShape3D");
@@ -39,17 +37,17 @@ public partial class Crouch : Node
 
 	public override void _PhysicsProcess(double delta)
 	{
-	    if (_rig == null) return;
+	    if (Player == null) return;
 	    
 	    float velocityLength = _velocity.Length();
 
-	    if (_rig.IsSliding())
+	    if (Player.CurrentState == PlayerState.Sliding)
 	    {
 	        ApplySimpleSlide((float)delta);
 	        if (velocityLength < SlideMinThreshold)
 	            PerformCrouch();
 	    }
-	    else if (_rig.IsCrouching() && velocityLength > SlideThreshold)
+	    else if (Player.CurrentState == PlayerState.Crouching && velocityLength > SlideThreshold)
 	        Slide();
 	    else
 	        Player.FloorStopOnSlope = true;
@@ -80,7 +78,7 @@ public partial class Crouch : Node
 		var capsule = (CapsuleShape3D)_collisionShape.Shape;
 		_collisionShape.Position = new Vector3(_collisionShape.Position.X, 0.5f, _collisionShape.Position.Z);
 		capsule.Height = CrouchHeight;
-		_rig.Travel("Crouch");
+		Player.SetState(PlayerState.Crouching);
 	}
 
 	private void Stand()
@@ -89,15 +87,16 @@ public partial class Crouch : Node
 		var capsule = (CapsuleShape3D)_collisionShape.Shape;
 		capsule.Height = StandHeight;
 		_collisionShape.Position = new Vector3(_collisionShape.Position.X, 1f, _collisionShape.Position.Z);
-		_rig.Travel("MoveSpace");
+		// Transition back to idle/running - let UpdatePlayerState determine which
+		Player.SetState(PlayerState.Idle);
 	}
 
 	private void Slide()
 	{
-		if (_rig.IsSliding()) return;
+		if (Player.CurrentState == PlayerState.Sliding) return;
 		if (_velocity.Length() > SlideThreshold)
 		{
-			_rig.Travel("Slide");
+			Player.SetState(PlayerState.Sliding);
 		}
 	}
 

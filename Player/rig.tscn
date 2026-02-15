@@ -672,18 +672,18 @@ advance_mode = 2
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_awthv"]
 switch_mode = 2
-advance_mode = 2
+advance_mode = 0
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_wer68"]
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_32kt2"]
 switch_mode = 2
-advance_mode = 2
+advance_mode = 0
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_vcvy3"]
 xfade_time = 0.1
 switch_mode = 2
-advance_mode = 2
+advance_mode = 0
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_icx30"]
 
@@ -702,14 +702,14 @@ xfade_time = 0.1
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_srgp2"]
 switch_mode = 2
-advance_mode = 2
+advance_mode = 0
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_fruns"]
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_8qp75"]
 xfade_time = 0.2
 switch_mode = 2
-advance_mode = 2
+advance_mode = 0
 
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_ydo8n"]
 states/Attack/node = SubResource("AnimationNodeAnimation_wer68")
@@ -730,7 +730,7 @@ states/MoveSpace/position = Vector2(482, 100)
 states/Slide/node = SubResource("AnimationNodeAnimation_icx30")
 states/Slide/position = Vector2(626, -65)
 transitions = ["Start", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_8s7l5"), "MoveSpace", "Attack", SubResource("AnimationNodeStateMachineTransition_ojd8b"), "Attack", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_awthv"), "MoveSpace", "Jump", SubResource("AnimationNodeStateMachineTransition_wer68"), "Jump", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_32kt2"), "Dash", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_vcvy3"), "MoveSpace", "Dash", SubResource("AnimationNodeStateMachineTransition_icx30"), "MoveSpace", "Crouch", SubResource("AnimationNodeStateMachineTransition_80s3x"), "Crouch", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_r5mnt"), "MoveSpace", "Slide", SubResource("AnimationNodeStateMachineTransition_n25uh"), "Slide", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_856ud"), "Dash", "Jump", SubResource("AnimationNodeStateMachineTransition_sy1xi"), "Crouch", "CrouchJump", SubResource("AnimationNodeStateMachineTransition_fugc2"), "CrouchJump", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_srgp2"), "MoveSpace", "LedgeGrab", SubResource("AnimationNodeStateMachineTransition_fruns"), "LedgeGrab", "MoveSpace", SubResource("AnimationNodeStateMachineTransition_8qp75")]
-graph_offset = Vector2(243, -132)
+graph_offset = Vector2(-11, -64)
 
 [node name="Rig" type="Node3D" unique_id=1874133142]
 script = ExtResource("1_wer68")

@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://dagbryuxta64w"]
+
+[ext_resource type="Script" uid="uid://cfb3tbydxp85q" path="res://Player/Attack.cs" id="1_i1vk6"]
+
+[node name="Attack" type="Node3D" unique_id=98067112 node_paths=PackedStringArray("Player")]
+script = ExtResource("1_i1vk6")
+Player = NodePath("")
+
+[node name="Timer" type="Timer" parent="." unique_id=2131213813]
+one_shot = true
