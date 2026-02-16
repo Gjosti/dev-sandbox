@@ -19,6 +19,10 @@ run/main_scene="uid://clq4ymy58tejc"
 config/features=PackedStringArray("4.6", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+InputManager="*res://Systems/InputManager.cs"
+
 [debug]
 
 gdscript/warnings/untyped_declaration=1
@@ -28,19 +32,12 @@ gdscript/warnings/inferred_declaration=1
 
 window/size/viewport_width=1920
 window/size/viewport_height=1080
-window/size/mode=0
-window/size/resizable=true
 window/size/window_width_override=1920
 window/size/window_height_override=1080
-window/stretch/mode="disabled"
 
 [dotnet]
 
 project/assembly_name="DevSandbox"
-
-[autoload]
-
-InputManager="*res://Systems/InputManager.cs"
 
 [editor_plugins]
 
@@ -48,6 +45,11 @@ enabled=PackedStringArray("res://addons/brackeys_particle_controls/plugin.cfg")
 
 [input]
 
+ui_cancel={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":4194305,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
+}
 ui_left={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":4194319,"physical_keycode":0,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
@@ -128,11 +130,6 @@ attack={
 crouch={
 "deadzone": 0.2,
 "events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":4194326,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
-]
-}
-ui_cancel={
-"deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":4194305,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
 ]
 }
 

@@ -1,7 +1,8 @@
 [gd_scene format=3 uid="uid://cthqdgu3mm2oo"]
 
 [ext_resource type="Script" uid="uid://l2eiotkwu53o" path="res://UI/UserInterface.cs" id="1_6ogyk"]
-[ext_resource type="PackedScene" uid="uid://bx7m3n8pvq2kj" path="res://UI/pause_menu.tscn" id="3_pause"]
+[ext_resource type="PackedScene" uid="uid://drghgmepxjva1" path="res://UI/pause_menu.tscn" id="3_pause"]
+[ext_resource type="Script" path="res://UI/FPSCounter.cs" id="4_fpscounter"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_m44r8"]
 font_size = 64
@@ -89,3 +90,17 @@ custom_minimum_size = Vector2(128, 0)
 layout_mode = 2
 label_settings = SubResource("LabelSettings_m44r8")
 horizontal_alignment = 2
+
+[node name="FPSCounter" type="Label" parent="." unique_id=1862905947]
+unique_name_in_owner = true
+anchors_preset = 1
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_right = 100.0
+offset_bottom = 40.0
+grow_horizontal = 1
+grow_vertical = 1
+mouse_filter = 2
+text = "FPS: 60"
+label_settings = SubResource("LabelSettings_m44r8")
+script = ExtResource("4_fpscounter")

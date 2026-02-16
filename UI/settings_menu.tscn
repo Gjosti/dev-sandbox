@@ -182,6 +182,87 @@ vertical_alignment = 1
 unique_name_in_owner = true
 layout_mode = 2
 
+[node name="FPSCounterContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer/VideoPanel"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer/VideoPanel/FPSCounterContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "Show FPS:"
+vertical_alignment = 1
+
+[node name="FPSCounterCheckButton" type="CheckButton" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer/VideoPanel/FPSCounterContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HorizontalMarginContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer/VideoPanel"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer/VideoPanel/HorizontalMarginContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "H. Margin:"
+vertical_alignment = 1
+
+[node name="HorizontalMarginSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer/VideoPanel/HorizontalMarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 0.0
+max_value = 40.0
+step = 1.0
+value = 0.0
+
+[node name="VerticalMarginContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer/VideoPanel"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer/VideoPanel/VerticalMarginContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "V. Margin:"
+vertical_alignment = 1
+
+[node name="VerticalMarginSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer/VideoPanel/VerticalMarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 0.0
+max_value = 20.0
+step = 1.0
+value = 0.0
+
+[node name="BrightnessContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer/VideoPanel"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer/VideoPanel/BrightnessContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "Brightness:"
+vertical_alignment = 1
+
+[node name="BrightnessSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer/VideoPanel/BrightnessContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 0.5
+max_value = 2.0
+step = 0.1
+value = 1.0
+
+[node name="AntiAliasingContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer/VideoPanel"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer/VideoPanel/AntiAliasingContainer"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "Anti-Aliasing:"
+vertical_alignment = 1
+
+[node name="AntiAliasingOption" type="OptionButton" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer/VideoPanel/AntiAliasingContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
 [node name="Spacer" type="Control" parent="PanelContainer/MarginContainer/VBoxContainer/ContentContainer/PanelContent/MarginContainer/VideoPanel"]
 layout_mode = 2
 size_flags_vertical = 3

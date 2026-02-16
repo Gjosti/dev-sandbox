@@ -1,4 +1,5 @@
 using Godot;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -23,6 +24,11 @@ public partial class SettingsMenu : Control
 	private OptionButton _resolutionOption;
 	private OptionButton _windowModeOption;
 	private CheckButton _vsyncCheckButton;
+	private CheckButton _fpsCounterCheckButton;
+	private HSlider _horizontalMarginSlider;
+	private HSlider _verticalMarginSlider;
+	private HSlider _brightnessSlider;
+	private OptionButton _antiAliasingOption;
 	private Button _applyVideoButton;
 
 	// Keybindings controls
@@ -31,6 +37,11 @@ public partial class SettingsMenu : Control
 	private Button _currentlyRebindingButton;
 	private string _currentlyRebindingAction;
 	private int _currentlyRebindingIndex;
+
+	// Window mode constants
+	private const int WindowModeFullscreen = 0;
+	private const int WindowModeWindowed = 1;
+	private const int WindowModeBorderlessFullscreen = 2;
 
 	// Resolution dictionary with aspect ratio labels
 	private Dictionary<string, (Vector2I size, string aspectRatio)> _resolutions = new Dictionary<string, (Vector2I, string)>
@@ -80,6 +91,11 @@ public partial class SettingsMenu : Control
 		_resolutionOption = GetNode<OptionButton>("%ResolutionOption");
 		_windowModeOption = GetNode<OptionButton>("%WindowModeOption");
 		_vsyncCheckButton = GetNode<CheckButton>("%VsyncCheckButton");
+		_fpsCounterCheckButton = GetNode<CheckButton>("%FPSCounterCheckButton");
+		_horizontalMarginSlider = GetNode<HSlider>("%HorizontalMarginSlider");
+		_verticalMarginSlider = GetNode<HSlider>("%VerticalMarginSlider");
+		_brightnessSlider = GetNode<HSlider>("%BrightnessSlider");
+		_antiAliasingOption = GetNode<OptionButton>("%AntiAliasingOption");
 		_applyVideoButton = GetNode<Button>("%ApplyVideoButton");
 
 		// Keybindings controls
@@ -93,11 +109,20 @@ public partial class SettingsMenu : Control
 		_keybindingsButton.Pressed += () => ShowPanel("keybindings");
 		_backButton.Pressed += OnBackPressed;
 		_applyVideoButton.Pressed += OnApplyVideoSettings;
+		_fpsCounterCheckButton.Toggled += OnFpsCounterToggled;
+		_horizontalMarginSlider.ValueChanged += OnHorizontalMarginChanged;
+		_verticalMarginSlider.ValueChanged += OnVerticalMarginChanged;
+		_brightnessSlider.ValueChanged += OnBrightnessChanged;
+		_antiAliasingOption.ItemSelected += OnAntiAliasingChanged;
 		_resetAllBindingsButton.Pressed += OnResetAllBindings;
 
 		// Populate video options
 		PopulateVideoOptions();
 		LoadCurrentVideoSettings();
+		LoadFpsCounterSetting();
+		LoadUIMarginSettings();
+		LoadBrightnessSetting();
+		LoadAntiAliasingSetting();
 		
 		// Populate keybindings
 		PopulateBindings();
@@ -112,12 +137,17 @@ public partial class SettingsMenu : Control
 		SetProcessInput(false);
 	}
 
+	private List<KeyValuePair<string, (Vector2I size, string aspectRatio)>> GetSortedResolutions()
+	{
+		return _resolutions
+			.OrderByDescending(kvp => kvp.Value.size.X * kvp.Value.size.Y)
+			.ToList();
+	}
+
 	private void PopulateVideoOptions()
 	{
 		// Add resolutions sorted by pixel count (descending - largest first)
-		var sortedResolutions = _resolutions
-			.OrderByDescending(kvp => kvp.Value.size.X * kvp.Value.size.Y)
-			.ToList();
+		var sortedResolutions = GetSortedResolutions();
 		
 		foreach (var kvp in sortedResolutions)
 		{
@@ -129,6 +159,71 @@ public partial class SettingsMenu : Control
 		_windowModeOption.AddItem("Fullscreen");
 		_windowModeOption.AddItem("Windowed");
 		_windowModeOption.AddItem("Borderless Fullscreen");
+
+		// Add anti-aliasing options
+		_antiAliasingOption.AddItem("Off");
+		_antiAliasingOption.AddItem("2x");
+		_antiAliasingOption.AddItem("4x");
+		_antiAliasingOption.AddItem("8x");
+	}
+
+	private void OnBrightnessChanged(double value)
+	{
+		ProjectSettings.SetSetting("user/video/brightness", value);
+		ApplyBrightness();
+	}
+
+	private void OnAntiAliasingChanged(long index)
+	{
+		ProjectSettings.SetSetting("user/video/anti_aliasing", index);
+		ApplyAntiAliasing();
+	}
+
+	private void LoadBrightnessSetting()
+	{
+		float brightness = (float)ProjectSettings.GetSetting("user/video/brightness", 1.0).AsDouble();
+		_brightnessSlider.Value = brightness;
+	}
+
+	private void LoadAntiAliasingSetting()
+	{
+		int msaaIndex = (int)ProjectSettings.GetSetting("user/video/anti_aliasing", 0).AsInt64();
+		_antiAliasingOption.Selected = msaaIndex;
+	}
+
+	private void ApplyBrightness()
+	{
+		float brightness = (float)_brightnessSlider.Value;
+		// Apply brightness using Godot's environment adjustment
+		var env = GetViewport().GetWorld3D().Environment;
+		if (env != null)
+		{
+			env.AdjustmentBrightness = brightness;
+		}
+	}
+
+	private void ApplyAntiAliasing()
+	{
+		int index = _antiAliasingOption.Selected;
+		int[] msaaValues = { 0, 1, 2, 3 }; // Maps to MSAA_Off (0), MSAA_2X (1), MSAA_4X (2), MSAA_8X (3)
+		
+		if (index >= 0 && index < msaaValues.Length)
+		{
+			ProjectSettings.SetSetting("rendering/anti_aliasing/msaa_3d", msaaValues[index]);
+			RenderingServer.GlobalShaderParameterSet("msaa_mode", msaaValues[index]);
+		}
+	}
+
+	private Godot.Environment GetEnvironment()
+	{
+		// Helper to get or create environment for brightness adjustment
+		var env = GetViewport().GetWorld3D().Environment;
+		if (env == null)
+		{
+			env = new Godot.Environment();
+			GetViewport().GetWorld3D().Environment = env;
+		}
+		return env;
 	}
 
 	private void LoadCurrentVideoSettings()
@@ -140,10 +235,8 @@ public partial class SettingsMenu : Control
 		int resIndex = 0;
 		int i = 0;
 		
-		// Sort resolutions the same way as PopulateVideoOptions
-		var sortedResolutions = _resolutions
-			.OrderByDescending(kvp => kvp.Value.size.X * kvp.Value.size.Y)
-			.ToList();
+		// Get sorted resolutions
+		var sortedResolutions = GetSortedResolutions();
 		
 		// Find exact match first
 		bool foundExactMatch = false;
@@ -183,15 +276,15 @@ public partial class SettingsMenu : Control
 		// Set window mode
 		if (window.Mode == Window.ModeEnum.Fullscreen)
 		{
-			_windowModeOption.Selected = 0; // Fullscreen
+			_windowModeOption.Selected = WindowModeFullscreen;
 		}
 		else if (window.Mode == Window.ModeEnum.Windowed && window.Borderless)
 		{
-			_windowModeOption.Selected = 2; // Borderless Fullscreen
+			_windowModeOption.Selected = WindowModeBorderlessFullscreen;
 		}
 		else if (window.Mode == Window.ModeEnum.Windowed)
 		{
-			_windowModeOption.Selected = 1; // Windowed
+			_windowModeOption.Selected = WindowModeWindowed;
 		}
 
 		// Set VSync
@@ -211,64 +304,16 @@ public partial class SettingsMenu : Control
 		// Handle different window modes
 		switch (_windowModeOption.Selected)
 		{
-			case 0: // Fullscreen
-				window.Mode = Window.ModeEnum.Fullscreen;
-				window.Borderless = false;
-				
-				// Disable content scaling for fullscreen (native resolution)
-				window.ContentScaleMode = Window.ContentScaleModeEnum.Disabled;
-				
-				// Apply selected resolution for fullscreen
-				if (_resolutions.ContainsKey(selectedResolution))
-				{
-					window.Size = _resolutions[selectedResolution].size;
-				}
+			case WindowModeFullscreen:
+				ApplyFullscreenMode(window, selectedResolution);
 				break;
 				
-			case 1: // Windowed
-				window.Mode = Window.ModeEnum.Windowed;
-				window.Borderless = false;
-				
-				// Disable content scaling for windowed mode (native resolution)
-				window.ContentScaleMode = Window.ContentScaleModeEnum.Disabled;
-				
-				// Apply selected resolution for windowed mode
-				if (_resolutions.ContainsKey(selectedResolution))
-				{
-					Vector2I newSize = _resolutions[selectedResolution].size;
-					
-					// Clamp window size to screen size (with margin for window chrome)
-					newSize.X = Mathf.Min(newSize.X, screenRect.Size.X - 20);
-					newSize.Y = Mathf.Min(newSize.Y, screenRect.Size.Y - 60);
-					
-					window.Size = newSize;
-					
-					// Center the window on the current screen
-					Vector2I centerPos = new Vector2I(
-						screenRect.Position.X + (screenRect.Size.X - newSize.X) / 2,
-						screenRect.Position.Y + (screenRect.Size.Y - newSize.Y) / 2
-					);
-					window.Position = centerPos;
-				}
+			case WindowModeWindowed:
+				ApplyWindowedMode(window, selectedResolution, screenRect);
 				break;
 				
-			case 2: // Borderless Fullscreen
-				window.Mode = Window.ModeEnum.Windowed;
-				window.Borderless = true;
-				
-				// Window covers entire screen at native resolution
-				Vector2I screenSize = DisplayServer.ScreenGetSize(currentScreen);
-				window.Size = screenSize;
-				window.Position = DisplayServer.ScreenGetPosition(currentScreen);
-				
-				// Set viewport to selected resolution (game renders at this resolution)
-				if (_resolutions.ContainsKey(selectedResolution))
-				{
-					Vector2I targetResolution = _resolutions[selectedResolution].size;
-					GetWindow().ContentScaleSize = targetResolution;
-					GetWindow().ContentScaleMode = Window.ContentScaleModeEnum.CanvasItems;
-					GetWindow().ContentScaleAspect = Window.ContentScaleAspectEnum.Keep;
-				}
+			case WindowModeBorderlessFullscreen:
+				ApplyBorderlessMode(window, selectedResolution, currentScreen);
 				break;
 		}
 
@@ -278,6 +323,162 @@ public partial class SettingsMenu : Control
 			DisplayServer.VSyncMode.Enabled : 
 			DisplayServer.VSyncMode.Disabled
 		);
+
+		// Apply brightness and anti-aliasing
+		ApplyBrightness();
+		ApplyAntiAliasing();
+	}
+
+	private void LoadFpsCounterSetting()
+	{
+		// Load FPS counter preference from project settings
+		bool showFps = ProjectSettings.GetSetting("user/ui/show_fps_counter", false).AsBool();
+		_fpsCounterCheckButton.ButtonPressed = showFps;
+	}
+
+	private void OnFpsCounterToggled(bool toggled)
+	{
+		// Save preference
+		ProjectSettings.SetSetting("user/ui/show_fps_counter", toggled);
+		
+		// Toggle FPS counter in UserInterface
+		try
+		{
+			var userInterface = GetTree().GetNodesInGroup("ui_root").FirstOrDefault() as UserInterface;
+			if (userInterface == null)
+			{
+				// Fallback: search by node name
+				userInterface = FindUserInterface(GetTree().Root);
+			}
+			
+			if (userInterface != null)
+			{
+				userInterface.SetFPSCounterVisible(toggled);
+			}
+		}
+		catch (Exception ex)
+		{
+			GD.PrintErr($"Failed to toggle FPS counter: {ex.Message}");
+		}
+	}
+
+	private void LoadUIMarginSettings()
+	{
+		// Load margin settings from project settings (percentage values: 0-40% horizontal, 0-20% vertical)
+		float horizontalMarginPercent = (float)ProjectSettings.GetSetting("user/ui/horizontal_margin", 0.0).AsDouble();
+		float verticalMarginPercent = (float)ProjectSettings.GetSetting("user/ui/vertical_margin", 0.0).AsDouble();
+		
+		_horizontalMarginSlider.Value = horizontalMarginPercent;
+		_verticalMarginSlider.Value = verticalMarginPercent;
+	}
+
+	private void OnHorizontalMarginChanged(double value)
+	{
+		ProjectSettings.SetSetting("user/ui/horizontal_margin", value);
+		ApplyUIMargins();
+	}
+
+	private void OnVerticalMarginChanged(double value)
+	{
+		ProjectSettings.SetSetting("user/ui/vertical_margin", value);
+		ApplyUIMargins();
+	}
+
+	private void ApplyUIMargins()
+	{
+		try
+		{
+			var userInterface = FindUserInterface(GetTree().Root);
+			if (userInterface != null)
+			{
+				// Convert percentage values to pixels based on viewport size
+				float horizontalMarginPercent = (float)_horizontalMarginSlider.Value; // 0-40%
+				float verticalMarginPercent = (float)_verticalMarginSlider.Value;     // 0-20%
+				userInterface.SetUIMarginsByPercent(horizontalMarginPercent, verticalMarginPercent);
+			}
+		}
+		catch (Exception ex)
+		{
+			GD.PrintErr($"Failed to apply UI margins: {ex.Message}");
+		}
+	}
+
+	private UserInterface FindUserInterface(Node node)
+	{
+		if (node is UserInterface ui)
+			return ui;
+		
+		foreach (Node child in node.GetChildren())
+		{
+			var result = FindUserInterface(child);
+			if (result != null)
+				return result;
+		}
+		
+		return null;
+	}
+
+	private void ApplyFullscreenMode(Window window, string selectedResolution)
+	{
+		window.Mode = Window.ModeEnum.Fullscreen;
+		window.Borderless = false;
+		
+		// Apply selected resolution with content scaling to center on ultrawide/mismatched monitors
+		if (_resolutions.ContainsKey(selectedResolution))
+		{
+			Vector2I targetResolution = _resolutions[selectedResolution].size;
+			window.ContentScaleSize = targetResolution;
+			window.ContentScaleMode = Window.ContentScaleModeEnum.CanvasItems;
+			window.ContentScaleAspect = Window.ContentScaleAspectEnum.Keep;
+		}
+	}
+
+	private void ApplyWindowedMode(Window window, string selectedResolution, Rect2I screenRect)
+	{
+		window.Mode = Window.ModeEnum.Windowed;
+		window.Borderless = false;
+		
+		// Disable content scaling for windowed mode (native resolution)
+		window.ContentScaleMode = Window.ContentScaleModeEnum.Disabled;
+		
+		// Apply selected resolution for windowed mode
+		if (_resolutions.ContainsKey(selectedResolution))
+		{
+			Vector2I newSize = _resolutions[selectedResolution].size;
+			
+			// Clamp window size to screen size (with margin for window chrome)
+			newSize.X = Mathf.Min(newSize.X, screenRect.Size.X - 20);
+			newSize.Y = Mathf.Min(newSize.Y, screenRect.Size.Y - 60);
+			
+			window.Size = newSize;
+			
+			// Center the window on the current screen
+			Vector2I centerPos = new Vector2I(
+				screenRect.Position.X + (screenRect.Size.X - newSize.X) / 2,
+				screenRect.Position.Y + (screenRect.Size.Y - newSize.Y) / 2
+			);
+			window.Position = centerPos;
+		}
+	}
+
+	private void ApplyBorderlessMode(Window window, string selectedResolution, int currentScreen)
+	{
+		window.Mode = Window.ModeEnum.Windowed;
+		window.Borderless = true;
+		
+		// Window covers entire screen at native resolution
+		Vector2I screenSize = DisplayServer.ScreenGetSize(currentScreen);
+		window.Size = screenSize;
+		window.Position = DisplayServer.ScreenGetPosition(currentScreen);
+		
+		// Set viewport to selected resolution (game renders at this resolution)
+		if (_resolutions.ContainsKey(selectedResolution))
+		{
+			Vector2I targetResolution = _resolutions[selectedResolution].size;
+			GetWindow().ContentScaleSize = targetResolution;
+			GetWindow().ContentScaleMode = Window.ContentScaleModeEnum.CanvasItems;
+			GetWindow().ContentScaleAspect = Window.ContentScaleAspectEnum.Keep;
+		}
 	}
 
 	private void PopulateBindings()

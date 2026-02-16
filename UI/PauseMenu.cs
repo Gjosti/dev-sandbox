@@ -5,6 +5,7 @@ using Godot;
 /// </summary>
 public partial class PauseMenu : Control
 {
+	[ExportGroup("UI Settings")]
 	[Export] public PackedScene SettingsMenuScene { get; set; }
 
 	private Button _resumeButton;
