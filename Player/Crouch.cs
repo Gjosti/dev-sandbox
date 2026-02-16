@@ -17,6 +17,7 @@ public partial class Crouch : Node
 
 	private bool _rotatePlayerLeft = false;
 	private bool _rotatePlayerRight = false;
+	private bool _isCrouchHeld = false; // Track crouch button state to avoid polling Input every frame
 
 	private Node3D _rigPivot;
 	private Node3D _playerMesh;
@@ -52,16 +53,15 @@ public partial class Crouch : Node
 	        Slide();
 	    }
 	    // Auto-slide: If holding crouch, on ground, and velocity exceeds threshold, start sliding
-	    else if (Input.IsActionPressed("crouch") && 
+	    else if (_isCrouchHeld && 
 	             Player.IsOnFloor() && 
 	             velocityLength > SlideThreshold &&
 	             Player.CurrentState != PlayerState.LedgeGrabbing)
 	    {
 	        // Enter slide from any grounded state (Idle, Running, etc.)
-	        GD.Print("Auto-sliding at velocity: ", velocityLength);
 	        Slide();
 	    }
-	    else
+	    else if (Player.CurrentState != PlayerState.Sliding)
 	    {
 	        Player.FloorStopOnSlope = true;
 	    }
@@ -75,25 +75,32 @@ public partial class Crouch : Node
 
 		SlideMovement(@event);
 
-		if (@event.IsActionPressed("crouch") && _velocity.Length() < SlideThreshold)
+		if (@event.IsActionPressed("crouch"))
 		{
-			// Only allow crouch when on floor (prevents air-crouch exploits)
-			if (Player.IsOnFloor())
+			_isCrouchHeld = true;
+			float velocityLength = _velocity.Length();
+			
+			if (velocityLength < SlideThreshold)
 			{
-				PerformCrouch();
+				// Only allow crouch when on floor (prevents air-crouch exploits)
+				if (Player.IsOnFloor())
+				{
+					PerformCrouch();
+				}
 			}
-		}
-		else if (@event.IsActionPressed("crouch") && _velocity.Length() > SlideThreshold)
-		{
-			// Only allow slide when on floor
-			if (Player.IsOnFloor())
+			else
 			{
-				GD.Print("trying to slide at ", _velocity);
-				Slide();
+				// Only allow slide when on floor
+				if (Player.IsOnFloor())
+				{
+					Slide();
+				}
 			}
 		}
 		else if (@event.IsActionReleased("crouch"))
 		{
+			_isCrouchHeld = false;
+			
 			// Only allow standing up when on floor OR already crouching/sliding
 			// Prevents state changes while airborne
 			if (Player.IsOnFloor() || Player.CurrentState == PlayerState.Crouching || Player.CurrentState == PlayerState.Sliding)
