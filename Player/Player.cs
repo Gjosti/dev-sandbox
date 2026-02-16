@@ -271,30 +271,29 @@ public partial class Player : CharacterBody3D
 		else if (IsOnFloor() && CurrentState == PlayerState.Jumping)
 		{
 			// Just landed from a jump - transition to ground movement
-			Vector3 horizontalVel = new Vector3(Velocity.X, 0, Velocity.Z);
-			
-			if (horizontalVel.Length() > 0.1f || Direction.Length() > 0.1f)
-			{
-				SetState(PlayerState.Running);
-			}
-			else
-			{
-				SetState(PlayerState.Idle);
-			}
+			UpdateGroundedState();
 		}
 		else if (IsOnFloor() && CurrentState != PlayerState.Jumping)
 		{
 			// Normal ground movement state updates
-			Vector3 horizontalVel = new Vector3(Velocity.X, 0, Velocity.Z);
-			
-			if (horizontalVel.Length() > 0.1f || Direction.Length() > 0.1f)
-			{
-				SetState(PlayerState.Running);
-			}
-			else
-			{
-				SetState(PlayerState.Idle);
-			}
+			UpdateGroundedState();
+		}
+	}
+
+	/// <summary>
+	/// Updates player state based on ground movement velocity and input.
+	/// </summary>
+	private void UpdateGroundedState()
+	{
+		Vector3 horizontalVel = GetHorizontalVelocity();
+		
+		if (horizontalVel.Length() > 0.1f || Direction.Length() > 0.1f)
+		{
+			SetState(PlayerState.Running);
+		}
+		else
+		{
+			SetState(PlayerState.Idle);
 		}
 	}
 
