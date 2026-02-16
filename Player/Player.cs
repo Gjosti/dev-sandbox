@@ -26,10 +26,8 @@ public partial class Player : CharacterBody3D
 	[Export] public float Acceleration { get; set; } = 30f;
 	[Export] public float AirAcceleration { get; set; } = 10.0f;
 	[Export] public float AirDrag { get; set; } = 0.5f;
-	[Export] public float GroundFriction { get; set; } = 200f;
-
-	public float AirTurnFaceRate = 10f;
-	public float GroundTurnRate = 20f;
+	[Export] public float GroundTurnRate { get; set; } = 20f;
+	[Export] public float AirTurnRate { get; set; } = 10f;
 
 	[ExportGroup("Camera Settings")]
 	[Export] public float MouseSensitivity { get; set; } = 0.00075f;
@@ -38,9 +36,6 @@ public partial class Player : CharacterBody3D
 	[Export] public float MaxCameraRotation { get; set; } = 90f;
 	[Export] public float MinCameraDistance { get; set; } = 1f;
 	[Export] public float MaxCameraDistance { get; set; } = 15f;
-
-	[ExportGroup("Debug")]
-	[Export] public bool DebugMode { get; set; } = false;
 
 	public Vector3 Direction { get; set; } = Vector3.Zero;
 	private Vector3 _horizontalVelocity = Vector3.Zero;
@@ -184,7 +179,7 @@ public partial class Player : CharacterBody3D
 		}
 		else
 		{
-			horizontal = horizontal.MoveToward(Vector3.Zero, GroundFriction * delta);
+			horizontal = horizontal.MoveToward(Vector3.Zero, Acceleration * delta);
 		}
 		return horizontal;
 	}
@@ -195,12 +190,11 @@ public partial class Player : CharacterBody3D
 		if (Direction != Vector3.Zero)
 		{
 			horizontal += Direction * AirAcceleration * delta;
-			FaceDirection(AirTurnFaceRate, delta);
+			FaceDirection(AirTurnRate, delta);
 		}
 		return horizontal;
 	}
 
-	// 
 	private void ApplyPushForce()
 	{
 		for (int i = 0; i < GetSlideCollisionCount(); i++)
