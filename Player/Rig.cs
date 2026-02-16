@@ -3,7 +3,6 @@ using Godot;
 public partial class Rig : Node3D
 {
 	[Export] public float AnimationSpeed { get; set; } = 10.0f;
-	[Export] public bool DebugMode { get; set; } = true;
 
 	private AnimationTree _animationTree;
 	private AnimationNodeStateMachinePlayback _playback;
@@ -12,6 +11,11 @@ public partial class Rig : Node3D
 	private const string RunPath = "parameters/MoveSpace/blend_position";
 	private float _runWeightTarget = -1.0f;
 	private PlayerState _currentGameState = PlayerState.Idle;
+
+	// Debug label throttling - only update periodically to reduce string allocations
+	private float _debugLabelUpdateTimer = 0f;
+	private const float DebugLabelUpdateInterval = 0.1f; // Update 10 times per second
+	private string _lastDebugText = "";
 
 	public override void _Ready()
 	{
@@ -30,10 +34,20 @@ public partial class Rig : Node3D
 			(float)delta * AnimationSpeed
 		));
 
-		if (DebugMode)
+		if (DebugManager.IsEnabled(DebugManager.RigAnimations))
 		{
-			// Show both animation state and game state for debugging
-			_stateLabel.Text = $"Game: {_currentGameState}\nAnim: {_playback.GetCurrentNode()}";
+			// Throttle debug label updates to avoid excessive string allocations
+			_debugLabelUpdateTimer -= (float)delta;
+			if (_debugLabelUpdateTimer <= 0)
+			{
+				_debugLabelUpdateTimer = DebugLabelUpdateInterval;
+				string newDebugText = $"Game: {_currentGameState}\nAnim: {_playback.GetCurrentNode()}";
+				if (newDebugText != _lastDebugText)
+				{
+					_stateLabel.Text = newDebugText;
+					_lastDebugText = newDebugText;
+				}
+			}
 		}
 	}
 

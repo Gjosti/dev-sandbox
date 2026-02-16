@@ -171,7 +171,7 @@ public partial class LedgeGrab : Node3D
 		// Set state
 		Player.SetState(PlayerState.LedgeGrabbing);
 		
-		if (Player.DebugMode)
+		if (DebugManager.IsEnabled(DebugManager.LedgeGrab))
 			GD.Print("Grabbed ledge at: ", _ledgePosition);
 	}
 
@@ -181,7 +181,7 @@ public partial class LedgeGrab : Node3D
 		// Explicitly set to Jumping state (player will be airborne after release)
 		Player.SetState(PlayerState.Jumping);
 		
-		if (Player.DebugMode)
+		if (DebugManager.IsEnabled(DebugManager.LedgeGrab))
 			GD.Print("Released from ledge");
 	}
 
@@ -231,7 +231,7 @@ public partial class LedgeGrab : Node3D
 		_isHanging = false;
 		Player.SetState(PlayerState.Jumping);
 		
-		if (Player.DebugMode)
+		if (DebugManager.IsEnabled(DebugManager.LedgeGrab))
 			GD.Print("Climbing up from ledge");
 	}
 }
