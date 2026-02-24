@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://bp4egawc77s6r" path="res://Player/player_camera.tscn" id="6_6ysni"]
 [ext_resource type="PackedScene" uid="uid://o8io8idytia6" path="res://Player/ledge_grab.tscn" id="7_vlldt"]
 [ext_resource type="PackedScene" uid="uid://dagbryuxta64w" path="res://Player/attack.tscn" id="8_s1rgi"]
+[ext_resource type="Script" path="res://Player/PlayerStateMachine.cs" id="9_psm"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tok1r"]
 
@@ -40,5 +41,9 @@ Player = NodePath("..")
 Player = NodePath("..")
 HangOffsetFromWall = 0.6
 HangHeightBelowLedge = -0.2
+
+[node name="PlayerStateMachine" type="Node" parent="." node_paths=PackedStringArray("Player")]
+script = ExtResource("9_psm")
+Player = NodePath("..")
 
 [editable path="RigPivot/Rig"]

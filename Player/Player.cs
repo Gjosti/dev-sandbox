@@ -54,6 +54,7 @@ public partial class Player : CharacterBody3D
 	private Jump _jump;
 	private LedgeGrab _ledgeGrab;
 	private PlayerCamera _camera;
+	private PlayerStateMachine _stateMachine;
 
 	public override void _Ready()
 	{
@@ -64,6 +65,12 @@ public partial class Player : CharacterBody3D
 		_jump = GetNode<Jump>("Jump");
 		_ledgeGrab = GetNode<LedgeGrab>("LedgeGrab");
 		_camera = GetNode<PlayerCamera>("PlayerCamera");
+		_stateMachine = GetNodeOrNull<PlayerStateMachine>("PlayerStateMachine");
+
+		if (_stateMachine == null)
+		{
+			GD.PrintErr("PlayerStateMachine node missing. State auto-updates are disabled.");
+		}
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -79,7 +86,7 @@ public partial class Player : CharacterBody3D
 		ApplyPushForce();
 
 		// Update game state based on movement
-		UpdatePlayerState();
+		_stateMachine?.EvaluateAndUpdateState();
 
 		// Drive animations from game state
 		Rig.UpdateFromGameState(CurrentState, Direction);
@@ -234,67 +241,13 @@ public partial class Player : CharacterBody3D
 
 		PreviousState = CurrentState;
 		CurrentState = newState;
+
+		if (DebugManager.IsEnabled(DebugManager.PlayerStateTransitions))
+		{
+			DebugManager.Print("State", $"{PreviousState} -> {CurrentState}");
+		}
+
 		EmitSignal(SignalName.StateChanged, (int)newState, (int)PreviousState);
-	}
-
-	/// <summary>
-	/// Automatically determines and updates player state based on current conditions.
-	/// Called every physics frame to keep state synchronized with gameplay.
-	/// </summary>
-	private void UpdatePlayerState()
-	{
-		// Don't auto-update certain states that are managed by ability components
-		if (CurrentState == PlayerState.Dashing 
-		    || CurrentState == PlayerState.Attacking 
-		    || CurrentState == PlayerState.LedgeGrabbing)
-		{
-			return;
-		}
-
-		// Crouching and Sliding are managed by Crouch component
-		if (CurrentState == PlayerState.Crouching || CurrentState == PlayerState.Sliding)
-		{
-			return;
-		}
-
-		// Auto-update based on ground state and movement
-		if (!IsOnFloor())
-		{
-			// If airborne and not already jumping, transition to jumping
-			// This handles falling off edges
-			if (CurrentState != PlayerState.Jumping)
-			{
-				SetState(PlayerState.Jumping);
-			}
-			// Stay in Jumping state while airborne - don't check anything else
-		}
-		else if (IsOnFloor() && CurrentState == PlayerState.Jumping)
-		{
-			// Just landed from a jump - transition to ground movement
-			UpdateGroundedState();
-		}
-		else if (IsOnFloor() && CurrentState != PlayerState.Jumping)
-		{
-			// Normal ground movement state updates
-			UpdateGroundedState();
-		}
-	}
-
-	/// <summary>
-	/// Updates player state based on ground movement velocity and input.
-	/// </summary>
-	private void UpdateGroundedState()
-	{
-		Vector3 horizontalVel = GetHorizontalVelocity();
-		
-		if (horizontalVel.Length() > 0.1f || Direction.Length() > 0.1f)
-		{
-			SetState(PlayerState.Running);
-		}
-		else
-		{
-			SetState(PlayerState.Idle);
-		}
 	}
 
 	/// <summary>

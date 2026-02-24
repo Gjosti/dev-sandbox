@@ -22,6 +22,11 @@ public static class DebugManager
 	public static bool PlayerMovement { get; set; } = false;
 
 	/// <summary>
+	/// Debug output for player state transitions.
+	/// </summary>
+	public static bool PlayerStateTransitions { get; set; } = false;
+
+	/// <summary>
 	/// Debug output for rig/animation state.
 	/// </summary>
 	public static bool RigAnimations { get; set; } = true;
